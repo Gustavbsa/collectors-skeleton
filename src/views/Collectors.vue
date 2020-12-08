@@ -31,6 +31,10 @@
       <div class="cardslots" v-if="players[playerId]">
         <CollectorsCard v-for="(card, index) in players[playerId].items" :card="card" :key="index"/>
       </div>
+      Board
+      <div class="board">
+        <CollectorsGameboard  />
+      </div>
     </main>
     {{players}}
     {{marketValues}}
@@ -51,12 +55,14 @@
 
 import CollectorsCard from '@/components/CollectorsCard.vue'
 import CollectorsBuyActions from '@/components/CollectorsBuyActions.vue'
+import CollectorsGameboard from '@/components/CollectorsGameboard.vue'
 
 export default {
   name: 'Collectors',
   components: {
     CollectorsCard,
-    CollectorsBuyActions
+    CollectorsBuyActions,
+    CollectorsGameboard
   },
   data: function () {
     return {
@@ -89,6 +95,8 @@ export default {
       skillsOnSale: [],
       auctionCards: [],
       playerid: 0
+      
+      
     }
   },
   computed: {
