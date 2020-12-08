@@ -41,7 +41,7 @@ else {
 // Read in the "class" to store all our data on the server side
 // If you need to change how data is handled, check the dataHandler.js file!
 
-const CollectorsData = require("./dataHandlerCollectors.js");
+const CollectorsData = require("./dataHandlerCollectors.js"); // KOMMER BEHÖVA FÖRSTÅ RAD 44-45
 const CollectorsSockets = require("./socketsCollectors.js");
 
 
