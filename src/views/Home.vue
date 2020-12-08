@@ -2,16 +2,13 @@
   <div class="center">
     <div>
       <h1>Collectors</h1>
-      <ul>
-        <li v-for="i in 3" :key="i">
-          <a @click="setupCollectors(i+1, 'en')">Set up a game of Collectors for {{i+1}} players</a>.
-        </li>
-      </ul>
-      <ul>
-        <li v-for="i in 3" :key="i">
-          <a @click="setupCollectors(i+1, 'se')">Spela Collectors med {{i+1}} spelare</a>.
-        </li>
-      </ul>
+      <label for="players">Select number of players</label><br>
+      <select id="Number_of_Players" name="players">
+        <option v-for="i in 3" :key="i">
+          <a value="">{{i+1}}</a>
+        </option>
+      </select>
+      <button v-on:click="start('en');">Start game</button>
     </div>
   </div>
 </template>
@@ -25,12 +22,13 @@ export default {
     this.$store.commit('SET_ROOM_ID');
   },
   methods: {
-    setupCollectors: function (playerCount, lang="en") {
+    start: function (lang='en') {
+      this.name = document.getElementById("Number_of_Players").value;
       this.$store.commit('SETUP_GAME', {roomId: this.$store.state.roomId, 
-        playerCount: playerCount,
+        playerCount: this.name,
         lang: lang });
       this.$router.push("/room/" + this.$store.state.roomId);
-    },
+    }
   }
 }
 </script>
