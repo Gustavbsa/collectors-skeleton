@@ -33,7 +33,7 @@
       </div>
       Board
       <div class="board">
-        <CollectorsGameboard  />
+        <CollectorsGameboard />
       </div>
     </main>
     {{players}}
