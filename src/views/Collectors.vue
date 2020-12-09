@@ -42,6 +42,12 @@
         <PlayerPieces  />
       </div>
 
+      PlayerBoard
+
+      <div class="pboard">
+        <PlayerBoard  />
+      </div>
+
     </main>
     {{players}}
     {{marketValues}}
@@ -64,6 +70,7 @@ import CollectorsCard from '@/components/CollectorsCard.vue'
 import CollectorsBuyActions from '@/components/CollectorsBuyActions.vue'
 import CollectorsGameboard from '@/components/CollectorsGameboard.vue'
 import PlayerPieces from '@/components/PlayerPieces.vue'
+import PlayerBoard from '@/components/PlayerBoard.vue'
 
 export default {
   name: 'Collectors',
@@ -71,7 +78,8 @@ export default {
     CollectorsCard,
     CollectorsBuyActions,
     CollectorsGameboard,
-    PlayerPieces
+    PlayerPieces,
+    PlayerBoard
   },
   data: function () {
     return {
