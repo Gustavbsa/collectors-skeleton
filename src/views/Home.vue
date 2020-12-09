@@ -24,14 +24,19 @@
     <button type="button" class="btn" v-on:click="gameStart('en');">Start Game</button>
     <button type="button" class="btn cancel" v-on:click="closeForm()">Close</button>
   </form></div>
+  <div class="picture"><BakgroundImg/></div>
   </div>
 </template>
 
 <script>
+import BakgroundImg from '@/components/BakgroundImg.vue'
 // @ is an alias to /src
 
 export default {
   name: 'Home',
+  components:{
+    BakgroundImg
+  },
   created: function () {
     this.$store.commit('SET_ROOM_ID');
   },
@@ -99,5 +104,6 @@ export default {
 .PopUpText{
   color: black;
 }
+
 
 </style>
