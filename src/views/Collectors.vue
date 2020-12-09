@@ -34,6 +34,7 @@
      
       Board
       <div class="board">
+      
         <CollectorsGameboard />
       </div>
       
