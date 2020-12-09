@@ -33,6 +33,7 @@
       </div>
       Board
       <div class="board">
+      
         <CollectorsGameboard />
       </div>
     </main>
