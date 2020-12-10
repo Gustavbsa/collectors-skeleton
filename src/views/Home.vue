@@ -5,10 +5,10 @@
       <label for="players">Select number of players</label><br>
       <select id="Number_of_Players" name="players">
         <option v-for="i in 3" :key="i">
-          <a value="">{{i+1}}</a>
+          <a>{{i+1}}</a>
         </option>
       </select>
-      <button v-on:click="start()">Start game</button>
+      <button v-on:click="start('en')">Start game</button>
     </div>
     <div class="form-popup" id="myForm">
     <form class="form-container">
@@ -19,9 +19,9 @@
     <input type="text" placeholder="Enter Username" name="username" required>
 
     <label for="Link"><b class="PopUpText">Link</b></label>
-    <input type="text" :value="publicPath + $route.path" @click="selectAll" readonly="readonly">
+    <h5 class="linkText" v> localhost:8080/#/room/{{room}}</h5>
 
-    <button type="button" class="btn" v-on:click="gameStart('en');">Start Game</button>
+    <button type="button" class="btn" v-on:click="gameStart();">Start Game</button>
     <button type="button" class="btn cancel" v-on:click="closeForm()">Close</button>
   </form></div>
   <div class="picture"><BakgroundImg/></div>
@@ -37,22 +37,29 @@ export default {
   components:{
     BakgroundImg
   },
+  data: function(){
+    return{
+      room: '',
+    }
+  },
   created: function () {
     this.$store.commit('SET_ROOM_ID');
   },
   methods: {
-    start: function () {
+    start: function (lang='en') {
       document.getElementById("myForm").style.display = "block";
+      this.number = document.getElementById("Number_of_Players").value;
+      this.$store.commit('SETUP_GAME', {roomId: this.$store.state.roomId, 
+      playerCount: this.number,
+      lang: lang });
+      this.room = this.$store.state.roomId;
+      console.log(this.room);
     },
   closeForm: function() {
   document.getElementById("myForm").style.display = "none";
   },
-  gameStart: function(lang='en'){
-     this.name = document.getElementById("Number_of_Players").value;
-      this.$store.commit('SETUP_GAME', {roomId: this.$store.state.roomId, 
-        playerCount: this.name,
-        lang: lang });
-      this.$router.push("/room/" + this.$store.state.roomId);
+  gameStart: function(){
+        this.$router.push("/room/" + this.$store.state.roomId);
   }
 }
 }
@@ -104,6 +111,8 @@ export default {
 .PopUpText{
   color: black;
 }
-
+.linkText{
+  color: black;
+}
 
 </style>
