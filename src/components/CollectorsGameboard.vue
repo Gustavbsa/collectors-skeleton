@@ -6,10 +6,7 @@
     v-on:click="showCoords($event)" width="531" height="641" />
   
     <map name="mapname" >
-      <area shape="rect" coords="102,300,140,200"  alt="bs1" >
-      <area shape="rect" coords="102,300,140,200"  alt="bs1" >
-      
-      
+      <area shape="rect" coords="102,300,140,200"  alt="bs1" target="_blank" href="https://www.google.com">
 
     </map>
 </p>
