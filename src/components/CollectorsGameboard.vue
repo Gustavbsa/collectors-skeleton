@@ -3,7 +3,7 @@
 <div :class="['board', {'available-to-choose': availableAction}]" :style="{'background-position': width + height}" @click="doAction">
   <p>
   <img src="/images/collectors-gameboard.png" usemap="#mapname" 
-    v-on:click="showCoords($event)" width="531" height="641" />
+    width="531" height="641" />
   
     <map name="mapname" >
       <area target="" alt="bs1" title="bs1" href="" coords="38,300,80,339" shape="rect">
@@ -53,14 +53,6 @@
     </map>
 </p>
 
-
-
-
-<p id="demo"></p>
-
-
-
-  
     </div>
 
 
@@ -78,14 +70,7 @@ export default {
     doAction: function() {
       this.$emit('doAction');
     },
-    showCoords: function(event) {
-        var x = event.clientX;
-        var y = event.clientY;
-        var coords = "X coords: " + x + ", Y coords: " + y;
-        document.getElementById("demo").innerHTML = coords;
-        console.log(coords);
-        
-    }
+    
   }
 }
 
