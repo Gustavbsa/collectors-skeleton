@@ -6,9 +6,6 @@
     v-on:click="showCoords($event)" width="531" height="641" />
   
     <map name="mapname" >
-<<<<<<< HEAD
-      <area shape="rect" coords="102,300,140,200"  alt="bs1" target="_blank" href="https://www.google.com">
-=======
       <area target="" alt="bs1" title="bs1" href="" coords="38,300,80,339" shape="rect">
     <area target="" alt="bs2" title="bs2" href="" coords="38,356,80,396" shape="rect">
     <area target="" alt="bs3" title="bs3" href="" coords="39,410,82,453" shape="rect">
@@ -55,7 +52,6 @@
       
       
       
->>>>>>> 9eaec264a85dc829358ab77fe91d3a41f55edeb6
 
     </map>
 </p>
