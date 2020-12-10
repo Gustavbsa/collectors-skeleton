@@ -94,4 +94,14 @@ export default {
     display: grid;
     grid-template-columns: repeat(auto-fill, 130px);
   }
+  .buy-cards div {
+    transform: scale(0.7)translate(-20%,-0%);
+    transition:0.2s;
+    transition-timing-function: ease-out;
+    z-index: 0;
+  }
+  .buy-cards div:hover {
+    transform: scale(1)translate(-10%,10%);
+    z-index: 1;
+  }
 </style>
