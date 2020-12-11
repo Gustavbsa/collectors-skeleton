@@ -78,13 +78,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+/*
   .board{
+    
     color:red;
     user-select: none;
     width:600px;
     height:700px;
-    /*
+    
     
     background-image: url('/images/collectors-gameboard.png');
     
@@ -109,11 +110,11 @@ export default {
   "s bw w ab ac ac"
   "s bw w acr ac ac"
   "s v v v v v";
-  */
+  
     
   }
   
-
+*/
   .available-to-choose {
     animation: jiggle 1s ease-in-out;
     animation-iteration-count:infinite;
