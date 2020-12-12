@@ -11,16 +11,23 @@
         </div>
       </div>
       <div>
+        <!-- -->
+        
         <div class="buttons" v-for="(p, index) in placement" :key="index">
+          
           <button
             v-if="p.playerId===null"
             :disabled="cannotAfford(p.cost)" 
-            @click="placeBottle(p)" >
+            @click="placeBottle(p)">
             ${{p.cost}}
           </button>
-          <div v-if="p.playerId !== null">
+          
+          
+          <div v-if="p.playerId !== null" >
             {{p.playerId}}
           </div>
+          
+        
         </div>
       </div>
     </div>
@@ -57,6 +64,7 @@ export default {
       this.$emit('placeBottle', p.cost);
       this.highlightAvailableCards(p.cost);
     },
+   
     highlightAvailableCards: function (cost=100) {
       for (let i = 0; i < this.itemsOnSale.length; i += 1) {
         if (this.marketValues[this.itemsOnSale[i].item] <= this.player.money - cost) {

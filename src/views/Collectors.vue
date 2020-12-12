@@ -1,7 +1,34 @@
 <template>
   <div>
     <main>
+    <div class="layout">  
+    <div class="topPage">
+      <h1>info info info</h1>
+    </div>
+      <div class="gboard">
+      
+      <div class="board">
+        <CollectorsGameboard />
+      </div>
+      </div>
+      <div class="pBoard">
+        
+
+      <div class="pboard">
+        <PlayerBoard  />
+      </div> 
+      <br><br>
+      Hand
+      <div class="cardslots" v-if="players[playerId]">
+        <CollectorsCard v-for="(card, index) in players[playerId].hand" :card="card" :availableAction="card.available" @doAction="buyCard(card)" :key="index"/>
+      </div>
+      <div>
+        ${{players[playerId].money}}
+      </div>
+      </div>
       {{buyPlacement}} {{chosenPlacementCost}}
+      <div class="buyCard">
+        
       <CollectorsBuyActions v-if="players[playerId]"
         :labels="labels"
         :player="players[playerId]"
@@ -15,43 +42,42 @@
           {{ labels.draw }} 
         </button>
       </div>
+      </div>
+      <div class="skills">
       Skills
       <div class="cardslots">
         <CollectorsCard v-for="(card, index) in skillsOnSale" :card="card" :key="index"/>
       </div>
+      </div>
+      <div class="auction">
       Auction
       <div class="cardslots">
         <CollectorsCard v-for="(card, index) in auctionCards" :card="card" :key="index"/>
       </div>
-      Hand
-      <div class="cardslots" v-if="players[playerId]">
-        <CollectorsCard v-for="(card, index) in players[playerId].hand" :card="card" :availableAction="card.available" @doAction="buyCard(card)" :key="index"/>
       </div>
+      <!--<div class="pHand"> </div>-->
+      
+      
+      <div class="item">
       Items
       <div class="cardslots" v-if="players[playerId]">
         <CollectorsCard v-for="(card, index) in players[playerId].items" :card="card" :key="index"/>
       </div>
-     
-      Board
-      <div class="board">
+     </div>
       
-        <CollectorsGameboard />
-      </div>
-      
+      <div class="pPieces">
       Pieces
       <div class="pieces">
         <PlayerPieces  />
       </div>
-
-      PlayerBoard
-
-      <div class="pboard">
-        <PlayerBoard  />
       </div>
-
+      
+    </div>
     </main>
+    <!--
     {{players}}
     {{marketValues}}
+    -->
     <button v-if="players[playerId]" @click="players[playerId].money += 1">
       fake more money
     </button>
@@ -227,6 +253,7 @@ export default {
   main {
     user-select: none;
   }
+
   footer {
     margin-top: 5em auto;
   }
@@ -236,6 +263,48 @@ export default {
   }
   footer a:visited {
     color:ivory;
+  }
+  .layout{
+    display: grid;
+    background: radial-gradient(rgb(116, 22, 22), black);
+    border-radius: 5px;
+    padding:20px;
+    
+  }
+  .topPage{
+    grid-column: 1;
+    grid-row:1;
+    
+  }
+  .gboard{
+    grid-column: 2 ; /*kolla konstigt*/
+    grid-row: 2;
+    user-select: none;
+  }
+  .pBoard {
+   grid-column: 1; 
+  grid-row: 2;
+  transform: scale(0.7)translate(-15%,-15%);
+  }
+  .buyCard{
+    grid-row: 3;
+  }
+  .skills{
+    grid-row: 4;
+  }
+  .auction {
+    grid-row:5;
+  }
+  /*
+  .pHand {
+    grid-row:6;
+  }
+  */
+  .item{
+    grid-row:7;
+  }
+  .pPieces{
+    grid-row:8;
   }
   .cardslots {
     display: grid;
