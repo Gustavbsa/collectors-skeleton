@@ -1,7 +1,6 @@
 
 <template>
-<div :class="['board', {'available-to-choose': availableAction}]" :style="{'background-position': width + height}" @click="doAction">
-  <p>
+<div :class="['gboard', {'available-to-choose': availableAction}]" :style="{'background-position': width + height}" @click="doAction">
   <img src="/images/collectors-gameboard.png" usemap="#mapname" 
     width="531" height="641" />
   
@@ -51,7 +50,7 @@
       <area target="" alt="iSlot5" title="iSlot5" href="" coords="370,0,451,31" shape="rect">
 
     </map>
-</p>
+
 
     </div>
 
