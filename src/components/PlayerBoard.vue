@@ -2,7 +2,7 @@
 <template>
 <div :class="['pboard', {'available-to-choose': availableAction}]" :style="{'background-position': width + height}" @click="doAction">
 <img src="/images/PlayerBoard.PNG" usemap="#pBoard" 
-     width="900" height="100%" />
+     width="100%" height="100%" />
 <map name="pBoard">
     <area target="" alt="pB1" title="pB1" href="" coords="123,67,222,157" shape="rect">
     <area target="" alt="pB2" title="pB2" href="" coords="265,65,362,155" shape="rect">
@@ -41,14 +41,7 @@ export default {
   .pboard{
     color: blue;
     user-select: none;
-    /*
-    width:900px;
-    height:300px;
-    background-image: url('/images/PlayerBoard.PNG');
-    background-size: 100%;
-    background-repeat: no-repeat;
-    border-radius: 5px;
-    */
+    
   }
 
   .available-to-choose {

@@ -2,7 +2,7 @@
 <template>
 <div :class="['gboard', {'available-to-choose': availableAction}]" :style="{'background-position': width + height}" @click="doAction">
   <img src="/images/collectors-gameboard.png" usemap="#mapname" 
-    width="531" height="641" />
+    width="100%" height="100%" />
   
     <map name="mapname" >
       <area target="" alt="bs1" title="bs1" href="" coords="38,300,80,339" shape="rect">

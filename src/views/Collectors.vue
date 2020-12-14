@@ -5,16 +5,25 @@
         <div class="topPage">
           <h1>info info info</h1>
         </div>
-        
-        <div class="gboard">
-            <CollectorsGameboard />
+        <div class="empty1"></div>
+
+        <div v-if="this.$store.state.playerCount >= 2">
+          <div class="opboard1">
+            <OpponentBoard />
+          </div>
+          <br /><br />
         </div>
-        <div v-if="this.$store.state.playerCount == 2">
-          <div class="opboard">
+
+        <div class="gboard">
+          <CollectorsGameboard />
+        <br /><br />
+        <div v-if="this.$store.state.playerCount == 4">
+          <div class="opboard3">
             <OpponentBoard />
           </div>
         </div>
-        <div class="pBoard">
+        </div>
+         <div class="pBoard">
           <div class="pboard">
             <PlayerBoard />
           </div>
@@ -22,7 +31,7 @@
           <div>
             <button class="shape">${{ players[playerId].money }}</button>
           </div>
-          Hand
+            Hand
           <div class="cardslots" v-if="players[playerId]">
             <CollectorsCard
               v-for="(card, index) in players[playerId].hand"
@@ -33,6 +42,19 @@
             />
           </div>
         </div>
+
+        <div class="empty2"></div>
+        <div v-if="this.$store.state.playerCount >= 3">
+          <div class="opboard2">
+            <OpponentBoard />
+          </div>
+        </div>
+       
+       
+
+       
+        
+        
         {{ buyPlacement }} {{ chosenPlacementCost }}
         <div class="buyCard">
           <CollectorsBuyActions
@@ -302,45 +324,73 @@ footer a:visited {
   background: radial-gradient(rgb(116, 22, 22), black);
   border-radius: 5px;
   padding: 20px;
+  grid-template-columns: auto auto auto;
 }
 .topPage {
-  grid-column: 1;
+  grid-column: 1 / span 3;
   grid-row: 1;
 }
 .gboard {
-  grid-column: 2; /*kolla konstigt*/
-  grid-row: 2;
+  grid-column: 2;
+  grid-row: 3;
   user-select: none;
 }
 .pBoard {
   grid-column: 1;
-  grid-row: 2;
-  transform: scale(0.7) translate(-15%, -15%);
+  grid-row: 3;
+  transform: scale(0.8) translate(-15%, -15%);
 }
-.opboard {
-  grid-column: 3;
+.empty1 {
   grid-row: 2;
-  transform: scale(0.2) translate(-15%, -15%);
+  grid-column: 1;
+}
+.empty2 {
+  grid-row: 2;
+  grid-column: 3;
+}
+.opboard1 {
+  
+  grid-row: 2;
+  grid-column: 2;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.opboard2 {
+  
+  grid-row: 3;
+  grid-column: 3;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 200px;
+  
+}
+.opboard3 {
+  
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
 .buyCard {
-  grid-row: 3;
+  grid-row: 4;
+  grid-column: 1;
 }
 .skills {
-  grid-row: 4;
+  grid-row: 5;
+  grid-column: 1;
 }
 .auction {
-  grid-row: 5;
+  grid-row: 6;
+  grid-column: 1;
 }
-/*
-  .pHand {
-    grid-row:6;
-  }
-  */
 .item {
-  grid-row: 7;
+  grid-row: 8;
+  grid-column: 1;
 }
 .pPieces {
-  grid-row: 8;
+  grid-row: 9;
+  grid-column: 3;
 }
 .cardslots {
   display: grid;
