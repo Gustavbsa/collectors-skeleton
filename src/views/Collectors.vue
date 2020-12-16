@@ -3,22 +3,24 @@
     <main>
       <div class="layout">
         <div class="topPage">
-          <h1>info info info</h1>
+          <h1>info info info {{Object.keys(this.players).length}}</h1>
         </div>
         <div class="empty1"></div>
 
-        <div v-if="this.$store.state.playerCount >= 2">
+        <div v-if="this.$store.state.playerCount>=2 || Object.keys(this.players).length>=2">
           <div class="opboard1">
             <OpponentBoard />
+            
           </div>
+          
           <br /><br />
         </div>
 
         <div class="gboard">
           <CollectorsGameboard />
         <br /><br />
-        <div v-if="this.$store.state.playerCount == 4">
-          <div class="opboard3">
+        <div v-if="this.$store.state.playerCount==4||Object.keys(this.players).length == 4">
+          <div class="opboard3; backsideCard3">
             <OpponentBoard />
           </div>
         </div>
@@ -43,9 +45,28 @@
           </div>
         </div>
 
-        <div class="empty2"></div>
-        <div v-if="this.$store.state.playerCount >= 3">
-          <div class="opboard2">
+        <div class="backsideCard1"> <img src="/images/backsideCard.png" height= "100%" width= "30%" class="opac">
+        <div v-if="this.$store.state.playerId!=Object.keys(this.players)[1]">
+        <div class="numberOCards">{{ this.players[Object.keys(this.players)[1]].hand.length }} </div>
+         
+        </div>
+        
+        <div v-else-if="this.$store.state.playerId!=Object.keys(this.players)[2] && Object.keys(this.players).length>=2"> 
+         <div class="numberOCards"> {{ this.players[Object.keys(this.players)[2]].hand.length }}</div>
+
+        </div>
+        
+         <div v-else-if="this.$store.state.playerId!=Object.keys(this.players)[3] && Object.keys(this.players).length>=3"> 
+           <div class="numberOCards"> {{ this.players[Object.keys(this.players)[3]].hand.length }}</div>
+           </div>
+         <div v-else-if="this.$store.state.playerId!=Object.keys(this.players)[4] && Object.keys(this.players).length==4">
+            <div class="numberOCards"> {{ this.players[Object.keys(this.players)[4]].hand.length }}</div></div>
+        
+      
+      
+      </div>
+        <div v-if="this.$store.state.playerCount>=3||Object.keys(this.players).length >= 3">
+          <div class="opboard2; backsideCard2">
             <OpponentBoard />
           </div>
         </div>
@@ -356,6 +377,16 @@ footer a:visited {
   margin-left: auto;
   margin-right: auto;
 }
+.backsideCard1{
+  grid-row: 2;
+  grid-column: 3;
+  transform: scale(0.6) translate(-40%, -50%);
+  
+  position:relative;
+}
+.opac{
+  opacity:0.5;
+}
 .opboard2 {
   
   grid-row: 3;
@@ -366,11 +397,25 @@ footer a:visited {
   margin-top: 200px;
   
 }
+.backsideCard2{
+background-image: url("/images/backsideCard.png");
+}
 .opboard3 {
   
   width: 80%;
   margin-left: auto;
   margin-right: auto;
+}
+.backsideCard3{
+background-image: url("/images/backsideCard.png");
+}
+.numberOCards{
+  top: 1em;
+  left: 0.5em;
+  font-size: 40px;
+  color: white;
+  position:absolute;
+
 }
 .buyCard {
   grid-row: 4;
