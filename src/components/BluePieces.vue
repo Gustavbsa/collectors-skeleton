@@ -11,7 +11,7 @@
 <script>
 
 export default {
-  name: 'PlayerPieces',
+  name: 'BluePieces',
   props: {
     pieces: Object,
     availableAction: Boolean
@@ -32,7 +32,7 @@ export default {
     user-select: none;
     width:100px;
     height:100px;
-    background-image: url('/images/BottleBlack.PNG');
+    background-image: url('/images/BottleBlue.PNG');
     background-size: 80%;
     background-repeat: no-repeat;
     border-radius: 4px;

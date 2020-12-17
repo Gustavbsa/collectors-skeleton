@@ -4,15 +4,23 @@
       <div class="layout">
         <div class="topPage">
           <h1>info info info {{Object.keys(this.players).length}}</h1>
+                  <h1> {{ Object.keys(this.players)[0] }}</h1>
+          <h1>{{ this.players[Object.keys(this.players)[0]].money }}</h1>
         </div>
         <div class="empty1"></div>
 
         <div v-if="this.$store.state.playerCount>=2 || Object.keys(this.players).length>=2">
+          <div>
           <div class="opboard1">
             <OpponentBoard />
-            
+          <div class="piecesOp11">
+            <BlackPieces />
           </div>
-          
+           <div class="piecesOp12">
+            <BlackPieces />
+          </div>
+          </div>
+          </div>
           <br /><br />
         </div>
 
@@ -20,14 +28,61 @@
           <CollectorsGameboard />
         <br /><br />
         <div v-if="this.$store.state.playerCount==4||Object.keys(this.players).length == 4">
-          <div class="opboard3; backsideCard3">
+          <div class="opboard3">
             <OpponentBoard />
+               <div class="piecesOp31">
+            <PurplePieces />
           </div>
+           <div class="piecesOp32">
+            <PurplePieces />
+          </div>
+          </div>
+          <div class="backsideCard3"> <img src="/images/backsideCard.png" height= "100%" width= "30%" class="opac">
+        <div v-if="this.$store.state.playerId==Object.keys(this.players)[0]">
+        <div class="numberOCards">{{ this.players[Object.keys(this.players)[3]].hand.length }} </div>
+         <br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[3]].money}}</div>
+          
+         
+        </div>
+        
+        <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[1] && Object.keys(this.players).length>=2"> 
+         <div class="numberOCards"> {{ this.players[Object.keys(this.players)[3]].hand.length }}</div>
+          <br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[3]].money }}</div>
+          
+
+        </div>
+        
+         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[2] && Object.keys(this.players).length>=3"> 
+           <div class="numberOCards"> {{ this.players[Object.keys(this.players)[3]].hand.length }}</div>
+            <br /><br />
+          
+             <div class="moneyOp">${{ this.players[Object.keys(this.players)[3]].money }}</div>
+          
+
+           </div>
+         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[3] && Object.keys(this.players).length==4">
+            <div class="numberOCards"> {{ this.players[Object.keys(this.players)[2]].hand.length }}</div>
+              <br /><br />
+          
+             <div class="moneyOp">${{ this.players[Object.keys(this.players)[2]].money }}</div>
+          
+            </div>
+           
         </div>
         </div>
+        </div>
+
          <div class="pBoard">
           <div class="pboard">
             <PlayerBoard />
+            <div class="pieces1">
+            <BluePieces />
+          </div>
+           <div class="pieces2">
+            <BluePieces />
+          </div>
           </div>
           <br /><br />
           <div>
@@ -46,30 +101,70 @@
         </div>
 
         <div class="backsideCard1"> <img src="/images/backsideCard.png" height= "100%" width= "30%" class="opac">
-        <div v-if="this.$store.state.playerId!=Object.keys(this.players)[1]">
+        <div v-if="this.$store.state.playerId==Object.keys(this.players)[0]">
         <div class="numberOCards">{{ this.players[Object.keys(this.players)[1]].hand.length }} </div>
+        <br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[1]].money}}</div>
          
         </div>
         
-        <div v-else-if="this.$store.state.playerId!=Object.keys(this.players)[2] && Object.keys(this.players).length>=2"> 
-         <div class="numberOCards"> {{ this.players[Object.keys(this.players)[2]].hand.length }}</div>
+        <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[1] && Object.keys(this.players).length>=2"> 
+         <div class="numberOCards"> {{ this.players[Object.keys(this.players)[0]].hand.length }}</div>
+         <br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[0]].money}}</div>
 
         </div>
         
-         <div v-else-if="this.$store.state.playerId!=Object.keys(this.players)[3] && Object.keys(this.players).length>=3"> 
-           <div class="numberOCards"> {{ this.players[Object.keys(this.players)[3]].hand.length }}</div>
+         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[2] && Object.keys(this.players).length>=3"> 
+           <div class="numberOCards"> {{ this.players[Object.keys(this.players)[0]].hand.length }}</div>
+           <br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[0]].money}}</div>
            </div>
-         <div v-else-if="this.$store.state.playerId!=Object.keys(this.players)[4] && Object.keys(this.players).length==4">
-            <div class="numberOCards"> {{ this.players[Object.keys(this.players)[4]].hand.length }}</div></div>
+         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[3] && Object.keys(this.players).length==4">
+            <div class="numberOCards"> {{ this.players[Object.keys(this.players)[0]].hand.length }}</div>
+            <br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[0]].money}}</div>
+            </div>
         
       
       
       </div>
         <div v-if="this.$store.state.playerCount>=3||Object.keys(this.players).length >= 3">
-          <div class="opboard2; backsideCard2">
+          <div class="opboard2">
             <OpponentBoard />
+             <div class="piecesOp21">
+            <BrownPieces />
           </div>
+           <div class="piecesOp22">
+            <BrownPieces />
+          </div>
+          </div>
+         <div class="backsideCard2"> <img src="/images/backsideCard.png" height= "100%" width= "30%" class="opac">
+        <div v-if="this.$store.state.playerId==Object.keys(this.players)[0]">
+        <div class="numberOCards">{{ this.players[Object.keys(this.players)[2]].hand.length }} </div>
+         <br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[2]].money}}</div>
         </div>
+        
+        <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[1] && Object.keys(this.players).length>=2"> 
+         <div class="numberOCards"> {{ this.players[Object.keys(this.players)[2]].hand.length }}</div>
+<br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[2]].money}}</div>
+        </div>
+        
+         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[2] && Object.keys(this.players).length>=3"> 
+           <div class="numberOCards"> {{ this.players[Object.keys(this.players)[1]].hand.length }}</div>
+           <br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[1]].money}}</div>
+           </div>
+         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[3] && Object.keys(this.players).length==4">
+            <div class="numberOCards"> {{ this.players[Object.keys(this.players)[1]].hand.length }}</div>
+            <br /><br />
+            <div class="moneyOp">${{ this.players[Object.keys(this.players)[1]].money}}</div>
+            </div>
+        </div>
+        </div>
+
        
        
 
@@ -114,7 +209,7 @@
             />
           </div>
         </div>
-        <!--<div class="pHand"> </div>-->
+        
 
         <div class="item">
           Items
@@ -130,7 +225,7 @@
         <div class="pPieces">
           Pieces
           <div class="pieces">
-            <PlayerPieces />
+            <BlackPieces />
           </div>
         </div>
       </div>
@@ -162,7 +257,10 @@
 import CollectorsCard from "@/components/CollectorsCard.vue";
 import CollectorsBuyActions from "@/components/CollectorsBuyActions.vue";
 import CollectorsGameboard from "@/components/CollectorsGameboard.vue";
-import PlayerPieces from "@/components/PlayerPieces.vue";
+import BlackPieces from "@/components/BlackPieces.vue";
+import BluePieces from "@/components/BluePieces.vue";
+import BrownPieces from "@/components/BrownPieces.vue";
+import PurplePieces from "@/components/PurplePieces.vue";
 import PlayerBoard from "@/components/PlayerBoard.vue";
 import OpponentBoard from "@/components/OpponentBoard.vue";
 
@@ -172,7 +270,10 @@ export default {
     CollectorsCard,
     CollectorsBuyActions,
     CollectorsGameboard,
-    PlayerPieces,
+    BlackPieces,
+    BluePieces,
+    PurplePieces,
+    BrownPieces,
     PlayerBoard,
     OpponentBoard,
   },
@@ -360,6 +461,7 @@ footer a:visited {
   grid-column: 1;
   grid-row: 3;
   transform: scale(0.8) translate(-15%, -15%);
+  position: relative;
 }
 .empty1 {
   grid-row: 2;
@@ -376,6 +478,7 @@ footer a:visited {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
+  position: relative;
 }
 .backsideCard1{
   grid-row: 2;
@@ -395,19 +498,20 @@ footer a:visited {
   margin-left: auto;
   margin-right: auto;
   margin-top: 200px;
+  position: relative;
   
 }
 .backsideCard2{
-background-image: url("/images/backsideCard.png");
+transform: scale(0.6) translate(-8%, -30%);
 }
 .opboard3 {
   
   width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+  position: relative;
+  
 }
 .backsideCard3{
-background-image: url("/images/backsideCard.png");
+transform: scale(0.6) translate(110%, -120%);
 }
 .numberOCards{
   top: 1em;
@@ -437,6 +541,56 @@ background-image: url("/images/backsideCard.png");
   grid-row: 9;
   grid-column: 3;
 }
+.piecesOp11{
+  position: absolute;
+  transform: scale(0.5);
+  top: 10%;
+  left: 8%;
+}
+.piecesOp12{
+  position: absolute;
+  transform: scale(0.5);
+  top: 10%;
+  left: 24%;
+
+}
+.pieces1{
+  position: absolute;
+  transform: scale(0.7);
+  top: 5%;
+  left: 12%;
+}
+.pieces2{
+  position: absolute;
+  transform: scale(0.7);
+  top: 5%;
+  left: 27%;
+}
+.piecesOp21{
+  position: absolute;
+  transform: scale(0.5);
+  bottom: 6%;
+  left: 9%;
+  
+}
+.piecesOp22{
+  position: absolute;
+  transform: scale(0.5);
+  bottom: 6%;
+  left: 25%;
+}
+.piecesOp31{
+  position: absolute;
+  transform: scale(0.5);
+  top: 10%;
+  left: 9%;
+}
+.piecesOp32{
+position: absolute;
+transform: scale(0.5);
+top: 10%;
+left: 25%;
+}
 .cardslots {
   display: grid;
   grid-template-columns: repeat(auto-fill, 130px);
@@ -463,6 +617,18 @@ background-image: url("/images/backsideCard.png");
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+  border-radius: 50%;
+}
+.moneyOp{
+  background-color: blue; 
+  border: none;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
   border-radius: 50%;
 }
 
