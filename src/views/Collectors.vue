@@ -77,12 +77,25 @@
          <div class="pBoard">
           <div class="pboard">
             <PlayerBoard />
-            <div class="pieces1">
+            <button class="pieces1" v-on:click="PiecesA()">
             <BluePieces />
-          </div>
-           <div class="pieces2">
+            </button>
+           <button class="pieces2" v-on:click="PiecesA()">
             <BluePieces />
-          </div>
+           </button>
+           
+           <div class="form-popup" id="myForm">
+          <form class="form-container">
+          <h1 class="PopUpText">Actions</h1>
+
+          <button type="button" class="buyItem" v-on:click="buyItem();">Buy Item</button>
+          <button type="button" class="gainSkill" v-on:click="gainSkill()">Gain Skill</button>
+          <button type="button" class="auction" v-on:click="auction()">Auction</button>
+          <button type="button" class="raiseValue" v-on:click="raiseValue()">Raise Value</button>
+          <br>
+          <button type="button" class="cancel" v-on:click="closeForm()">Close</button>
+          </form></div>
+
           </div>
           <br /><br />
           <div>
@@ -417,6 +430,12 @@ export default {
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
       });
     },
+    PiecesA: function (){
+      document.getElementById("myForm").style.display = "block";
+    },
+    closeForm: function() {
+  document.getElementById("myForm").style.display = "none";
+  },
   },
 };
 </script>
@@ -630,6 +649,24 @@ left: 25%;
   font-size: 16px;
   margin: 4px 2px;
   border-radius: 50%;
+}
+.form-popup {
+  display: none;
+  position: fixed;
+  position: center;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+.PopUpText{
+  color: black;
+}
+.form-container .cancel {
+  background-color: red;
 }
 
 @media screen and (max-width: 800px) {
