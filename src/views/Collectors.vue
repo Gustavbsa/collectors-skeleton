@@ -202,16 +202,23 @@
             </button>
           </div>
         </div>
-        <div class="skills">
-          Skills
-          <div class="cardslots">
-            <CollectorsCard
-              v-for="(card, index) in skillsOnSale"
-              :card="card"
-              :key="index"
-            />
-          </div>
+        <br>
+       
+
+      
+           <div class="skills">
+          <CollectorsSkillAction
+            v-if="players[playerId]"
+            :labels="labels"
+            :player="players[playerId]"
+            :skillsOnSale="skillsOnSale"
+            :marketValues="marketValues"
+            :placement="skillPlacement"
+            @buySkill="buySkill($event)"
+            @placeBottle="placeBottle('skill', $event)"
+          />
         </div>
+
         <div class="auction">
           Auction
           <div class="cardslots">
@@ -229,6 +236,16 @@
           <div class="cardslots" v-if="players[playerId]">
             <CollectorsCard
               v-for="(card, index) in players[playerId].items"
+              :card="card"
+              :key="index"
+            />
+          </div>
+        </div>
+        <div class="boughtSkills">
+          boughtSkills
+          <div class="cardslots" v-if="players[playerId]">
+            <CollectorsCard
+              v-for="(card, index) in players[playerId].skills"
               :card="card"
               :key="index"
             />
@@ -276,6 +293,7 @@ import BrownPieces from "@/components/BrownPieces.vue";
 import PurplePieces from "@/components/PurplePieces.vue";
 import PlayerBoard from "@/components/PlayerBoard.vue";
 import OpponentBoard from "@/components/OpponentBoard.vue";
+import CollectorsSkillAction from "@/components/CollectorsSkillAction.vue";
 
 export default {
   name: "Collectors",
@@ -289,6 +307,7 @@ export default {
     BrownPieces,
     PlayerBoard,
     OpponentBoard,
+    CollectorsSkillAction,
   },
   data: function () {
     return {
@@ -401,6 +420,14 @@ export default {
         this.itemsOnSale = d.itemsOnSale;
       }.bind(this)
     );
+     this.$store.state.socket.on(
+      "collectorsSkillBought",
+      function (d) {
+        console.log(d.playerId, "bought a skill");
+        this.players = d.players;
+        this.skillsOnSale = d.skillsOnSale;
+      }.bind(this)
+    );
   },
   methods: {
     selectAll: function (n) {
@@ -424,6 +451,15 @@ export default {
     buyCard: function (card) {
       console.log("buyCard", card);
       this.$store.state.socket.emit("collectorsBuyCard", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        card: card,
+        cost: this.marketValues[card.market] + this.chosenPlacementCost,
+      });
+    },
+    buySkill: function (card) { // sista saken den går igenom!
+      console.log("buySkill", card);
+      this.$store.state.socket.emit("collectorsSkillCard", {
         roomId: this.$route.params.id,
         playerId: this.playerId,
         card: card,
@@ -556,8 +592,12 @@ transform: scale(0.6) translate(110%, -120%);
   grid-row: 8;
   grid-column: 1;
 }
-.pPieces {
+.boughtSkills{
   grid-row: 9;
+  grid-column: 1;
+}
+.pPieces {
+  grid-row: 10;
   grid-column: 3;
 }
 .piecesOp11{
