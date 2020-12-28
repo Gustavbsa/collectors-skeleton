@@ -4,6 +4,7 @@
       {{card.item}} 
       {{card.skill}}
       {{card.market}}
+   
     </div>
 </template>
 

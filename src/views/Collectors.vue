@@ -220,14 +220,16 @@
         </div>
 
         <div class="auction">
-          Auction
-          <div class="cardslots">
-            <CollectorsCard
-              v-for="(card, index) in auctionCards"
-              :card="card"
-              :key="index"
-            />
-          </div>
+          <CollectorsAuction
+            v-if="players[playerId]"
+            :labels="labels"
+            :player="players[playerId]"
+            :auctionCards="auctionCards"
+            :marketValues="marketValues"
+            :placement="auctionPlacement"
+            @buyAuction="buyAuction($event)"
+            @placeBottle="placeBottle('auction', $event)"
+          />
         </div>
         
 
@@ -250,6 +252,31 @@
               :key="index"
             />
           </div>
+        </div>
+         <div class="auctionCard">
+          Auction Cards
+          <br>
+          <div class="cardslots" v-if="boughtAuction">
+            <CollectorsCard
+              v-for="(card, index) in boughtAuction"
+              :card="card"
+              :key="index"
+              :availableAction="card.available"
+              @doAction="getAuction(card)"
+            />
+          </div>
+          <div class="form-auction" id="formAuction">
+          <form class="form-container">
+          <h1 class="PopUpText">Auction</h1>
+
+          <label for="Auction price"><b class="PopUpText">Auction price</b></label>
+          <input type="number" placeholder="Enter price" name="price" id="price" required>
+          <button type="button" class="btn" v-on:click="bid();">Bid</button>
+          <button type="button" class="btn cancel" v-on:click="bidClose()">Close</button>
+          
+          </form>
+          </div>
+         
         </div>
 
         <div class="pPieces">
@@ -294,6 +321,7 @@ import PurplePieces from "@/components/PurplePieces.vue";
 import PlayerBoard from "@/components/PlayerBoard.vue";
 import OpponentBoard from "@/components/OpponentBoard.vue";
 import CollectorsSkillAction from "@/components/CollectorsSkillAction.vue";
+import CollectorsAuction from "@/components/CollectorsAuction.vue";
 
 export default {
   name: "Collectors",
@@ -308,6 +336,7 @@ export default {
     PlayerBoard,
     OpponentBoard,
     CollectorsSkillAction,
+    CollectorsAuction,
   },
   data: function () {
     return {
@@ -341,6 +370,7 @@ export default {
       skillsOnSale: [],
       auctionCards: [],
       playerid: 0,
+      boughtAuction: [],
     };
   },
   computed: {
@@ -381,6 +411,7 @@ export default {
         this.marketValues = d.marketValues;
         this.skillsOnSale = d.skillsOnSale;
         this.auctionCards = d.auctionCards;
+        this.boughtAuction = d.boughtAuction;
         this.buyPlacement = d.placements.buyPlacement;
         this.skillPlacement = d.placements.skillPlacement;
         this.marketPlacement = d.placements.marketPlacement;
@@ -428,6 +459,15 @@ export default {
         this.skillsOnSale = d.skillsOnSale;
       }.bind(this)
     );
+    this.$store.state.socket.on(
+      "collectorsAuctionBought",
+      function (d) {
+        console.log(d.playerId, "bought a auction card");
+        this.players = d.players;
+        this.auctionCards = d.auctionCards;
+        this.boughtAuction = d.boughtAuction;
+      }.bind(this)
+    );
   },
   methods: {
     selectAll: function (n) {
@@ -466,11 +506,43 @@ export default {
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
       });
     },
+     buyAuction: function (card) { 
+      console.log("buyAuction", card);
+      this.$store.state.socket.emit("collectorsAuction", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        card: card,
+        cost: this.marketValues[card.market] + this.chosenPlacementCost,
+      });
+    },
+    auctionBid: function (){
+    document.getElementById("formAuction").style.display = "block";
+    
+    },
+    getAuction: function (card) { 
+      this.auctionPrice = null,
+      this.auctionBid();
+      this.auctionPrice = document.getElementById("price")
+      if (this.auctionPrice){
+      this.$store.state.socket.emit("collectorsGetAuction", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        card: card,
+        cost: this.auctionPrice
+      });
+    }
+    },
     PiecesA: function (){
       document.getElementById("myForm").style.display = "block";
     },
     closeForm: function() {
   document.getElementById("myForm").style.display = "none";
+  },
+  bid: function(){
+  document.getElementById("formAuction").style.display = "none";
+  },
+  bidClose: function() {
+  document.getElementById("formAuction").style.display = "none";
   },
   },
 };
@@ -596,6 +668,10 @@ transform: scale(0.6) translate(110%, -120%);
   grid-row: 9;
   grid-column: 1;
 }
+.auctionCard{
+  grid-row: 5;
+  grid-column: 2;
+}
 .pPieces {
   grid-row: 10;
   grid-column: 3;
@@ -695,6 +771,10 @@ left: 25%;
   position: fixed;
   position: center;
   border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+.form-auction {
+  display: none;
   z-index: 9;
 }
 .form-container {
