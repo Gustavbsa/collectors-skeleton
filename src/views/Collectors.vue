@@ -271,7 +271,7 @@
 
           <label for="Auction price"><b class="PopUpText">Auction price</b></label>
           <input type="number" placeholder="Enter price" name="price" id="price" required>
-          <button type="button" class="btn" v-on:click="bid();">Bid</button>
+          <button type="button" class="btn" v-on:click="bid(players[playerId].money);">Bid</button>
           <button type="button" class="btn cancel" v-on:click="bidClose()">Close</button>
           
           </form>
@@ -468,6 +468,15 @@ export default {
         this.boughtAuction = d.boughtAuction;
       }.bind(this)
     );
+    this.$store.state.socket.on(
+      "collectorsAuctionBid",
+      function (d) {
+        console.log(d.playerId, "bought a auction card through bid");
+        this.players = d.players;
+        this.auctionCards = d.auctionCards;
+        this.boughtAuction = d.boughtAuction;
+      }.bind(this)
+    );
   },
   methods: {
     selectAll: function (n) {
@@ -515,22 +524,12 @@ export default {
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
       });
     },
-    auctionBid: function (){
-    document.getElementById("formAuction").style.display = "block";
-    
-    },
+  
     getAuction: function (card) { 
-      this.auctionPrice = null,
-      this.auctionBid();
-      this.auctionPrice = document.getElementById("price")
-      if (this.auctionPrice){
-      this.$store.state.socket.emit("collectorsGetAuction", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        card: card,
-        cost: this.auctionPrice
-      });
-    }
+      this.auctionPrice = -1,
+      this.auctionCard = card;
+      console.log(this.auctionPrice, "hej")
+      document.getElementById("formAuction").style.display = "block";
     },
     PiecesA: function (){
       document.getElementById("myForm").style.display = "block";
@@ -538,8 +537,19 @@ export default {
     closeForm: function() {
   document.getElementById("myForm").style.display = "none";
   },
-  bid: function(){
+  bid: function(pMoney){
+  this.auctionPrice = document.getElementById("price").value;
+  console.log(this.auctionPrice, "bid");
   document.getElementById("formAuction").style.display = "none";
+    if (this.auctionPrice>=0 && pMoney>=this.auctionPrice){
+      this.$store.state.socket.emit("collectorsGetAuction", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        card: this.auctionCard,
+        cost: this.auctionPrice
+      });
+    }
+    this.auctionCard={};
   },
   bidClose: function() {
   document.getElementById("formAuction").style.display = "none";
