@@ -227,8 +227,8 @@
             :auctionCards="auctionCards"
             :marketValues="marketValues"
             :placement="auctionPlacement"
-            @buyAuction="buyAuction($event)"
             @placeBottle="placeBottle('auction', $event)"
+            @buyAuction="buyAuction($event)"
           />
         </div>
         
@@ -278,6 +278,20 @@
           </div>
          
         </div>
+      <div class="market">
+      <CollectorsMarket
+        v-if="players[playerId]"
+            :labels="labels"
+            :player="players[playerId]"
+            :market="market"
+            :skillsOnSale="skillsOnSale"
+            :auctionCards="auctionCards"
+            :marketValues="marketValues"
+            :placement="marketPlacement"
+            @buyMarket="buyMarket($event)"
+            @placeBottle="placeBottle('market', $event)"
+            />   
+      </div>
 
         <div class="pPieces">
           Pieces
@@ -322,6 +336,7 @@ import PlayerBoard from "@/components/PlayerBoard.vue";
 import OpponentBoard from "@/components/OpponentBoard.vue";
 import CollectorsSkillAction from "@/components/CollectorsSkillAction.vue";
 import CollectorsAuction from "@/components/CollectorsAuction.vue";
+import CollectorsMarket from "@/components/CollectorsMarket.vue";
 
 export default {
   name: "Collectors",
@@ -337,6 +352,7 @@ export default {
     OpponentBoard,
     CollectorsSkillAction,
     CollectorsAuction,
+    CollectorsMarket,
   },
   data: function () {
     return {
@@ -371,6 +387,11 @@ export default {
       auctionCards: [],
       playerid: 0,
       boughtAuction: [],
+      market: [],
+      isMarket: false,
+      twoCards: true,
+      costMarket:-1,
+      marketAction:""
     };
   },
   computed: {
@@ -477,6 +498,33 @@ export default {
         this.boughtAuction = d.boughtAuction;
       }.bind(this)
     );
+     this.$store.state.socket.on(
+      "collectorsMarketBought",
+      function (d) {
+        console.log(d.playerId, "bought a card from market");
+        this.players = d.players;
+        this.market = d.market;
+        this.auctionCards  = d.auctionCards;
+        this.skillsOnSale = d.skillsOnSale;
+        if(this.costMarket==1){
+            this.twoCards=false;
+        }
+        if(this.twoCards){
+          this.twoCards=false;
+          console.log("return", this.marketAction, this.costMarket);
+          if(this.costMarket==0){
+            console.log("twoCards",this.marketPlacement[0]);
+            this.placeBottle(this.marketPlacement[0]);
+          }
+          else{
+            this.placeBottle(this.marketPlacement[1]);
+          }
+          
+          this.placeBottle(this.marketAction,this.costMarket);
+        }
+      }.bind(this)
+      
+    );
   },
   methods: {
     selectAll: function (n) {
@@ -490,6 +538,15 @@ export default {
         action: action,
         cost: cost,
       });
+      console.log(action, "the Action");
+        if(action=='market'){
+          this.isMarket=true;
+          this.costMarket=cost;
+          this.marketAction=action;
+        }
+        else{
+          this.isMarket=false;
+        }
     },
     drawCard: function () {
       this.$store.state.socket.emit("collectorsDrawCard", {
@@ -498,6 +555,7 @@ export default {
       });
     },
     buyCard: function (card) {
+      if(!this.isMarket){
       console.log("buyCard", card);
       this.$store.state.socket.emit("collectorsBuyCard", {
         roomId: this.$route.params.id,
@@ -505,8 +563,18 @@ export default {
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
       });
+      }
+       else{
+        this.$store.state.socket.emit("collectorsMarket", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        card: card,
+        cost: this.marketValues[card.market] + this.chosenPlacementCost,
+      }); 
+      }
     },
     buySkill: function (card) { // sista saken den går igenom!
+      if(!this.isMarket){
       console.log("buySkill", card);
       this.$store.state.socket.emit("collectorsSkillCard", {
         roomId: this.$route.params.id,
@@ -514,8 +582,19 @@ export default {
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
       });
+      }
+      else{
+        this.$store.state.socket.emit("collectorsMarket", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        card: card,
+        cost: this.marketValues[card.market] + this.chosenPlacementCost,
+        typeAction: 1,
+      }); 
+      }
     },
      buyAuction: function (card) { 
+      if(!this.isMarket){ 
       console.log("buyAuction", card);
       this.$store.state.socket.emit("collectorsAuction", {
         roomId: this.$route.params.id,
@@ -523,6 +602,27 @@ export default {
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
       });
+      }
+      else{
+        this.$store.state.socket.emit("collectorsMarket", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        card: card,
+        cost: this.marketValues[card.market] + this.chosenPlacementCost,
+        typeAction: 2,
+      }); 
+      }
+    },
+    buyMarket: function (card) {
+      console.log("buyMarket", card);
+      this.$store.state.socket.emit("collectorsMarket", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        card: card,
+        cost: this.marketValues[card.market] + this.chosenPlacementCost,
+        typeAction: 3,
+      });
+      console.log(card);
     },
   
     getAuction: function (card) { 

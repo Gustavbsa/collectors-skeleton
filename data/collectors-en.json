@@ -4,5 +4,6 @@
 	"endTurn": "End turn",
 	"buyCard": "Buy a card",
 	"buySkill": "Buy a skill",
-	"auction": "Auction a card"
+	"auction": "Auction a card",
+	"market": "Raise value"
 }
