@@ -84,7 +84,7 @@
             <BluePieces />
            </button>
            
-           <div class="form-popup" id="myForm">
+          <div class="form-popup" id="myForm">
           <form class="form-container">
           <h1 class="PopUpText">Actions</h1>
 
@@ -107,10 +107,21 @@
               v-for="(card, index) in players[playerId].hand"
               :card="card"
               :availableAction="card.available"
-              @doAction="buyCard(card)"
+              @doAction="selectOp(card)"
               :key="index"
             />
           </div>
+          <div class="form-popup" id="formHand">
+          <form class="form-container">
+          <h1 class="PopUpText">Actions</h1>
+
+          <button type="button" class="buyItem" v-on:click="buyItem();">Buy Item</button>
+          <button type="button" class="gainSkill" v-on:click="gainSkill()">Gain Skill</button>
+          <button type="button" class="auction" v-on:click="putAuction()">Auction</button>
+          <button type="button" class="raiseValue" v-on:click="raiseValue()">Raise Value</button>
+          <br>
+          <button type="button" class="cancel" v-on:click="closeFormHand()">Close</button>
+          </form></div>
         </div>
 
         <div class="backsideCard1"> <img src="/images/backsideCard.png" height= "100%" width= "30%" class="opac">
@@ -292,6 +303,16 @@
             @placeBottle="placeBottle('market', $event)"
             />   
       </div>
+      <div class="work">
+        <CollectorsWork
+        v-if="players[playerId]"
+        :labels="labels"
+        :player="players[playerId]"
+        :placement="workPlacement"
+        @placeBottle="placeBottle('work', $event), buyWork($event)"
+        /> <!-- hur tar man emot two input i buyWork? från CollectorWork-->
+      </div>
+
 
         <div class="pPieces">
           Pieces
@@ -337,6 +358,7 @@ import OpponentBoard from "@/components/OpponentBoard.vue";
 import CollectorsSkillAction from "@/components/CollectorsSkillAction.vue";
 import CollectorsAuction from "@/components/CollectorsAuction.vue";
 import CollectorsMarket from "@/components/CollectorsMarket.vue";
+import CollectorsWork from "@/components/CollectorsWork.vue";
 
 export default {
   name: "Collectors",
@@ -353,6 +375,7 @@ export default {
     CollectorsSkillAction,
     CollectorsAuction,
     CollectorsMarket,
+    CollectorsWork,
   },
   data: function () {
     return {
@@ -374,6 +397,7 @@ export default {
       skillPlacement: [],
       auctionPlacement: [],
       marketPlacement: [],
+      workPlacement: [],
       chosenPlacementCost: null,
       marketValues: {
         fastaval: 0,
@@ -392,6 +416,7 @@ export default {
       twoCards: true,
       costMarket:-1,
       marketAction:""
+      
     };
   },
   computed: {
@@ -437,6 +462,7 @@ export default {
         this.skillPlacement = d.placements.skillPlacement;
         this.marketPlacement = d.placements.marketPlacement;
         this.auctionPlacement = d.placements.auctionPlacement;
+        this.workPlacement = d.placements.workPlacement;
       }.bind(this)
     );
 
@@ -447,6 +473,7 @@ export default {
         this.skillPlacement = d.skillPlacement;
         this.marketPlacement = d.marketPlacement;
         this.auctionPlacement = d.auctionPlacement;
+        this.workPlacement = d.workPlacement;
       }.bind(this)
     );
 
@@ -472,6 +499,14 @@ export default {
         this.itemsOnSale = d.itemsOnSale;
       }.bind(this)
     );
+    this.$store.state.socket.on(
+      " collectorsWorkBought",
+      function (d) {
+        console.log(d.playerId, "bought a work");
+        this.players = d.players;
+      }.bind(this)
+    );
+   
      this.$store.state.socket.on(
       "collectorsSkillBought",
       function (d) {
@@ -531,6 +566,7 @@ export default {
       n.target.select();
     },
     placeBottle: function (action, cost) {
+      console.log("placeBottle in Collectors");
       this.chosenPlacementCost = cost;
       this.$store.state.socket.emit("collectorsPlaceBottle", {
         roomId: this.$route.params.id,
@@ -553,6 +589,26 @@ export default {
         roomId: this.$route.params.id,
         playerId: this.playerId,
       });
+    },
+    selectOp: function(card){
+      this.handCard = card;
+      document.getElementById("formHand").style.display = "block";
+    },
+    buyItem: function(){
+      this.buyCard(this.handCard);
+       document.getElementById("formHand").style.display = "none";
+    },
+    gainSkill: function(){
+      this.buySkill(this.handCard);
+       document.getElementById("formHand").style.display = "none";
+    },
+    putAuction: function(){
+      this.buyAuction(this.handCard);
+      document.getElementById("formHand").style.display = "none";
+    },
+    raiseValue: function(){
+      this.buyMarket(this.handCard);
+      document.getElementById("formHand").style.display = "none";
     },
     buyCard: function (card) {
       if(!this.isMarket){
@@ -624,6 +680,16 @@ export default {
       });
       console.log(card);
     },
+    buyWork: function(cost,index){
+      console.log("Collectors index", index);
+      console.log("Collectors cost", cost);
+      this.$store.state.socket.emit("collectorsWork", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        cost: cost,
+        index: index,
+      });
+    },
   
     getAuction: function (card) { 
       this.auctionPrice = -1,
@@ -636,6 +702,9 @@ export default {
     },
     closeForm: function() {
   document.getElementById("myForm").style.display = "none";
+  },
+  closeFormHand: function(){
+    document.getElementById("formHand").style.display = "none";
   },
   bid: function(pMoney){
   this.auctionPrice = document.getElementById("price").value;
@@ -781,6 +850,10 @@ transform: scale(0.6) translate(110%, -120%);
 .auctionCard{
   grid-row: 5;
   grid-column: 2;
+}
+.work{
+grid-row: 10;
+grid-column: 1;
 }
 .pPieces {
   grid-row: 10;

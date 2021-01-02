@@ -70,14 +70,23 @@ function sockets(io, socket, data) {
           players: data.getPlayers(d.roomId),
           market: data.getMarket(d.roomId),
           auctionCards: data.getAuctionCards(d.roomId), 
-          skillsOnSale: data.getSkillsOnSale(d.roomId) 
+          skillsOnSale: data.getSkillsOnSale(d.roomId),
+         
+        }
+      );
+    });
+    socket.on('collectorsWork', function(d) { 
+      data.buyWork(d.roomId, d.playerId, d.cost, d.index),
+      io.to(d.roomId).emit('collectorsWorkBought', { 
+          playerId: d.playerId,
+          players: data.getPlayers(d.roomId),
         }
       );
     });
 
     
     socket.on('collectorsPlaceBottle', function(d) {
-      data.placeBottle(d.roomId, d.playerId, d.action, d.cost);
+      data.placeBottle(d.roomId, d.playerId, d.action, d.cost, d.index);
       io.to(d.roomId).emit('collectorsBottlePlaced', data.getPlacements(d.roomId),
       );
     });

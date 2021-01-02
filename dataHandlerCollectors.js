@@ -82,6 +82,11 @@ Data.prototype.createRoom = function(roomId, playerCount, lang="en") {
   room.marketPlacement = [ {cost:0, playerId: null},
                            {cost:2, playerId: null},
                            {cost:1, playerId: null} ];
+  room.workPlacement = [{cost:0, playerId: null, cards: 2, index: 1},
+                        {cost:1, playerId: null, cards: 0, index: 2},
+                        {cost:-1, playerId: null, cards: 0, index: 3},
+                        {cost:2, playerId: null, cards: 0, index: 4},
+                        {cost:-2, playerId: null, cards: 1, index: 5}];                         
   this.rooms[roomId] = room;
 }
 
@@ -102,7 +107,7 @@ Data.prototype.joinGame = function (roomId, playerId) {
     }
     else if (Object.keys(room.players).length < room.playerCount) {
       console.log("Player", playerId, "joined for the first time");
-      room.players[playerId] = { hand: [], 
+      room.players[playerId] = { hand: room.deck.splice(0, 3), 
                                  money: 1,
                                  points: 0,
                                  skills: [],
@@ -170,6 +175,29 @@ Data.prototype.buyCard = function (roomId, playerId, card, cost) {
       }
     }
     room.players[playerId].items.push(...c);
+    room.players[playerId].money -= cost;
+    
+  }
+}
+Data.prototype.buyWork = function (roomId, playerId, cost, index) {
+  let room = this.rooms[roomId];
+  if (typeof room !== 'undefined') {
+    let cardOne = null;
+    let cardTwo = null;
+    console.log("buyWork", index);
+    if(index==1){
+      console.log("index 1", room.players[playerId].hand.splice(0,1));
+      cardOne = room.players[playerId].hand.splice(0,1);
+      cardTwo = room.players[playerId].hand.splice(1,1); 
+      room.players[playerId].income.push(...cardOne);
+      room.players[playerId].income.push(...cardTwo);
+    }
+    if(index==5){
+      console.log("index 5");
+      cardOne = room.players[playerId].hand.splice(0,1);
+      room.players[playerId].income.push(...cardOne);
+    }
+    
     room.players[playerId].money -= cost;
     
   }
@@ -325,6 +353,9 @@ Data.prototype.buyMarket = function (roomId, playerId, card, cost, typeAction) {
     room.market.push(...c);  // titta mer på detta sen!!!!
     room.players[playerId].money -= cost;
     console.log(room.market, "this is market");
+    console.log(room.market[room.market.length-1].market);
+   
+
     
   }
 }
@@ -345,14 +376,19 @@ Data.prototype.placeBottle = function (roomId, playerId, action, cost) {
     else if (action === "market") {
       activePlacement = room.marketPlacement;
     }
+    else if (action === "work") {
+      activePlacement = room.workPlacement;
+    }
     for(let i = 0; i < activePlacement.length; i += 1) {
         if( activePlacement[i].cost === cost && 
-            activePlacement[i].playerId === null ) {
+            activePlacement[i].playerId === null) {
           activePlacement[i].playerId = playerId;
           break;
         }
     }
-  }
+  
+  console.log("placeBottle in dataHandler");
+}
 }
 /* returns the hand of the player */
 Data.prototype.getCards = function (roomId, playerId) {
@@ -370,7 +406,8 @@ Data.prototype.getPlacements = function(roomId){
     return { buyPlacement: room.buyPlacement,
              skillPlacement: room.skillPlacement,
              auctionPlacement: room.auctionPlacement,
-             marketPlacement: room.marketPlacement }
+             marketPlacement: room.marketPlacement,
+            workPlacement: room.workPlacement}
   }
   else return {};
 }
@@ -387,6 +424,7 @@ Data.prototype.getMarketValues = function(roomId){
   let room = this.rooms[roomId];
   if (typeof room !== 'undefined') {
     return room.market.reduce(function(acc, curr) {
+      console.log("hoh", acc, curr);
       acc[curr.market] += 1;
     }, 
     { fastaval: 0, 
