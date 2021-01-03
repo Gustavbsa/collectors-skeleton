@@ -113,7 +113,8 @@ Data.prototype.joinGame = function (roomId, playerId) {
                                  skills: [],
                                  items: [],
                                  income: [],
-                                 secret: [] };
+                                 secret: [],
+                                bottles: 2 };
       return true;
     }
     console.log("Player", playerId, "was declined due to player limit");
@@ -184,18 +185,27 @@ Data.prototype.buyWork = function (roomId, playerId, cost, index) {
   if (typeof room !== 'undefined') {
     let cardOne = null;
     let cardTwo = null;
-    console.log("buyWork", index);
     if(index==1){
-      console.log("index 1", room.players[playerId].hand.splice(0,1));
       cardOne = room.players[playerId].hand.splice(0,1);
-      cardTwo = room.players[playerId].hand.splice(1,1); 
+      cardTwo = room.players[playerId].hand.splice(0,1); 
       room.players[playerId].income.push(...cardOne);
       room.players[playerId].income.push(...cardTwo);
     }
+    if(index==3){
+    for(let i=0; i <= 1; i += 1){
+      let card = room.deck.pop();
+      room.players[playerId].hand.push(card);
+    }  
+    }
+    if(index==4){
+      let card = room.deck.pop();
+      room.players[playerId].hand.push(card);
+    }
     if(index==5){
-      console.log("index 5");
       cardOne = room.players[playerId].hand.splice(0,1);
       room.players[playerId].income.push(...cardOne);
+      let card = room.deck.pop();
+      room.players[playerId].hand.push(card);
     }
     
     room.players[playerId].money -= cost;
@@ -387,8 +397,6 @@ Data.prototype.placeBottle = function (roomId, playerId, action, cost) {
           break;
         }
     }
-  
-  console.log("placeBottle in dataHandler");
 }
 }
 /* returns the hand of the player */

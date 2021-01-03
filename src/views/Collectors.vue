@@ -88,10 +88,11 @@
           <form class="form-container">
           <h1 class="PopUpText">Actions</h1>
 
-          <button type="button" class="buyItem" v-on:click="buyItem();">Buy Item</button>
-          <button type="button" class="gainSkill" v-on:click="gainSkill()">Gain Skill</button>
-          <button type="button" class="auction" v-on:click="auction()">Auction</button>
-          <button type="button" class="raiseValue" v-on:click="raiseValue()">Raise Value</button>
+          <button type="button" class="buyItem" v-on:click="buyItemBottle();">Buy Item</button>
+          <button type="button" class="gainSkill" v-on:click="gainSkillBottle()">Gain Skill</button>
+          <button type="button" class="auction" v-on:click="auctionBottle()">Auction</button>
+          <button type="button" class="raiseValue" v-on:click="raiseValueBottle()">Raise Value</button>
+          <button type="button" class="work" v-on:click="workBottle()">work</button>
           <br>
           <button type="button" class="cancel" v-on:click="closeForm()">Close</button>
           </form></div>
@@ -113,9 +114,9 @@
           </div>
           <div class="form-popup" id="formHand">
           <form class="form-container">
-          <h1 class="PopUpText">Actions</h1>
+          <h1 class="PopUpText">Actions from Hand</h1>
 
-          <button type="button" class="buyItem" v-on:click="buyItem();">Buy Item</button>
+          <button type="button" class="buyItem" v-on:click="buyItem()">Buy Item</button>
           <button type="button" class="gainSkill" v-on:click="gainSkill()">Gain Skill</button>
           <button type="button" class="auction" v-on:click="putAuction()">Auction</button>
           <button type="button" class="raiseValue" v-on:click="raiseValue()">Raise Value</button>
@@ -188,15 +189,9 @@
             </div>
         </div>
         </div>
-
-       
-       
-
-       
-        
         
         {{ buyPlacement }} {{ chosenPlacementCost }}
-        <div class="buyCard">
+        <div class="actions" v-if="this.currentAction=='buyItem'">
           <CollectorsBuyActions
             v-if="players[playerId]"
             :labels="labels"
@@ -217,7 +212,7 @@
        
 
       
-           <div class="skills">
+           <div class="actions" v-if="this.currentAction=='buySkill'">
           <CollectorsSkillAction
             v-if="players[playerId]"
             :labels="labels"
@@ -230,7 +225,7 @@
           />
         </div>
 
-        <div class="auction">
+        <div class="actions" v-if="this.currentAction=='buyAuction'">
           <CollectorsAuction
             v-if="players[playerId]"
             :labels="labels"
@@ -289,7 +284,7 @@
           </div>
          
         </div>
-      <div class="market">
+      <div class="actions" v-if="this.currentAction=='buyMarket'">
       <CollectorsMarket
         v-if="players[playerId]"
             :labels="labels"
@@ -303,13 +298,14 @@
             @placeBottle="placeBottle('market', $event)"
             />   
       </div>
-      <div class="work">
+      <div class="actions" v-if="this.currentAction=='buyWork'">
         <CollectorsWork
         v-if="players[playerId]"
         :labels="labels"
         :player="players[playerId]"
         :placement="workPlacement"
-        @placeBottle="placeBottle('work', $event), buyWork($event)"
+        @placeBottle="placeBottle('work', $event)"
+        @buyWork="buyWork($event)"
         /> <!-- hur tar man emot two input i buyWork? från CollectorWork-->
       </div>
 
@@ -415,7 +411,8 @@ export default {
       isMarket: false,
       twoCards: true,
       costMarket:-1,
-      marketAction:""
+      marketAction:"",
+      currentAction:""
       
     };
   },
@@ -500,7 +497,7 @@ export default {
       }.bind(this)
     );
     this.$store.state.socket.on(
-      " collectorsWorkBought",
+      "collectorsWorkBought",
       function (d) {
         console.log(d.playerId, "bought a work");
         this.players = d.players;
@@ -599,6 +596,26 @@ export default {
       this.buyCard(this.handCard);
        document.getElementById("formHand").style.display = "none";
     },
+    buyItemBottle: function(){
+      this.currentAction='buyItem';
+      document.getElementById("myForm").style.display = "none";
+    },
+    gainSkillBottle: function(){
+      this.currentAction='buySkill';
+      document.getElementById("myForm").style.display = "none";
+    },
+    auctionBottle: function(){
+      this.currentAction='buyAuction';
+      document.getElementById("myForm").style.display = "none";
+    },
+    raiseValueBottle: function(){
+      this.currentAction='buyMarket';
+      document.getElementById("myForm").style.display = "none";  
+    },
+    workBottle: function(){
+      this.currentAction='buyWork';
+      document.getElementById("myForm").style.display = "none"; 
+    },
     gainSkill: function(){
       this.buySkill(this.handCard);
        document.getElementById("formHand").style.display = "none";
@@ -681,14 +698,15 @@ export default {
       });
       console.log(card);
     },
-    buyWork: function(cost,index){
-      console.log("Collectors index", index);
-      console.log("Collectors cost", cost);
+    buyWork: function(event){
+      console.log("Collectors p", event);
+      console.log("Collectors index", event.index);
+      console.log("Collectors cost", event.cost);
       this.$store.state.socket.emit("collectorsWork", {
         roomId: this.$route.params.id,
         playerId: this.playerId,
-        cost: cost,
-        index: index,
+        cost: event.cost,
+        index: event.index,
       });
     },
   
@@ -827,6 +845,10 @@ transform: scale(0.6) translate(110%, -120%);
   color: white;
   position:absolute;
 
+}
+.actions{
+  grid-row: 4;
+  grid-column: 1;
 }
 .buyCard {
   grid-row: 4;

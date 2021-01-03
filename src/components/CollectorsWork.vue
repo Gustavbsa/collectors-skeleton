@@ -6,7 +6,7 @@
           <button
             v-if="p.playerId===null"
             :disabled="cannotAfford(p.cost,p.cards)" 
-            @click="placeBottle(p)">
+            @click="placeBottle(p),buyWork(p)">
             ${{p.cost}}
           </button>
           
@@ -54,9 +54,13 @@ name: 'CollectorsWork',
     },
     placeBottle: function (p) {
       this.$emit('placeBottle', p.cost);
-      console.log("CollectorsWork index",p.index);
-      this.$emit('buyWork',p.cost, p.index);
+    
     },
+    buyWork: function (p){
+      console.log("CollectorsWork index",p.index);
+      console.log("CollectorsWork p ", p);
+      this.$emit('buyWork',p);
+    }
   }
 }
 </script>
