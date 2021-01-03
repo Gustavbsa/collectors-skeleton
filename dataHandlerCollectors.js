@@ -354,6 +354,7 @@ Data.prototype.buyMarket = function (roomId, playerId, card, cost, typeAction) {
     room.players[playerId].money -= cost;
     console.log(room.market, "this is market");
     console.log(room.market[room.market.length-1].market);
+    this.getMarketValues(room);
    
 
     

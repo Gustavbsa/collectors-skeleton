@@ -71,6 +71,7 @@ function sockets(io, socket, data) {
           market: data.getMarket(d.roomId),
           auctionCards: data.getAuctionCards(d.roomId), 
           skillsOnSale: data.getSkillsOnSale(d.roomId),
+          marketValues: data.getMarketValues(d.roomId),
          
         }
       );

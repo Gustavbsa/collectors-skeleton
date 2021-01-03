@@ -541,6 +541,7 @@ export default {
         this.market = d.market;
         this.auctionCards  = d.auctionCards;
         this.skillsOnSale = d.skillsOnSale;
+        this.marketValues = d.marketValues;
         if(this.costMarket==1){
             this.twoCards=false;
         }
