@@ -292,7 +292,10 @@
             :auctionCards="auctionCards"
             :marketValues="marketValues"
             :placement="marketPlacement"
-            @buyMarket="buyMarket($event)"
+            :secondAction="secondAction"
+            
+            @buySkill="buySkill($event)"
+            @buyAuction="buyAuction($event)"
             @placeBottle="placeBottle('market', $event)"
             />   
       </div>
@@ -304,7 +307,7 @@
         :placement="workPlacement"
         @placeBottle="placeBottle('work', $event)"
         @buyWork="buyWork($event)"
-        /> <!-- hur tar man emot two input i buyWork? från CollectorWork-->
+        /> 
       </div>
 
 
@@ -410,7 +413,8 @@ export default {
       twoCards: true,
       costMarket:-1,
       marketAction:"",
-      currentAction:"",  
+      currentAction:"",
+      secondAction:false,
     };
   },
   computed: {
@@ -543,13 +547,8 @@ export default {
           this.twoCards=false;
           console.log("return", this.marketAction, this.costMarket);
           if(this.costMarket==0){
-            console.log("twoCards",this.marketPlacement[0]);
-            this.placeBottle(this.marketPlacement[0]);
+            this.secondAction = true;
           }
-          else{
-            this.placeBottle(this.marketPlacement[1]);
-          }
-          
           this.placeBottle(this.marketAction,this.costMarket);
         }
       }.bind(this)
@@ -622,12 +621,15 @@ export default {
       document.getElementById("formHand").style.display = "none";
     },
     raiseValue: function(){
-      this.buyMarket(this.handCard);
+      if(this.isMarket){
+      console.log("action", this.marketAction);  
+      this.buyAuction(this.handCard);
+      this.isMarket=false;
       document.getElementById("formHand").style.display = "none";
+      }
     },
     //funktioner kopplat till datahandlerCollectors
     buyCard: function (card) {
-      if(!this.isMarket){
       console.log("buyCard", card);
       this.$store.state.socket.emit("collectorsBuyCard", {
         roomId: this.$route.params.id,
@@ -635,17 +637,8 @@ export default {
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
       });
-      }
-       else{
-        this.$store.state.socket.emit("collectorsMarket", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        card: card,
-        cost: this.marketValues[card.market] + this.chosenPlacementCost,
-      }); 
-      }
     },
-    buySkill: function (card) { // sista saken den går igenom!
+    buySkill: function (card) {
       if(!this.isMarket){
       console.log("buySkill", card);
       this.$store.state.socket.emit("collectorsSkillCard", {
@@ -662,6 +655,7 @@ export default {
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
         typeAction: 1,
+        secondAction: this.secondAction,
       }); 
       }
     },
@@ -682,9 +676,10 @@ export default {
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
         typeAction: 2,
+        secondAction: this.secondAction,
       }); 
       }
-    },
+    },/*
     buyMarket: function (card) {
       console.log("buyMarket", card);
       this.$store.state.socket.emit("collectorsMarket", {
@@ -695,7 +690,7 @@ export default {
         typeAction: 3,
       });
       console.log(card);
-    },
+    },*/
     buyWork: function(event){
       console.log("Collectors p", event);
       console.log("Collectors index", event.index);

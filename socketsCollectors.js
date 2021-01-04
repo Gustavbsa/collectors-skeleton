@@ -64,7 +64,7 @@ function sockets(io, socket, data) {
       );
     });
     socket.on('collectorsMarket', function(d) { 
-      data.buyMarket(d.roomId, d.playerId, d.card, d.cost, d.typeAction),
+      data.buyMarket(d.roomId, d.playerId, d.card, d.cost, d.typeAction, d.secondAction),
       io.to(d.roomId).emit('collectorsMarketBought', { 
           playerId: d.playerId,
           players: data.getPlayers(d.roomId),

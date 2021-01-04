@@ -5,8 +5,7 @@
         <div v-for="(card, index) in market" :key="index">
           <CollectorsCard 
             :card="card" 
-            :availableAction="card.available" 
-            @doAction="buyMarket(card)"/> 
+            /> 
           {{ cardCost(card) }}
         </div>
       </div>
@@ -30,6 +29,28 @@
         
         </div>
       </div>
+      <h1>{{ labels.buySkill }}</h1>
+      <div class="buy-cards">
+        <div v-for="(card, index) in skillsOnSale" :key="index">
+          <CollectorsCard 
+            :card="card" 
+            :availableAction="card.available" 
+            @doAction="buySkill(card)"/> 
+          {{ cardCost(card) }}
+        </div>
+      </div>
+       <h1>{{ labels.auction }}</h1>
+      <div class="buy-cards">
+        <div v-for="(card, index) in auctionCards" :key="index">
+          <CollectorsCard 
+            :card="card" 
+            :availableAction="card.available" 
+            @doAction="buyAuction(card)"/> 
+          {{ cardCost(card) }}
+        </div>
+      </div>
+
+
     </div>
    
 </template>
@@ -50,6 +71,12 @@ export default {
     placement: Array,
     skillsOnSale: Array,
     auctionCards: Array,
+    secondAction: Boolean,
+  },
+  watch:{
+    secondAction: function(){
+      this.highlightAvailableCards(0);
+    }
   },
   methods: {
     cannotAfford: function (cost) {
@@ -88,9 +115,16 @@ export default {
       }
     },
 
-    buyMarket: function (card) {
+    
+    buySkill: function (card) {
       if (card.available) {
-        this.$emit('buyMarket', card)
+        this.$emit('buySkill', card)
+        this.highlightAvailableCards()
+      }
+    },
+    buyAuction: function (card) {
+      if (card.available) {
+        this.$emit('buyAuction', card)
         this.highlightAvailableCards()
       }
     }
