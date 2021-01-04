@@ -55,7 +55,7 @@ export default {
         if (cost + this.marketValues[key] < minCost)
           minCost = cost + this.marketValues[key]
       }
-      return (this.player.money < minCost);
+      return (this.player.money < minCost || this.player.bottles<1);
     },
     cardCost: function (card) {
       return this.marketValues[card.market];

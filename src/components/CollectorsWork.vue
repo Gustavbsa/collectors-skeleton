@@ -47,7 +47,7 @@ name: 'CollectorsWork',
 
     cannotAfford: function (cost, numOfCards) {
       this.tooFewCards(numOfCards);  
-      return (this.player.money < cost);
+      return (this.player.money < cost || this.player.bottles<1);
     },
     tooFewCards: function(numOfCards){
         return(this.player.hand.length < numOfCards);

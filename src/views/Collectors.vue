@@ -37,6 +37,7 @@
             <PurplePieces />
           </div>
           </div>
+          <br><br><br>
           <div class="backsideCard3"> <img src="/images/backsideCard.png" height= "100%" width= "30%" class="opac">
         <div v-if="this.$store.state.playerId==Object.keys(this.players)[0]">
         <div class="numberOCards">{{ this.players[Object.keys(this.players)[3]].hand.length }} </div>
@@ -77,16 +78,10 @@
          <div class="pBoard">
           <div class="pboard">
             <PlayerBoard />
-            <button class="pieces1" v-on:click="PiecesA()">
-            <BluePieces />
-            </button>
-           <button class="pieces2" v-on:click="PiecesA()">
-            <BluePieces />
-           </button>
            
           <div class="form-popup" id="myForm">
           <form class="form-container">
-          <h1 class="PopUpText">Actions</h1>
+          <h1 class="PopUpText">Actions available {{players[playerId].bottles}}</h1>
 
           <button type="button" class="buyItem" v-on:click="buyItemBottle();">Buy Item</button>
           <button type="button" class="gainSkill" v-on:click="gainSkillBottle()">Gain Skill</button>
@@ -100,7 +95,10 @@
           </div>
           <br /><br />
           <div>
-            <button class="shape">${{ players[playerId].money }}</button>
+            <button class="shape">${{ players[playerId].money }}</button> 
+            <button class="pieces1" v-on:click="PiecesA()">
+            <BluePieces />
+            </button>
           </div>
             Hand
           <div class="cardslots" v-if="players[playerId]">
@@ -412,8 +410,7 @@ export default {
       twoCards: true,
       costMarket:-1,
       marketAction:"",
-      currentAction:""
-      
+      currentAction:"",  
     };
   },
   computed: {
@@ -628,6 +625,7 @@ export default {
       this.buyMarket(this.handCard);
       document.getElementById("formHand").style.display = "none";
     },
+    //funktioner kopplat till datahandlerCollectors
     buyCard: function (card) {
       if(!this.isMarket){
       console.log("buyCard", card);
@@ -850,22 +848,6 @@ transform: scale(0.6) translate(110%, -120%);
   grid-row: 4;
   grid-column: 1;
 }
-.buyCard {
-  grid-row: 4;
-  grid-column: 1;
-}
-.skills {
-  grid-row: 5;
-  grid-column: 1;
-}
-.auction {
-  grid-row: 6;
-  grid-column: 1;
-}
-.item {
-  grid-row: 8;
-  grid-column: 1;
-}
 .boughtSkills{
   grid-row: 9;
   grid-column: 1;
@@ -873,10 +855,6 @@ transform: scale(0.6) translate(110%, -120%);
 .auctionCard{
   grid-row: 5;
   grid-column: 2;
-}
-.work{
-grid-row: 10;
-grid-column: 1;
 }
 .pPieces {
   grid-row: 10;
@@ -898,7 +876,7 @@ grid-column: 1;
 .pieces1{
   position: absolute;
   transform: scale(0.7);
-  top: 5%;
+  top: 23%;
   left: 12%;
 }
 .pieces2{

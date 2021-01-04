@@ -114,7 +114,8 @@ Data.prototype.joinGame = function (roomId, playerId) {
                                  items: [],
                                  income: [],
                                  secret: [],
-                                bottles: 2 };
+                                 bottles: 2,
+                                amountBottles: 2 };
       return true;
     }
     console.log("Player", playerId, "was declined due to player limit");
@@ -177,6 +178,7 @@ Data.prototype.buyCard = function (roomId, playerId, card, cost) {
     }
     room.players[playerId].items.push(...c);
     room.players[playerId].money -= cost;
+    room.players[playerId].bottles -= 1;
     
   }
 }
@@ -190,6 +192,9 @@ Data.prototype.buyWork = function (roomId, playerId, cost, index) {
       cardTwo = room.players[playerId].hand.splice(0,1); 
       room.players[playerId].income.push(...cardOne);
       room.players[playerId].income.push(...cardTwo);
+    }
+    if(index==2){
+      room.players[playerId].amountBottles -= 1;
     }
     if(index==3){
     for(let i=0; i <= 1; i += 1){
@@ -209,6 +214,7 @@ Data.prototype.buyWork = function (roomId, playerId, cost, index) {
     }
     
     room.players[playerId].money -= cost;
+    room.players[playerId].bottles -= 1;
     
   }
 }
@@ -238,6 +244,7 @@ Data.prototype.buySkill = function (roomId, playerId, card, cost) {
     }
     room.players[playerId].skills.push(...c);  
     room.players[playerId].money -= cost;
+    room.players[playerId].bottles -= 1;
     
   }
 }
@@ -269,6 +276,7 @@ Data.prototype.buyAuction = function (roomId, playerId, card, cost) {
     
     room.boughtAuction.push(...c);  // titta mer på detta sen!!!!
     room.players[playerId].money -= cost;
+    room.players[playerId].bottles -= 1;
     
   }
 }
@@ -297,19 +305,16 @@ Data.prototype.auctionBid = function (roomId, playerId, card, cost) {
         break;
       }
     }
-    
     room.players[playerId].hand.push(...c);  // titta mer på detta sen!!!!
     room.players[playerId].money -= cost;
     
   }
 }
 Data.prototype.buyMarket = function (roomId, playerId, card, cost, typeAction) {
-  console.log("type", typeAction);
   let room = this.rooms[roomId];
   if (typeof room !== 'undefined') {
     let c = null;
     if(typeAction==3){
-      console.log("marketD");
     /// check first if the card is among the items on sale
     for (let i = 0; i < room.market.length; i += 1) {
       // since card comes from the client, it is NOT the same object (reference)
@@ -322,7 +327,6 @@ Data.prototype.buyMarket = function (roomId, playerId, card, cost, typeAction) {
     }
   }
   if(typeAction==1){
-    console.log("skillsD");
     for (let i = 0; i < room.skillsOnSale.length; i += 1) {
       // since card comes from the client, it is NOT the same object (reference)
       // so we need to compare properties for determining equality      
@@ -333,9 +337,7 @@ Data.prototype.buyMarket = function (roomId, playerId, card, cost, typeAction) {
       }
     }
   }
-  console.log("skill c", c);
   if(typeAction==2){
-    console.log("auctionD");
     for (let i = 0; i < room.auctionCards.length; i += 1) {
       // since card comes from the client, it is NOT the same object (reference)
       // so we need to compare properties for determining equality      
@@ -346,8 +348,6 @@ Data.prototype.buyMarket = function (roomId, playerId, card, cost, typeAction) {
       }
     }
   }
-  console.log("skill after auction", c);
-  
 
     // ...then check if it is in the hand. It cannot be in both so it's safe
     for (let i = 0; i < room.players[playerId].hand.length; i += 1) {
@@ -362,9 +362,8 @@ Data.prototype.buyMarket = function (roomId, playerId, card, cost, typeAction) {
     
     room.market.push(...c);  // titta mer på detta sen!!!!
     room.players[playerId].money -= cost;
-    console.log(room.market, "this is market");
-    console.log(room.market[room.market.length-1].market);
     this.getMarketValues(room);
+    room.players[playerId].bottles -= 1;
    
 
     
