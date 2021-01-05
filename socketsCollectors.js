@@ -14,7 +14,8 @@ function sockets(io, socket, data) {
             auctionCards: data.getAuctionCards(d.roomId),
             placements: data.getPlacements(d.roomId),
             boughtAuction: data.getBoughtAuction(d.roomId),
-            market: data.getMarket(d.roomId)
+            market: data.getMarket(d.roomId),
+            skillValue: data.getSkillValue(d.roomId, d.playerId) 
           }
         );
       }
@@ -38,7 +39,8 @@ function sockets(io, socket, data) {
       io.to(d.roomId).emit('collectorsSkillBought', { 
           playerId: d.playerId,
           players: data.getPlayers(d.roomId),
-          skillsOnSale: data.getSkillsOnSale(d.roomId) 
+          skillsOnSale: data.getSkillsOnSale(d.roomId), 
+          skillValue: data.getSkillValue(d.roomId, d.playerId)
         }
       );
     });

@@ -403,6 +403,18 @@ export default {
         figures: 0,
         music: 0,
       },
+      skillValue:{
+        bottle: 0,
+        workerIncome: 0,
+        workerCard: 0,
+        auctionIncome: 0,
+        VPall: 0,
+        VPfastaval: 0,
+        VPmovie: 0,
+        VPtechnology: 0,
+        VPfigures: 0,
+        VPmusic: 0,
+      },
       itemsOnSale: [],
       skillsOnSale: [],
       auctionCards: [],
@@ -461,6 +473,7 @@ export default {
         this.marketPlacement = d.placements.marketPlacement;
         this.auctionPlacement = d.placements.auctionPlacement;
         this.workPlacement = d.placements.workPlacement;
+        this.skillValue = d.skillValue;
       }.bind(this)
     );
 
@@ -511,6 +524,7 @@ export default {
         console.log(d.playerId, "bought a skill");
         this.players = d.players;
         this.skillsOnSale = d.skillsOnSale;
+        this.skillValue = d.skillValue;
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -647,7 +661,6 @@ export default {
         playerId: this.playerId,
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
-        skill: card.skill
       });
       }
       else{
