@@ -100,6 +100,12 @@
             <BluePieces />
             </button>
           </div>
+          <div class="form-popup" id="bottlePlace">
+            <form class="form-containerBottle">
+            <h1 class="PopUpText">Place your bottles on your playerboard</h1>
+            <button type="button" class="cancel" v-on:click="closeBottlePlace()">Close</button>
+            </form>
+          </div>
             Hand
           <div class="cardslots" v-if="players[playerId]">
             <CollectorsCard
@@ -525,6 +531,10 @@ export default {
         this.players = d.players;
         this.skillsOnSale = d.skillsOnSale;
         this.skillValue = d.skillValue;
+        if(d.players[d.playerId].bottles<=0){
+          console.log("player skill: ",d.players[d.playerId]);
+          this.bottlesPlace();
+        }
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -733,6 +743,12 @@ export default {
   closeFormHand: function(){
     document.getElementById("formHand").style.display = "none";
   },
+  bottlesPlace: function(){
+    document.getElementById("bottlePlace").style.display = "block";
+  },
+  closeBottlePlace: function(){
+    document.getElementById("bottlePlace").style.display = "none";
+  },
   bid: function(pMoney){
   this.auctionPrice = document.getElementById("price").value;
   console.log(this.auctionPrice, "bid");
@@ -752,6 +768,7 @@ export default {
   },
   },
 };
+
 </script>
 <style scoped>
 header {
@@ -976,6 +993,12 @@ left: 25%;
   padding: 10px;
   background-color: white;
 }
+.form-containerBottle {
+  max-width: 600px;
+  padding: 10px;
+  background-color: white;
+}
+
 .PopUpText{
   color: black;
 }
