@@ -540,6 +540,7 @@ export default {
         this.auctionCards  = d.auctionCards;
         this.skillsOnSale = d.skillsOnSale;
         this.marketValues = d.marketValues;
+        this.isMarket=false;
         if(this.costMarket==1){
             this.twoCards=false;
         }
@@ -646,6 +647,7 @@ export default {
         playerId: this.playerId,
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
+        skill: card.skill
       });
       }
       else{
