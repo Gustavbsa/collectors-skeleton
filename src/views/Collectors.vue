@@ -647,6 +647,7 @@ export default {
         playerId: this.playerId,
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
+        skill: card.skill
       });
       }
       else{

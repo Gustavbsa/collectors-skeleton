@@ -247,6 +247,8 @@ Data.prototype.buySkill = function (roomId, playerId, card, cost) {
     room.players[playerId].skills.push(...c);
     room.players[playerId].money -= cost;
     room.players[playerId].bottles -= 1;
+    
+    this.getSkillValue(room);
 
   }
 }
@@ -441,7 +443,32 @@ Data.prototype.getMarketValues = function (roomId) {
   }
   else return [];
 }
-
+Data.prototype.getSkillValue = function (roomId) {
+  console.log("testststtts")
+  let room = this.rooms[roomId];
+  if (typeof room !== 'undefined') {
+    let sv = {
+      bottle: 0,
+      workerIncome: 0,
+      workerCard: 0,
+      auctionIncome: 0,
+      VPall: 0,
+      VPfastaval: 0,
+      VPmovie: 0,
+      VPtechnology: 0,
+      VPfigures: 0,
+      VPmusic: 0,
+    };
+    console.log(room.players[playerId].skills,"hej");
+    for (let cardIndex in room.players[playerId].skills) {
+      
+      sv[room.players[playerId].skills[cardIndex]] += 1;
+    }
+    console.log(sv,"Tjoooooooo");
+    return sv;
+  }
+  else return [];
+}
 Data.prototype.getSkillsOnSale = function (roomId) {
   let room = this.rooms[roomId];
   if (typeof room !== 'undefined') {
