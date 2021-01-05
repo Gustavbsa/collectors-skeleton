@@ -17,12 +17,16 @@
     <h1 class="PopUpText">Game setup</h1>
 
     <label for="Username"><b class="PopUpText">Username</b></label>
-    <input type="text" placeholder="Enter Username" name="username" required>
+    <input type="text" placeholder="Enter Username" name="username">
 
     <label for="Link"><b class="PopUpText">Link</b></label>
-    <h5 class="linkText" v> localhost:8080/#/room/{{room}}</h5>
 
-    <button type="button" class="btn" v-on:click="gameStart();">Start Game</button>
+    <div>
+      <input class="linkText" type="text" id="roomLink" :value="'localhost:8080/#/room/'+room">
+      <button v-on:click="copyLink()" id="copyButton"><img id="clipboardimg" src="/images/copyclipboard.png"><inline id="copyButtonText">Copy</inline></button>
+    </div>
+
+    <button type="button" class="btn" v-on:click="gameStart()">Start Game</button>
     <button type="button" class="btn cancel" v-on:click="closeForm()">Close</button>
   </form></div>
 
@@ -137,6 +141,13 @@ startInfo: function(){
     },
   gameStart: function(){
         this.$router.push("/room/" + this.$store.state.roomId);
+  },
+  copyLink: function(){
+      //console.log("kommer in")
+      var copyText = document.getElementById("roomLink");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); /* For mobile devices */
+      document.execCommand("copy");
   }
 }
 }
@@ -223,6 +234,32 @@ startInfo: function(){
 
 .Pagenumber{
   position: bottom center;
+}
+
+#roomLink{
+  float: left;
+  width: 70%;
+  padding: 10px;
+  height: 27px;
+}
+
+#copyButton{
+  width: auto;
+  text-align: center;
+  float: left;
+  padding: 10px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+#copyButtonText{
+  vertical-align: super;
+}
+
+#clipboardimg{
+  width: 18px;
+  height: 24px;
 }
 
 </style>
