@@ -20,9 +20,10 @@
       <form class="form-container">
         <h1 class="PopUpText">Game setup</h1>
 
+        
         <label for="Username"><b class="PopUpText">Username</b></label>
         <input type="text" placeholder="Enter Username" name="username" />
-
+        
         <label for="Link"><b class="PopUpText">Link</b></label>
 
         <div>
@@ -32,12 +33,12 @@
             id="roomLink"
             :value="'localhost:8080/#/room/' + room"
           />
-          <button v-on:click="copyLink()" id="copyButton">
+          <inline v-on:click="copyLink()" id="copyButton">
             <img id="clipboardimg" src="/images/copyclipboard.png" /><inline
               id="copyButtonText"
               >Copy</inline
             >
-          </button>
+          </inline>
         </div>
 
         <button type="button" class="btn" v-on:click="gameStart()">
@@ -276,12 +277,13 @@ export default {
 
 #roomLink {
   float: left;
-  width: 70%;
+  width: 68%;
   padding: 10px;
-  height: 27px;
+  height: 28px;
 }
 
 #copyButton {
+  color: black;
   width: auto;
   text-align: center;
   float: left;
@@ -289,6 +291,7 @@ export default {
   margin: 5px 0 22px 0;
   border: none;
   background: #f1f1f1;
+  cursor:pointer;
 }
 
 #copyButtonText {
@@ -299,4 +302,11 @@ export default {
   width: 18px;
   height: 24px;
 }
+
+@media screen and (max-width: 800px) {
+    #roomLink{
+      width: 93%;
+    }
+}
+
 </style>
