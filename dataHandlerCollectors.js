@@ -54,7 +54,7 @@ Data.prototype.getUILabels = function (roomId) {
   else return {};
 }
 
-Data.prototype.createRoom = function (roomId, playerCount, lang = "en") {
+Data.prototype.createRoom = function (roomId, playerCount, lang) {
   let room = {};
   room.players = {};
   room.lang = lang;
@@ -463,6 +463,10 @@ Data.prototype.getSkillValue = function (roomId, playerId) {
     return sv;
   }
   else return [];
+}
+Data.prototype.SkillEffect=function(roomId, playerId){
+  let room = this.rooms[roomId];
+
 }
 Data.prototype.getSkillsOnSale = function (roomId) {
   let room = this.rooms[roomId];
