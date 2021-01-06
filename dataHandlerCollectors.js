@@ -217,8 +217,12 @@ Data.prototype.buyWork = function (roomId, playerId, cost, index) {
 
     room.players[playerId].money -= cost;
     room.players[playerId].bottles -= 1;
-
-  }
+    let sv= this.getSkillValue(roomId, playerId);
+    room.players[playerId].money+=2*sv.workerIncome;
+      for (let index = 0; index< sv.workerCard; index++) {
+        this.drawCard(roomId,playerId) 
+      }
+    }
 }
 Data.prototype.buySkill = function (roomId, playerId, card, cost) {
   let room = this.rooms[roomId];
@@ -464,7 +468,7 @@ Data.prototype.getSkillValue = function (roomId, playerId) {
   }
   else return [];
 }
-Data.prototype.SkillEffect=function(roomId, playerId){
+Data.prototype.SkillEffectWork=function(roomId, playerId){
   let room = this.rooms[roomId];
 
 }
