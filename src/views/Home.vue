@@ -8,8 +8,13 @@
           <a>{{i+1}}</a>
         </option>
       </select>
+      <label for="language">Select language</label><br />
+      <select id="gameLanguage" name="lang">
+        <option>English</option>
+        <option>Svenska</option></select
+      ><br /><br />
       <button v-on:click="startInfo()">Game Info</button>
-      <button v-on:click="start('en')">Start game</button>
+      <button v-on:click="start(selectLanguage())">Start game</button>
     </div>
     <div class="form-popup" id="myForm">
     <form class="form-container">
@@ -74,7 +79,7 @@ export default {
     this.$store.commit('SET_ROOM_ID');
   },
   methods: {
-    start: function (lang='en') {
+    start: function (lang) {
       document.getElementById("myForm").style.display = "block";
       this.number = document.getElementById("Number_of_Players").value;
       this.$store.commit('SETUP_GAME', {roomId: this.$store.state.roomId, 
@@ -93,6 +98,14 @@ startInfo: function(){
    //document.getElementById('number').value = value;
    document.getElementById("pages").innerHTML = "Collectors is a 20-40 minutes worker placement game for 2-4 players where every choice matters. The winning player is the one with the most valuable collection of rare collectables by the end of the game. Beware though, you have a limited number of actions and turns - make sure that you use them wisely."
   },
+  selectLanguage: function () {
+      this.lang = document.getElementById("gameLanguage").value;
+      if (this.lang == "English") {
+        return "en";
+      } else if (this.lang == "Svenska") {
+        return "se";
+      }
+    },
   nextInfo: function(){
     
     if (this.value<7){

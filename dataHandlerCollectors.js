@@ -54,7 +54,7 @@ Data.prototype.getUILabels = function (roomId) {
   else return {};
 }
 
-Data.prototype.createRoom = function (roomId, playerCount, lang = "en") {
+Data.prototype.createRoom = function (roomId, playerCount, lang) {
   let room = {};
   room.players = {};
   room.lang = lang;
@@ -276,7 +276,12 @@ Data.prototype.buyWork = function (roomId, playerId, cost, index) {
     }
     room.players[playerId].money -= cost;
     room.players[playerId].bottles -= 1;
-  }
+    let sv= this.getSkillValue(roomId, playerId);
+    room.players[playerId].money+=2*sv.workerIncome;
+      for (let index = 0; index< sv.workerCard; index++) {
+        this.drawCard(roomId,playerId) 
+      }
+    }
 }
 Data.prototype.buySkill = function (roomId, playerId, card, cost) {
   let room = this.rooms[roomId];
@@ -572,6 +577,10 @@ Data.prototype.getSkillValue = function (roomId, playerId) {
     return sv;
   }
    return [];
+}
+Data.prototype.SkillEffectWork=function(roomId, playerId){
+  let room = this.rooms[roomId];
+
 }
 Data.prototype.getSkillsOnSale = function (roomId) {
   let room = this.rooms[roomId];
