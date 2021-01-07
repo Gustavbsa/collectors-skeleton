@@ -46,16 +46,33 @@ export default {
     player: Object,
     skillsOnSale: Array,
     marketValues: Object,
-    placement: Array
+    placement: Array,
+    playOrder: [],
+    actingPlayer: null,
+    playerId: null,
   },
   methods: {
-    cannotAfford: function (cost) {
+    playerOrder: function(){
+      if(this.playOrder[this.actingPlayer] !== this.playerId){
+        return(this.opTurn=true);
+      }
+      else{
+        return(this.opTurn=false);
+      }
+    },
+     cannotAfford: function (cost) {
       let minCost = 100;
       for(let key in this.marketValues) {
         if (cost + this.marketValues[key] < minCost)
           minCost = cost + this.marketValues[key]
       }
-      return (this.player.money < minCost || this.player.bottles<1);
+      this.opTurn = this.playerOrder(); 
+      if(this.opTurn){
+        return(true);
+      }
+      else{
+        return(this.player.money < minCost || this.player.bottles<1);
+      }
     },
     cardCost: function (card) {
       return this.marketValues[card.market];

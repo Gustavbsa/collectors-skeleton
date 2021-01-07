@@ -5,7 +5,7 @@
           
           <button
             v-if="p.playerId===null"
-            :disabled="cannotAfford(p.cost,p.cards)" 
+            :disabled="cannotAfford(p.cost, p.cards)" 
             @click="placeBottle(p),buyWork(p)">
             ${{p.cost}}
           </button>
@@ -17,15 +17,6 @@
           
         
         </div>
-      <br><!--
-      <p>
-      <input type="radio" id="work1" name="allWork" value="1">increase income with two<br>
-      <input type="radio" id="work2" name="allWork" value="2">recive a coin<br>
-      <input type="radio" id="work3" name="allWork" value="3">cost one coin, draw two new cards<br>
-      <input type="radio" id="work4" name="allWork" value="4">draw one card and become the first player<br>
-      <input type="radio" id="work5" name="allWork" value="5">draw one card and increase income with one 
-      </p>-->
-      
     </div>
    
 </template>
@@ -42,16 +33,28 @@ name: 'CollectorsWork',
     player: Object,
     placement: Array,
     hand: Array,
+    playOrder: [],
+    actingPlayer: null,
+    playerId: null,
   },
   methods: {
-
-    cannotAfford: function (cost, numOfCards) {
-      this.tooFewCards(numOfCards);  
-      return (this.player.money < cost || this.player.bottles<1);
+      playerOrder: function(){
+      if(this.playOrder[this.actingPlayer] !== this.playerId){
+        return(this.opTurn=true);
+      }
+      else{
+        return(this.opTurn=false);
+      }
     },
-    tooFewCards: function(numOfCards){
-        return(this.player.hand.length < numOfCards);
-    },
+     cannotAfford: function (cost, numOfCards) {
+      this.opTurn = this.playerOrder(); 
+      if(this.opTurn){
+        return(true);
+      }
+      else{
+        return(this.player.money < cost || this.player.bottles<1 || this.player.hand.length < numOfCards);
+      }
+    },   
     placeBottle: function (p) {
       this.$emit('placeBottle', p.cost);
     

@@ -4,8 +4,8 @@
       <div class="layout">
         <div class="topPage">
           <h1>info info info {{Object.keys(this.players).length}}</h1>
-                  <h1> {{ Object.keys(this.players)[0] }}</h1>
-          <h1>{{ this.players[Object.keys(this.players)[0]].money }}</h1>
+         <h1>Round: {{ round }} Play order: {{ playOrder }} </h1> 
+ <h1 v-if="actingPlayer!==null">Current player is {{ playOrder[actingPlayer]}}</h1>
         </div>
         <div class="empty1"></div>
 
@@ -194,7 +194,7 @@
         </div>
         </div>
         
-        {{ buyPlacement }} {{ chosenPlacementCost }}
+       
         <div class="actions" v-if="this.currentAction=='buyItem'">
           <CollectorsBuyActions
             v-if="players[playerId]"
@@ -203,11 +203,14 @@
             :itemsOnSale="itemsOnSale"
             :marketValues="marketValues"
             :placement="buyPlacement"
+            :playOrder="playOrder"
+            :actingPlayer="actingPlayer"
+            :playerId="playerId"
             @buyCard="buyCard($event)"
             @placeBottle="placeBottle('buy', $event)"
           />
-          <div class="buttons">
-            <button @click="drawCard">
+          <div class="buttons" v-if="actingPlayer!==null">
+            <button :disabled="this.playOrder[actingPlayer] !== playerId" @click="drawCard">
               {{ labels.draw }}
             </button>
           </div>
@@ -224,6 +227,9 @@
             :skillsOnSale="skillsOnSale"
             :marketValues="marketValues"
             :placement="skillPlacement"
+            :playOrder="playOrder"
+            :actingPlayer="actingPlayer"
+            :playerId="playerId"
             @buySkill="buySkill($event)"
             @placeBottle="placeBottle('skill', $event)"
           />
@@ -237,6 +243,9 @@
             :auctionCards="auctionCards"
             :marketValues="marketValues"
             :placement="auctionPlacement"
+            :playOrder="playOrder"
+            :actingPlayer="actingPlayer"
+            :playerId="playerId"
             @placeBottle="placeBottle('auction', $event)"
             @buyAuction="buyAuction($event)"
           />
@@ -299,7 +308,9 @@
             :marketValues="marketValues"
             :placement="marketPlacement"
             :secondAction="secondAction"
-            
+            :playOrder="playOrder"
+            :actingPlayer="actingPlayer"
+            :playerId="playerId"
             @buySkill="buySkill($event)"
             @buyAuction="buyAuction($event)"
             @placeBottle="placeBottle('market', $event)"
@@ -311,12 +322,15 @@
         :labels="labels"
         :player="players[playerId]"
         :placement="workPlacement"
+        :playOrder="playOrder"
+        :actingPlayer="actingPlayer"
+        :playerId="playerId"
         @placeBottle="placeBottle('work', $event)"
         @buyWork="buyWork($event)"
         /> 
       </div>
 
-
+ 
         <div class="pPieces">
           Pieces
           <div class="pieces">
@@ -387,15 +401,9 @@ export default {
       maxSizes: { x: 0, y: 0 },
       labels: {},
       players: {},
-      // playerId: {
-      //   hand: [],
-      //   money: 1,
-      //   points: 0,
-      //   skills: [],
-      //   items: [],
-      //   income: [],
-      //   secret: []
-      // }
+      playOrder: [],
+      round: 0,
+      actingPlayer: null,
       buyPlacement: [],
       skillPlacement: [],
       auctionPlacement: [],
@@ -424,7 +432,7 @@ export default {
       itemsOnSale: [],
       skillsOnSale: [],
       auctionCards: [],
-      playerid: 0,
+      numberOfActions: [],
       boughtAuction: [],
       market: [],
       isMarket: false,
@@ -441,8 +449,7 @@ export default {
     },
   },
   watch: {
-    players: function (newP, oldP) {
-      console.log(newP, oldP);
+    players: function () {
       for (let p in this.players) {
         for (let c = 0; c < this.players[p].hand.length; c += 1) {
           if (typeof this.players[p].hand[c].item !== "undefined")
@@ -480,8 +487,25 @@ export default {
         this.auctionPlacement = d.placements.auctionPlacement;
         this.workPlacement = d.placements.workPlacement;
         this.skillValue = d.skillValue;
+        this.round = d.round;
+        this.playOrder = d.playOrder;
+        this.actingPlayer = d.actingPlayer;
       }.bind(this)
     );
+
+      this.$store.state.socket.on('collectorsUpdatePlayers', 
+        function(players) {
+          this.players = players;
+          if (this.numberOfActions > 0) {
+            for (let i = 0; i < this.players[this.playerId].hand.length; i += 1) {
+              setTimeout(() =>
+              this.$set(this.players[this.playerId].hand[i], "available", true), 500);
+            }
+          }
+        else {
+          this.$store.state.socket.emit('collectorsNextPlayer', {roomId: this.$route.params.id});
+        }
+        }.bind(this));
 
     this.$store.state.socket.on(
       "collectorsBottlePlaced",
@@ -491,20 +515,27 @@ export default {
         this.marketPlacement = d.marketPlacement;
         this.auctionPlacement = d.auctionPlacement;
         this.workPlacement = d.workPlacement;
+         if (this.players[this.playerId].bottles > 0) {
+          for (let i = 0; i < this.players[this.playerId].hand.length; i += 1) {
+            console.log("highlighting")
+            setTimeout(() =>
+            this.$set(this.players[this.playerId].hand[i], "available", true), 500);
+          }
+        }
+        else {
+          console.log("next player")
+          this.$store.state.socket.emit('collectorsNextPlayer', {roomId: this.$route.params.id});
+        }
       }.bind(this)
     );
 
-    this.$store.state.socket.on(
-      "collectorsPointsUpdated",
-      (d) => (this.points = d)
-    );
+    
 
     this.$store.state.socket.on(
-      "collectorsCardDrawn",
+      "collectorsActingPlayer",
       function (d) {
-        //this has been refactored to not single out one player's cards
-        //better to update the state of all cards
-        this.players = d;
+        this.players = d.players;
+        this.actingPlayer = d.actingPlayer;
       }.bind(this)
     );
 
@@ -514,6 +545,7 @@ export default {
         console.log(d.playerId, "bought a card");
         this.players = d.players;
         this.itemsOnSale = d.itemsOnSale;
+        this.actingPlayer = d.actingPlayer;
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -521,6 +553,7 @@ export default {
       function (d) {
         console.log(d.playerId, "bought a work");
         this.players = d.players;
+        this.actingPlayer = d.actingPlayer;
       }.bind(this)
     );
    
@@ -531,6 +564,7 @@ export default {
         this.players = d.players;
         this.skillsOnSale = d.skillsOnSale;
         this.skillValue = d.skillValue;
+        this.actingPlayer = d.actingPlayer;
         if(d.players[d.playerId].bottles<=0){
           console.log("player skill: ",d.players[d.playerId]);
           this.bottlesPlace();
@@ -544,6 +578,7 @@ export default {
         this.players = d.players;
         this.auctionCards = d.auctionCards;
         this.boughtAuction = d.boughtAuction;
+        this.actingPlayer = d.actingPlayer;
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -564,6 +599,7 @@ export default {
         this.auctionCards  = d.auctionCards;
         this.skillsOnSale = d.skillsOnSale;
         this.marketValues = d.marketValues;
+        this.actingPlayer = d.actingPlayer;
         this.isMarket=false;
         if(this.costMarket==1){
             this.twoCards=false;
@@ -943,13 +979,14 @@ left: 25%;
   grid-template-rows: repeat(auto-fill, 180px);
 }
 .cardslots div {
-  transform: scale(0.5) translate(-50%, -50%);
+ transform: scale(0.5) translate(-50%, -50%);
   transition: 0.2s;
   transition-timing-function: ease-out;
   z-index: 0;
+  
 }
 .cardslots div:hover {
-  transform: scale(1) translate(-25%, 0);
+   transform: scale(1) translate(-25%, 0);
   z-index: 1;
 }
 .shape {
@@ -1009,6 +1046,7 @@ left: 25%;
 @media screen and (max-width: 800px) {
   main {
     width: 90vw;
-  }
+    
+    }
 }
 </style>

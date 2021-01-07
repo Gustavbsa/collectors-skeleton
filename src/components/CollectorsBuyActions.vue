@@ -27,7 +27,6 @@
             {{p.playerId}}
           </div>
           
-        
         </div>
       </div>
     </div>
@@ -46,16 +45,34 @@ export default {
     player: Object,
     itemsOnSale: Array,
     marketValues: Object,
-    placement: Array
+    placement: Array,
+    playOrder: [],
+    actingPlayer: null,
+    playerId: null,
   },
   methods: {
+      playerOrder: function(){
+      if(this.playOrder[this.actingPlayer] !== this.playerId){
+        return(this.opTurn=true);
+      }
+      else{
+        return(this.opTurn=false);
+      }
+    },
     cannotAfford: function (cost) {
       let minCost = 100;
       for(let key in this.marketValues) {
         if (cost + this.marketValues[key] < minCost)
           minCost = cost + this.marketValues[key]
       }
-      return (this.player.money < minCost || this.player.bottles<1);
+      this.opTurn = this.playerOrder(); 
+      if(this.opTurn){
+        return(true);
+      }
+      else{
+        console.log("player money: ", this.player.money < minCost);
+        return(this.player.money < minCost || this.player.bottles<1);
+      }
     },
     cardCost: function (card) {
       return this.marketValues[card.market];
