@@ -640,6 +640,26 @@ Data.prototype.getMarket = function (roomId) {
   }
   else return [];
 }
+Data.prototype.bottleEffect = function (roomId, playerId) {
+  let room = this.rooms[roomId];
+  console.log("bottleEffect");
+  if (typeof room !== 'undefined') {
+    let bottleActions = 0;
+    if(room.players[playerId].amountBottles<=2){
+      room.players[playerId].amountBottles=2;
+    }
+   else{
+    bottleActions = room.players[playerId].amountBottles-2;
+   }
+   return(bottleActions);
+  }
+}
+Data.prototype.getMoney = function (roomId, playerId, extraMoney) {
+  let room = this.rooms[roomId];
+  if (typeof room !== 'undefined') {
+    room.players[playerId].money += extraMoney;
+  }
+}
 module.exports = Data;
 
 

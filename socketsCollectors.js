@@ -41,8 +41,16 @@ function sockets(io, socket, data) {
           playerId: d.playerId,
           players: data.getPlayers(d.roomId),
           itemsOnSale: data.getItemsOnSale(d.roomId),
-          actingPlayer: data.nextPlayer(d.roomId) 
+          actingPlayer: data.nextPlayer(d.roomId),
 
+        }
+      );
+    });
+    socket.on('collectorsBottleEffect', function(d) {
+      io.to(d.roomId).emit('collectorsEffectOfBottles', { 
+          playerId: d.playerId,
+          players: data.getPlayers(d.roomId),
+          bottleActions: data.bottleEffect(d.roomId, d.playerId)
         }
       );
     });
@@ -53,7 +61,7 @@ function sockets(io, socket, data) {
           players: data.getPlayers(d.roomId),
           skillsOnSale: data.getSkillsOnSale(d.roomId), 
           skillValue: data.getSkillValue(d.roomId, d.playerId),
-          actingPlayer: data.nextPlayer(d.roomId) 
+          actingPlayer: data.nextPlayer(d.roomId),
         }
       );
     });
@@ -64,7 +72,7 @@ function sockets(io, socket, data) {
           players: data.getPlayers(d.roomId),
           auctionCards: data.getAuctionCards(d.roomId),
           boughtAuction: data.getBoughtAuction(d.roomId),
-          actingPlayer: data.nextPlayer(d.roomId) 
+          actingPlayer: data.nextPlayer(d.roomId),
           
         }
       );
@@ -79,6 +87,14 @@ function sockets(io, socket, data) {
         }
       );
     });
+    socket.on('collectorsgetMoney', function(d) { 
+      data.getMoney(d.roomId, d.playerId, d.extraMoney),
+      io.to(d.roomId).emit('collectorsGotMoney', { 
+          playerId: d.playerId,
+          players: data.getPlayers(d.roomId),
+        }
+      );
+    });
     socket.on('collectorsMarket', function(d) { 
       data.buyMarket(d.roomId, d.playerId, d.card, d.cost, d.typeAction, d.secondAction)
       if(d.secondAction){
@@ -89,7 +105,7 @@ function sockets(io, socket, data) {
           auctionCards: data.getAuctionCards(d.roomId), 
           skillsOnSale: data.getSkillsOnSale(d.roomId),
           marketValues: data.getMarketValues(d.roomId),
-          actingPlayer: data.getActingPlayer(d.roomId)
+          actingPlayer: data.getActingPlayer(d.roomId),
         }
       );
       }
@@ -101,7 +117,7 @@ function sockets(io, socket, data) {
           auctionCards: data.getAuctionCards(d.roomId), 
           skillsOnSale: data.getSkillsOnSale(d.roomId),
           marketValues: data.getMarketValues(d.roomId),
-          actingPlayer: data.nextPlayer(d.roomId) 
+          actingPlayer: data.nextPlayer(d.roomId), 
         }
       );
       }
@@ -111,7 +127,7 @@ function sockets(io, socket, data) {
       io.to(d.roomId).emit('collectorsWorkBought', { 
           playerId: d.playerId,
           players: data.getPlayers(d.roomId),
-          actingPlayer: data.nextPlayer(d.roomId) 
+          actingPlayer: data.nextPlayer(d.roomId),  
         }
       );
     });
