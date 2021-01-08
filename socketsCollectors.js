@@ -42,7 +42,6 @@ function sockets(io, socket, data) {
           players: data.getPlayers(d.roomId),
           itemsOnSale: data.getItemsOnSale(d.roomId),
           actingPlayer: data.nextPlayer(d.roomId) 
-
         }
       );
     });
@@ -124,6 +123,16 @@ function sockets(io, socket, data) {
         placements: data.getPlacements(d.roomId),
         playOrder: data.getPlayOrder(d.roomId),
         actingPlayer: data.getActingPlayer(d.roomId)
+      }
+      );
+    });
+
+    socket.on('collectorsRefillCards', function(d) {
+      data.refillCards(d.roomId);
+      io.to(d.roomId).emit('collectorsCardsRefilled',{
+        itemsOnSale: data.getItemsOnSale(d.roomId),
+        skillsOnSale: data.getSkillsOnSale(d.roomId),
+        auctionCards: data.getAuctionCards(d.roomId), 
       }
       );
     });

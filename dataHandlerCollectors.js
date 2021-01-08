@@ -257,6 +257,7 @@ Data.prototype.buyWork = function (roomId, playerId, cost, index) {
       room.players[playerId].income.push(...cardOne);
       room.players[playerId].income.push(...cardTwo);
       room.players[playerId].incomeN += (2*room.players[playerId].cardIncome);
+      console.log("denna knapp fungerar")
     }
     if (index <= 5) {
       room.players[playerId].amountBottles -= 1;
@@ -498,6 +499,7 @@ Data.prototype.nextRound = function (roomId) {
     room.round += 1;
     room.playOrder = room.playOrderNextRound;
     this.resetPlacements(room);
+    //this.refillCards(roomId);
     for (let player of room.players) {
       for (let i = 0; i < player.bottleIncome; i += 1) {
         player.bottleSlots.add(i);
@@ -505,6 +507,101 @@ Data.prototype.nextRound = function (roomId) {
     }
   }
 }
+
+Data.prototype.refillCards = function (roomId) {
+  let room = this.rooms[roomId];
+  let itemsArray = room.itemsOnSale;
+  let skillsArray = room.skillsOnSale;
+  let auctionArray = room.auctionCards;
+
+  for (let index = 0; index < skillsArray.length; index++) {
+    if (skillsArray[index].skill == undefined) {
+      console.log("found empty card");
+      let nextFound = false;
+      while (nextFound == false) {
+        for (let jndex = index + 1; jndex < skillsArray.length; jndex++) {
+          if (skillsArray[jndex].skill != undefined) {
+            nextFound = true;
+            console.log("found next card in skillsArray");
+            skillsArray[index] = skillsArray[jndex];
+            skillsArray[jndex] = {};
+            break;
+          }
+        }
+        if (nextFound == true) {
+          break;
+        }
+        for (let jndex = 0; jndex < itemsArray.length; jndex++) {
+          if (itemsArray[jndex].skill != undefined) {
+            nextFound = true;
+            console.log("found next card in itemsArray");
+            skillsArray[index] = itemsArray[jndex];
+            itemsArray[jndex] = {};
+            break;
+          }
+        }
+
+      }
+    }
+  };
+
+  //sorting itemsarray
+  for (let index = 0; index < itemsArray.length; index++) {
+    if (itemsArray[index].item == undefined) {
+      for (let jndex = index + 1; jndex < itemsArray.length; jndex++) {
+        if (itemsArray[jndex].item != undefined) {
+          itemsArray[index] = itemsArray[jndex];
+          itemsArray[jndex] = {};
+          break;
+        }
+      }
+    }
+  };
+
+  //adding cards to itemsarray
+  for (let index = 0; index < itemsArray.length; index++) {
+    console.log("checking card no.: " + index);
+    console.log(itemsArray[index].item);
+    if (itemsArray[index].item == undefined) {
+      console.log("refilled Array");
+      itemsArray[index] = room.deck.pop();
+    }
+  };
+
+  //sorting auctionarray
+  for (let index = 0; index < auctionArray.length; index++) {
+    console.log("sorting auction card no.: " + index);
+    if (auctionArray[index].item == undefined) {
+      console.log("found empty")
+      for (let jndex = index + 1; jndex < auctionArray.length; jndex++) {
+        if (auctionArray[jndex].item != undefined) {
+          auctionArray[index] = auctionArray[jndex];
+          console.log("switched");
+          auctionArray[jndex] = {};
+          break;
+        }
+      }
+    }
+  };
+
+  for (let index = 0; index < auctionArray.length; index++) {
+    console.log("checking auction card no.: " + index);
+    console.log(auctionArray[index].item);
+    if (auctionArray[index].item == undefined) {
+      console.log("refilled auctionArray");
+      auctionArray[index] = room.deck.pop();
+    }
+  };
+
+
+  console.log("we finished")
+  room.itemsOnSale = itemsArray;
+  room.skillsOnSale = skillsArray;
+  room.auctionCards = auctionArray;
+  console.log(room.auctionCards);
+
+}
+
 Data.prototype.adjustBottle = function (roomId, playerId, oldPos, newPos) {
   player.bottleSlots.delete(oldPos);
   player.bottleSlots.add(newPos);
