@@ -220,6 +220,7 @@
             <button :disabled="this.playOrder[actingPlayer] !== playerId" @click="drawCard">
               {{ labels.draw }}
             </button>
+            <button @click="refillCards">Refill cards</button>
           </div>
         </div>
         <br>
@@ -320,7 +321,6 @@
             :playerId="playerId"
             @buySkill="buySkill($event)"
             @buyAuction="buyAuction($event)"
-            @placeBottle="placeBottle('market', $event)"
             />   
       </div>
       <div class="actions" v-if="this.currentAction=='buyWork'">
@@ -334,6 +334,7 @@
         :playerId="playerId"
         @placeBottle="placeBottle('work', $event)"
         @buyWork="buyWork($event)"
+        @refillCards="refillCards($event)"
         /> 
       </div>
 
@@ -641,6 +642,15 @@ export default {
         this.players = d.players;
       }.bind(this)
     );
+      this.$store.state.socket.on(
+        "collectorsCardsRefilled",
+        function (d) {
+          console.log(d.roomId, "refilled cards");
+          this.itemsOnSale = d.itemsOnSale;
+          this.skillsOnSale = d.skillsOnSale;
+          this.auctionCards = d.auctionCards;
+        }.bind(this)
+    );
   },
   methods: {
     selectAll: function (n) {
@@ -770,6 +780,14 @@ export default {
       }); 
       }
     },
+    
+    refillCards: function () {
+      console.log("RefillCards");
+      this.$store.state.socket.emit("collectorsRefillCards", {
+        roomId: this.$route.params.id,
+      });
+    },
+    
     buyWork: function(event){
       console.log("Collectors p", event);
       console.log("Collectors index", event.index);

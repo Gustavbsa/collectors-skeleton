@@ -135,6 +135,16 @@ function sockets(io, socket, data) {
       }
       );
     });
+
+    socket.on('collectorsRefillCards', function(d) {
+      data.refillCards(d.roomId);
+      io.to(d.roomId).emit('collectorsCardsRefilled',{
+        itemsOnSale: data.getItemsOnSale(d.roomId),
+        skillsOnSale: data.getSkillsOnSale(d.roomId),
+        auctionCards: data.getAuctionCards(d.roomId), 
+      }
+      );
+    });
 }
 
 module.exports = sockets;
