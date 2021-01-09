@@ -79,9 +79,25 @@ function sockets(io, socket, data) {
         }
       );
     });
+    socket.on('collectorsNewRound', function(d) { 
+      data.checkRound(d.roomId),
+      io.to(d.roomId).emit('collectorsCheck', { 
+          playerId: d.playerId,
+          players: data.getPlayers(d.roomId),
+        }
+      );
+    });
     socket.on('collectorsgetMoney', function(d) { 
       data.getMoney(d.roomId, d.playerId, d.extraMoney),
       io.to(d.roomId).emit('collectorsGotMoney', { 
+          playerId: d.playerId,
+          players: data.getPlayers(d.roomId),
+        }
+      );
+    });
+    socket.on('collectorsNumButtons', function(d) { 
+      data.getNumActions(d.roomId, d.playerId),
+      io.to(d.roomId).emit('collectorsLostAction', { 
           playerId: d.playerId,
           players: data.getPlayers(d.roomId),
         }
@@ -141,7 +157,8 @@ function sockets(io, socket, data) {
       io.to(d.roomId).emit('collectorsCardsRefilled',{
         itemsOnSale: data.getItemsOnSale(d.roomId),
         skillsOnSale: data.getSkillsOnSale(d.roomId),
-        auctionCards: data.getAuctionCards(d.roomId), 
+        auctionCards: data.getAuctionCards(d.roomId),
+        players: data.getPlayers(d.roomId)
       }
       );
     });

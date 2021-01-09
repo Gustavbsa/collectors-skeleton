@@ -80,9 +80,9 @@
             <PlayerBoard />
           <div class="form-popup-bottle" id="bottlebuttons">
           <form class="form-container-bottle">
-          <button type="button" class="bottleB" v-on:click="drawCardBottle();" :disabled="drawCardBottleDone()">1: get a card</button>
-          <button type="button" class="bottleB" v-on:click="getMoneyOne();" :disabled="drawCardBottleDone1()">2: get 1$</button>
-          <button type="button" class="bottleB" v-on:click="getMoneyTwo();" :disabled="drawCardBottleDone2()">3: get 2$</button>
+          <button type="button" class="bottleB" v-on:click="drawCardBottle();" :disabled="drawCardBottleDone()">1: don't a card</button>
+          <button type="button" class="bottleB" v-on:click="getMoneyOne();" :disabled="drawCardBottleDone1()">2: don't get 1$</button>
+          <button type="button" class="bottleB" v-on:click="getMoneyTwo();" :disabled="drawCardBottleDone2()">3: don't get 2$</button>
           </form>
           </div> 
            
@@ -456,6 +456,8 @@ export default {
       drawCardB: false,
       getMoney1: false,
       getMoney2: false,
+      bottlesA: false
+
 
     };
   },
@@ -515,11 +517,7 @@ export default {
 
       this.$store.state.socket.on('collectorsUpdatePlayers', 
         function(players) {
-          this.players = players;
-          for(let i = 0; i<2; i+=1){
-            console.log("player: ", this.players[i].bottles);
-          }
-          
+          this.players = players;  
           if (this.players[this.playerId].bottles <= 0) {
             this.$store.state.socket.emit('collectorsNextPlayer', {roomId: this.$route.params.id, playerId: this.playerId});
           }
@@ -564,7 +562,10 @@ export default {
         this.players = d.players;
         this.itemsOnSale = d.itemsOnSale;
         this.actingPlayer = d.actingPlayer;
-        this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
+        for(let playerI in this.players){
+          console.log("this player: ", playerI, " has: ",this.players[playerI].bottleActions," bottleActions" );
+        }
+        this.checkPhase();
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -573,6 +574,10 @@ export default {
         console.log(d.playerId, "bought a work");
         this.players = d.players;
         this.actingPlayer = d.actingPlayer;
+       for(let playerI in this.players){
+          console.log("this player: ", playerI, " has: ",this.players[playerI].bottleActions," bottleActions" );
+        }
+        this.checkPhase();
       }.bind(this)
     );
    
@@ -584,7 +589,10 @@ export default {
         this.skillsOnSale = d.skillsOnSale;
         this.skillValue = d.skillValue;
         this.actingPlayer = d.actingPlayer;
-        this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
+        for(let playerI in this.players){
+          console.log("this player: ", playerI, " has: ",this.players[playerI].bottleActions," bottleActions" );
+        }
+        this.checkPhase();
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -595,7 +603,10 @@ export default {
         this.auctionCards = d.auctionCards;
         this.boughtAuction = d.boughtAuction;
         this.actingPlayer = d.actingPlayer;
-        this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
+        for(let playerI in this.players){
+          console.log("this player: ", playerI, " has: ",this.players[playerI].bottleActions," bottleActions" );
+        }
+        this.checkPhase();
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -607,6 +618,17 @@ export default {
         this.boughtAuction = d.boughtAuction;
       }.bind(this)
     );
+    this.$store.state.socket.on(
+      "collectorsLostAction",
+      function (d) {
+        console.log(d.playerId, "lost a action");
+        this.players = d.players;
+        for(let playerId in this.players){
+          console.log("This player ", playerId, " has this many actions left: ", this.players[playerId].bottleActions);
+        }
+      }.bind(this)
+    );
+    
      this.$store.state.socket.on(
       "collectorsMarketBought",
       function (d) {
@@ -625,12 +647,18 @@ export default {
             this.placeBottle(this.marketAction,this.costMarket);
         }
         else{
-          this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
+        for(let playerI in this.players){
+          console.log("this player: ", playerI, " has: ",this.players[playerI].bottleActions," bottleActions" );
+        }
+          this.checkPhase();
         }
         if(this.costMarket==0 && this.newCard==false){
           this.twoCards=false;
           this.marketTwoCards=true; // hur kan man få den att titta 
-          this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
+         for(let playerI in this.players){
+          console.log("this player: ", playerI, " has: ",this.players[playerI].bottleActions," bottleActions" );
+        }
+          this.checkPhase();
         }
 
       }.bind(this)
@@ -642,6 +670,13 @@ export default {
         this.players = d.players;
       }.bind(this)
     );
+    this.$store.state.socket.on(
+      "collectorsCheck",
+      function (d) {
+        console.log(d.playerId, "New round");
+        this.players = d.players;
+      }.bind(this)
+    );
       this.$store.state.socket.on(
         "collectorsCardsRefilled",
         function (d) {
@@ -649,6 +684,7 @@ export default {
           this.itemsOnSale = d.itemsOnSale;
           this.skillsOnSale = d.skillsOnSale;
           this.auctionCards = d.auctionCards;
+          this.players = d.players;
         }.bind(this)
     );
   },
@@ -839,52 +875,125 @@ export default {
   document.getElementById("formAuction").style.display = "none";
   },
   effectOfBottles: function(playerId, bottleActions){
-    if(bottleActions>0){
+    if(bottleActions>0){  
     document.getElementById("bottlebuttons").style.display = "block";
     this.numButtons=bottleActions;
     }
   },
   drawCardBottle: function(){
     if(this.numButtons>0){
-      this.$store.state.socket.emit("collectorsDrawCard", {
+      this.numButtons-=1;
+      this.drawCardB=true;
+      console.log("player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
+      this.$store.state.socket.emit("collectorsNumButtons", {
         roomId: this.$route.params.id,
         playerId: this.playerId,
       });
-      this.numButtons-=1;
+      console.log("player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
+      
+
       if(this.numButtons<=0){
+        this.$store.state.socket.emit("collectorsNumButtons", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+      });
+        console.log("it's time");
         document.getElementById("bottlebuttons").style.display = "none";
-      }
-      this.drawCardB=true;
-    }
-  },
-  getMoneyOne: function(){
-   if(this.numButtons>0){
-     this.$store.state.socket.emit("collectorsgetMoney", {
+      if(this.getMoney1==false){
+        this.$store.state.socket.emit("collectorsgetMoney", {
         roomId: this.$route.params.id,
         playerId: this.playerId,
         extraMoney: 1
       });
-    this.numButtons-=1;
-      if(this.numButtons<=0){
-        document.getElementById("bottlebuttons").style.display = "none";
+      }
+      if(this.getMoney2==false){
+        this.$store.state.socket.emit("collectorsgetMoney", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        extraMoney: 2
+      });
+      }
+      }
+      this.doneOr();
+      
+    }
+  },
+  getMoneyOne: function(){
+   if(this.numButtons>0){
+     this.getMoney1=true;
+     this.numButtons-=1;
+     console.log("player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
+     this.$store.state.socket.emit("collectorsNumButtons", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+      });
+      console.log("player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
+    if(this.numButtons<=0){
+      this.$store.state.socket.emit("collectorsNumButtons", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+      });
+      console.log("it's time");
+      document.getElementById("bottlebuttons").style.display = "none";
+    if(this.getMoney2==false){
+        this.$store.state.socket.emit("collectorsgetMoney", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        extraMoney: 2
+      });
+      }
+    if(this.drawCardB==false){
+      this.$store.state.socket.emit("collectorsDrawCard", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+      });
+    }    
    }
-    this.getMoney1=true;
+   this.doneOr();
    } 
 
   },
   getMoneyTwo: function(){
     if(this.numButtons>0){
-     this.$store.state.socket.emit("collectorsgetMoney", {
+      this.getMoney2=true;
+      this.numButtons-=1;
+      console.log("player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
+      this.$store.state.socket.emit("collectorsNumButtons", {
         roomId: this.$route.params.id,
         playerId: this.playerId,
-        extraMoney: 2
       });
-    this.numButtons-=1;
-      if(this.numButtons<=0){
-        document.getElementById("bottlebuttons").style.display = "none";
+      console.log("player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
+    if(this.numButtons<=0){
+      this.$store.state.socket.emit("collectorsNumButtons", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+      });
+      console.log("After player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
+      console.log("it's time");
+      document.getElementById("bottlebuttons").style.display = "none";
+       if(this.getMoney1==false){
+         this.$store.state.socket.emit("collectorsgetMoney", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        extraMoney: 1
+      });
+      }
+      if(this.drawCardB==false){
+      this.$store.state.socket.emit("collectorsDrawCard", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+      });
+    }
    }
-    this.getMoney2=true;
+   this.doneOr();
+    
    } 
+  },
+  doneOr: function(){
+    this.$store.state.socket.emit("collectorsNewRound", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+      });
   },
   drawCardBottleDone: function(){
     return(this.drawCardB);
@@ -895,18 +1004,29 @@ export default {
   drawCardBottleDone2: function(){
     return(this.getMoney2);
   },
-  checkPhase: function(playerIdN, bottleActions){
-    if(this.players[playerIdN].timetoPlaceBB){
+  checkPhase: function(){
+    console.log("this player: ", this.playerId, ": has this many ",this.players[this.playerId].bottleActions )
+    if(this.players[this.playerId].timetoPlaceBB){
       console.log("nu börjar skiten");
-      this.bottlesPlace(); 
-      if(this.playerId==playerIdN){
-        this.effectOfBottles(playerIdN,bottleActions);
+      this.bottlesPlace();
+      console.log("this player: ", this.playerId, ": has this many ",this.players[this.playerId].bottleActions )
+      if(this.players[this.playerId].bottleActions>0){
+        console.log("this player1: ", this.playerId, " has: ",this.players[this.playerId].bottleActions," bottleActions1" );
+        this.effectOfBottles(this.playerId,this.players[this.playerId].bottleActions);
       }
-        
-        
+      else{
+      for(let playerI in this.players){
+        if(this.players[playerI].bottleActions>0)
+        this.bottlesA=true;
+        break;
+      }
+      if(!this.bottlesA){
+        this.refillCards();
+      }
+      
+    } 
     }
   }
-
   },
 };
 
