@@ -157,6 +157,8 @@ Data.prototype.joinGame = function (roomId, playerId) {
         bottles: 2,
         amountBottles: 2,
         bottleSlots: new Set(),
+        bottleActions: 0,
+        timetoPlaceBB: new Boolean,
       };
 
       room.playOrder.push(playerId);
@@ -494,15 +496,44 @@ Data.prototype.getPlayOrder = function (roomId) {
   }
   return [];
 }
-Data.prototype.nextPlayer = function (roomId) {
+Data.prototype.nextPlayer = function (roomId, playerIdN) {
   let room = this.rooms[roomId];
   if (typeof room !== 'undefined') {
-    room.actingPlayer = (room.actingPlayer + 1) % room.playerCount;
-    console.log("next Player", room.actingPlayer)
-    return room.actingPlayer;
+    let bottlesLeft = false;
+    for (let playerId in room.players) {
+      if(room.players[playerId].bottles>0){
+        bottlesLeft=true;
+        console.log("there is a player with bottles");
+        break;
+      }}
+      if(!bottlesLeft){
+        console.log("there are no more bottles");
+        this.bottleEffect(roomId);
+        room.players[playerIdN].timetoPlaceBB=true;
+        return room.actingPlayer;
+      }
+      else{
+        for(let playerId in room.players){
+          console.log("the boyes", room.playOrder[(room.actingPlayer + 1) % room.playerCount], "hhhhhh: ", playerId);
+          if(playerId == room.playOrder[(room.actingPlayer + 1)% room.playerCount]){
+            console.log("not all the way throu")
+            if(room.players[playerId].bottles>0){
+             room.actingPlayer = (room.actingPlayer + 1) % room.playerCount;
+             console.log("next Player", room.actingPlayer)
+             break;
+            }
+            else{
+            console.log("time to start again"); 
+             room.actingPlayer = (room.actingPlayer + 1) % room.playerCount;
+             this.nextPlayer(roomId);
+            }
+          }
+        }
+      }
+    return room.actingPlayer; 
   }
   return null;
-}
+  } 
 Data.prototype.getActingPlayer = function (roomId) {
   let room = this.rooms[roomId];
   if (typeof room !== 'undefined') {
@@ -640,18 +671,21 @@ Data.prototype.getMarket = function (roomId) {
   }
   else return [];
 }
-Data.prototype.bottleEffect = function (roomId, playerId) {
+Data.prototype.bottleEffect = function (roomId) {
   let room = this.rooms[roomId];
   console.log("bottleEffect");
   if (typeof room !== 'undefined') {
-    let bottleActions = 0;
-    if(room.players[playerId].amountBottles<=2){
-      room.players[playerId].amountBottles=2;
+  for(let playerIdN in room.players){
+    if(room.players[playerIdN].amountBottles<=2){
+      room.players[playerIdN].amountBottles=2;
+      console.log("only two bottles");
     }
    else{
-    bottleActions = room.players[playerId].amountBottles-2;
+    console.log("bottles: ", room.players[playerIdN].amountBottles, " bottleAction: ", room.players[playerIdN].bottleActions); 
+    room.players[playerIdN].bottleActions = room.players[playerIdN].amountBottles-2;
    }
-   return(bottleActions);
+   console.log("bottles1: ", room.players[playerIdN].amountBottles, " bottleAction1: ", room.players[playerIdN].bottleActions); 
+  }
   }
 }
 Data.prototype.getMoney = function (roomId, playerId, extraMoney) {

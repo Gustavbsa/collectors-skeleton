@@ -80,9 +80,9 @@
             <PlayerBoard />
           <div class="form-popup-bottle" id="bottlebuttons">
           <form class="form-container-bottle">
-          <button type="button" class="bottleB" v-on:click="drawCardBottle();">1: get a card</button>
-          <button type="button" class="bottleB" v-on:click="getMoneyOne();">2: get 1$</button>
-          <button type="button" class="bottleB" v-on:click="getMoneyTwo();">3: get 2$</button>
+          <button type="button" class="bottleB" v-on:click="drawCardBottle();" :disabled="drawCardBottleDone()">1: get a card</button>
+          <button type="button" class="bottleB" v-on:click="getMoneyOne();" :disabled="drawCardBottleDone1()">2: get 1$</button>
+          <button type="button" class="bottleB" v-on:click="getMoneyTwo();" :disabled="drawCardBottleDone2()">3: get 2$</button>
           </form>
           </div> 
            
@@ -452,6 +452,10 @@ export default {
       newCard: true,
       marketTwoCards: Boolean,
       numButtons: 0,
+      drawCardB: false,
+      getMoney1: false,
+      getMoney2: false,
+
     };
   },
   computed: {
@@ -466,20 +470,6 @@ export default {
           if (typeof this.players[p].hand[c].item !== "undefined")
             this.$set(this.players[p].hand[c], "available", false);
         }
-        }
-        this.amount=0;
-        for (let t in this.players){
-          this.amount+=1;
-          if(this.players[t].bottles<=0){
-            this.playerFinished.push(1);
-          }
-        }
-        if(this.playerFinished.length==this.amount){ //&& this.twoCards==false, kan man sätta in the här för raise value, när man kör två handlingar.
-          this.nextPhase=true;
-          console.log("nu börjar skiten");
-          this.bottlesPlace();
-          this.placefirstBottles();
-
         }
     },
     marketTwoCards: function(){
@@ -530,7 +520,7 @@ export default {
           }
           
           if (this.players[this.playerId].bottles <= 0) {
-            this.$store.state.socket.emit('collectorsNextPlayer', {roomId: this.$route.params.id});
+            this.$store.state.socket.emit('collectorsNextPlayer', {roomId: this.$route.params.id, playerId: this.playerId});
           }
         }.bind(this));
 
@@ -551,7 +541,7 @@ export default {
         }
         else {
           console.log("next player")
-          this.$store.state.socket.emit('collectorsNextPlayer', {roomId: this.$route.params.id});
+          this.$store.state.socket.emit('collectorsNextPlayer', {roomId: this.$route.params.id, playerId: this.playerId});
         }
       }.bind(this)
     );
@@ -573,6 +563,7 @@ export default {
         this.players = d.players;
         this.itemsOnSale = d.itemsOnSale;
         this.actingPlayer = d.actingPlayer;
+        this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -592,6 +583,7 @@ export default {
         this.skillsOnSale = d.skillsOnSale;
         this.skillValue = d.skillValue;
         this.actingPlayer = d.actingPlayer;
+        this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -602,6 +594,7 @@ export default {
         this.auctionCards = d.auctionCards;
         this.boughtAuction = d.boughtAuction;
         this.actingPlayer = d.actingPlayer;
+        this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
       }.bind(this)
     );
     this.$store.state.socket.on(
@@ -630,20 +623,15 @@ export default {
             console.log("return", this.marketAction, this.costMarket);
             this.placeBottle(this.marketAction,this.costMarket);
         }
+        else{
+          this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
+        }
         if(this.costMarket==0 && this.newCard==false){
           this.twoCards=false;
-          console.log("men nu då");
           this.marketTwoCards=true; // hur kan man få den att titta 
+          this.checkPhase(d.playerId, this.players[d.playerId].bottleActions);
         }
 
-      }.bind(this)
-    );
-     this.$store.state.socket.on(
-      "collectorsEffectOfBottles",
-      function (d) {
-        console.log(d.playerId, "time to place your bottles, bee");
-        this.players = d.players;
-        this.effectOfBottles(d.playerId, d.bottleActions);
       }.bind(this)
     );
      this.$store.state.socket.on(
@@ -781,18 +769,7 @@ export default {
         secondAction: this.secondAction,
       }); 
       }
-    },/*
-    buyMarket: function (card) {
-      console.log("buyMarket", card);
-      this.$store.state.socket.emit("collectorsMarket", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        card: card,
-        cost: this.marketValues[card.market] + this.chosenPlacementCost,
-        typeAction: 3,
-      });
-      console.log(card);
-    },*/
+    },
     buyWork: function(event){
       console.log("Collectors p", event);
       console.log("Collectors index", event.index);
@@ -843,13 +820,6 @@ export default {
   bidClose: function() {
   document.getElementById("formAuction").style.display = "none";
   },
-  placefirstBottles: function(){
-    console.log("bottleFirst");
-      this.$store.state.socket.emit("collectorsBottleEffect", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-      });
-  },
   effectOfBottles: function(playerId, bottleActions){
     if(bottleActions>0){
     document.getElementById("bottlebuttons").style.display = "block";
@@ -866,6 +836,7 @@ export default {
       if(this.numButtons<=0){
         document.getElementById("bottlebuttons").style.display = "none";
       }
+      this.drawCardB=true;
     }
   },
   getMoneyOne: function(){
@@ -879,6 +850,7 @@ export default {
       if(this.numButtons<=0){
         document.getElementById("bottlebuttons").style.display = "none";
    }
+    this.getMoney1=true;
    } 
 
   },
@@ -893,8 +865,30 @@ export default {
       if(this.numButtons<=0){
         document.getElementById("bottlebuttons").style.display = "none";
    }
+    this.getMoney2=true;
    } 
   },
+  drawCardBottleDone: function(){
+    return(this.drawCardB);
+  },
+  drawCardBottleDone1: function(){
+    return(this.getMoney1);
+  },
+  drawCardBottleDone2: function(){
+    return(this.getMoney2);
+  },
+  checkPhase: function(playerIdN, bottleActions){
+    if(this.players[playerIdN].timetoPlaceBB){
+      console.log("nu börjar skiten");
+      this.bottlesPlace(); 
+      if(this.playerId==playerIdN){
+        this.effectOfBottles(playerIdN,bottleActions);
+      }
+        
+        
+    }
+  }
+
   },
 };
 
