@@ -151,7 +151,12 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .buy-cards, .buttons {
+  .buy-cards{
+    display: grid;
+    grid-template-rows: 180px;
+    grid-template-columns: repeat(auto-fill, 130px);
+  }
+  .buttons {
     display: grid;
     grid-template-columns: repeat(auto-fill, 130px);
   }

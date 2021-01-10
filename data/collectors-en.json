@@ -2,9 +2,14 @@
 	"draw": "Draw card",
 	"invite": "Invite other players with this link:",
 	"endTurn": "End turn",
-	"buyCard": "Buy a card",
+	"buyCard": "Buy an item",
 	"buySkill": "Buy a skill",
 	"auction": "Auction a card",
 	"market": "Raise value",
-	"work": "Work options"
+	"work": "Work options",
+	"refill":"Refill Cards",
+	"hand":"Your hand",
+	"items":"Your items",
+	"currentAuction":"Current auction",
+	"boughtSkills":"Your skills"
 }

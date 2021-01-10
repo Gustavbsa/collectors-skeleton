@@ -2,6 +2,14 @@
 	"draw": "Dra kort",
 	"invite": "Bjud in andra spelare med den här länken:",
 	"endTurn": "Avsluta runda",
-	"buyCard": "Köp ett kort",
-	"buySkill": "Köp en skill"
+	"buyCard": "Köp ett item",
+	"buySkill": "Köp en skill",
+	"auction": "Auktionera ett kort",
+	"market": "Höj värdet",
+	"work": "Arbetstillfällen",
+	"refill":"Fyll på kort",
+	"hand":"Din hand",
+	"items":"Dina items",
+	"currentAuction":"Nuvarande auktion",
+	"boughtSkills":"Dina skills"
 }

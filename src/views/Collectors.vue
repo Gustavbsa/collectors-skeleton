@@ -3,206 +3,400 @@
     <main>
       <div class="layout">
         <div class="topPage">
-          <h1>info info info {{Object.keys(this.players).length}}</h1>
-         <h1>Round: {{ round }} Play order: {{ playOrder }} </h1> 
- <h1 v-if="actingPlayer!==null">Current player is {{ playOrder[actingPlayer]}}</h1>
-        </div>
-        <div class="empty1"></div>
-
-        <div v-if="this.$store.state.playerCount>=2 || Object.keys(this.players).length>=2">
-          <div>
-          <div class="opboard1">
-            <OpponentBoard />
-          <div class="piecesOp11">
-            <BlackPieces />
-          </div>
-           <div class="piecesOp12">
-            <BlackPieces />
-          </div>
-          </div>
-          </div>
-          <br /><br />
+          <h1>info info info {{ Object.keys(this.players).length }}</h1>
+          <h1>Round: {{ round }} Play order: {{ playOrder }}</h1>
+          <h1 v-if="actingPlayer !== null">
+            You are: {{ this.playerId }}, Current player is
+            {{ playOrder[actingPlayer] }}
+          </h1>
         </div>
 
-        <div class="gboard">
-          <CollectorsGameboard />
-        <br /><br />
-        <div v-if="this.$store.state.playerCount==4||Object.keys(this.players).length == 4">
-          <div class="opboard3">
-            <OpponentBoard />
-               <div class="piecesOp31">
-            <PurplePieces />
-          </div>
-           <div class="piecesOp32">
-            <PurplePieces />
-          </div>
-          </div>
-          <br><br><br>
-          <div class="backsideCard3"> <img src="/images/backsideCard.png" height= "100%" width= "30%" class="opac">
-        <div v-if="this.$store.state.playerId==Object.keys(this.players)[0]">
-        <div class="numberOCards">{{ this.players[Object.keys(this.players)[3]].hand.length }} </div>
-         <br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[3]].money}}</div>
-          
-         
-        </div>
-        
-        <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[1] && Object.keys(this.players).length>=2"> 
-         <div class="numberOCards"> {{ this.players[Object.keys(this.players)[3]].hand.length }}</div>
-          <br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[3]].money }}</div>
-          
+        <div class="allOpponents">
+          <div
+            class="opboardContainer"
+            style="grid-area: opponent1"
+            v-if="
+              this.$store.state.playerCount >= 2 ||
+              Object.keys(this.players).length >= 2
+            "
+          >
+            <div class="opboard">
+              <div
+                v-if="
+                  this.$store.state.playerId == Object.keys(this.players)[0]
+                "
+              >
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <div class="numberOCards">
+                    {{ this.players[Object.keys(this.players)[1]].hand.length }}
+                  </div>
+                </div>
+                <div class="moneyOp">
+                  ${{ this.players[Object.keys(this.players)[1]].money }}
+                </div>
+              </div>
+              
+              <div
+                v-else-if="
+                  this.$store.state.playerId == Object.keys(this.players)[1] &&
+                  Object.keys(this.players).length >= 2
+                "
+              >
 
-        </div>
-        
-         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[2] && Object.keys(this.players).length>=3"> 
-           <div class="numberOCards"> {{ this.players[Object.keys(this.players)[3]].hand.length }}</div>
-            <br /><br />
-          
-             <div class="moneyOp">${{ this.players[Object.keys(this.players)[3]].money }}</div>
-          
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <div class="numberOCards">
+                    {{ this.players[Object.keys(this.players)[0]].hand.length }}
+                  </div>
+                </div>
 
-           </div>
-         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[3] && Object.keys(this.players).length==4">
-            <div class="numberOCards"> {{ this.players[Object.keys(this.players)[2]].hand.length }}</div>
-              <br /><br />
-          
-             <div class="moneyOp">${{ this.players[Object.keys(this.players)[2]].money }}</div>
-          
+                <div class="moneyOp">
+                  ${{ this.players[Object.keys(this.players)[0]].money }}
+                </div>
+              </div>
+
+              <div
+                v-else-if="
+                  this.$store.state.playerId == Object.keys(this.players)[2] &&
+                  Object.keys(this.players).length >= 3
+                "
+              >
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <div class="numberOCards">
+                    {{ this.players[Object.keys(this.players)[0]].hand.length }}
+                  </div>
+                </div>
+
+                <div class="moneyOp">
+                  ${{ this.players[Object.keys(this.players)[0]].money }}
+                </div>
+              </div>
+              <div
+                v-else-if="
+                  this.$store.state.playerId == Object.keys(this.players)[3] &&
+                  Object.keys(this.players).length == 4
+                "
+              >
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <div class="numberOCards">
+                    {{ this.players[Object.keys(this.players)[0]].hand.length }}
+                  </div>
+                </div>
+
+                <div class="moneyOp">
+                  ${{ this.players[Object.keys(this.players)[0]].money }}
+                </div>
+              </div>
+              <v-container class="opboardimage">
+                <OpponentBoard />
+              </v-container>
             </div>
-           
-        </div>
-        </div>
-        </div>
-
-         <div class="pBoard">
-          <div class="pboard">
-            <PlayerBoard />
-          <div class="form-popup-bottle" id="bottlebuttons">
-          <form class="form-container-bottle">
-          <button type="button" class="bottleB" v-on:click="drawCardBottle();">1: get a card</button>
-          <button type="button" class="bottleB" v-on:click="getMoneyOne();">2: get 1$</button>
-          <button type="button" class="bottleB" v-on:click="getMoneyTwo();">3: get 2$</button>
-          </form>
-          </div> 
-           
-          <div class="form-popup" id="myForm">
-          <form class="form-container">
-          <h1 class="PopUpText">Actions available {{players[playerId].bottles}}</h1>
-
-          <button type="button" class="buyItem" v-on:click="buyItemBottle();">Buy Item</button>
-          <button type="button" class="gainSkill" v-on:click="gainSkillBottle()">Gain Skill</button>
-          <button type="button" class="auction" v-on:click="auctionBottle()">Auction</button>
-          <button type="button" class="raiseValue" v-on:click="raiseValueBottle()">Raise Value</button>
-          <button type="button" class="work" v-on:click="workBottle()">work</button>
-          <br>
-          <button type="button" class="cancel" v-on:click="closeForm()">Close</button>
-          </form></div>
-
           </div>
+
+          <div
+            class="opboardContainer"
+            style="grid-area: opponent2"
+            v-if="
+              this.$store.state.playerCount >= 3 ||
+              Object.keys(this.players).length >= 3
+            "
+          >
+            <div class="opboard">
+                <div
+                  v-if="
+                    this.$store.state.playerId == Object.keys(this.players)[0]
+                  "
+                >
+                  <div class="moneyOp">
+                    ${{ this.players[Object.keys(this.players)[2]].money }}
+                  </div>
+                </div>
+
+                <div
+                  v-else-if="
+                    this.$store.state.playerId ==
+                      Object.keys(this.players)[1] &&
+                    Object.keys(this.players).length >= 2
+                  "
+                >
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <div class="numberOCards">
+                    {{ this.players[Object.keys(this.players)[2]].hand.length }}
+                  </div>
+                </div>
+                  <div class="moneyOp">
+                    ${{ this.players[Object.keys(this.players)[2]].money }}
+                  </div>
+                </div>
+
+                <div
+                  v-else-if="
+                    this.$store.state.playerId ==
+                      Object.keys(this.players)[2] &&
+                    Object.keys(this.players).length >= 3
+                  "
+                >
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <div class="numberOCards">
+                    {{ this.players[Object.keys(this.players)[1]].hand.length }}
+                  </div>
+                </div>
+
+                  <div class="moneyOp">
+                    ${{ this.players[Object.keys(this.players)[1]].money }}
+                  </div>
+                </div>
+                <div
+                  v-else-if="
+                    this.$store.state.playerId ==
+                      Object.keys(this.players)[3] &&
+                    Object.keys(this.players).length == 4
+                  "
+                >
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <div class="numberOCards">
+                    {{ this.players[Object.keys(this.players)[1]].hand.length }}
+                  </div>
+                </div>
+
+                  <div class="moneyOp">
+                    ${{ this.players[Object.keys(this.players)[1]].money }}
+                  </div>
+                </div>
+              </div>
+              <v-container class="opboardimage">
+                <OpponentBoard />
+              </v-container>
+            
+          </div>
+
+          <div
+            class="opboardContainer"
+            style="grid-area: opponent3"
+            v-if="
+              this.$store.state.playerCount == 4 ||
+              Object.keys(this.players).length == 4
+            "
+          >
+            <div class="opboard">
+
+                <div
+                  v-if="
+                    this.$store.state.playerId == Object.keys(this.players)[0]
+                  "
+                >
+              <div class="numberOfCardsContainer">
+                <img src="/images/backsideCard.png" class="imageCard" />
+                <div class="numberOCards">
+                  {{ this.players[Object.keys(this.players)[3]].hand.length }}
+                </div>
+              </div>
+                  <div class="moneyOp">
+                    ${{ this.players[Object.keys(this.players)[3]].money }}
+                  </div>
+                </div>
+
+                <div
+                  v-else-if="
+                    this.$store.state.playerId ==
+                      Object.keys(this.players)[1] &&
+                    Object.keys(this.players).length >= 2
+                  "
+                >
+                  <div class="numberOfCardsContainer">
+                <img src="/images/backsideCard.png" class="imageCard" />
+                <div class="numberOCards">
+                  {{ this.players[Object.keys(this.players)[3]].hand.length }}
+                </div>
+              </div>
+
+                  <div class="moneyOp">
+                    ${{ this.players[Object.keys(this.players)[3]].money }}
+                  </div>
+                </div>
+
+                <div
+                  v-else-if="
+                    this.$store.state.playerId ==
+                      Object.keys(this.players)[2] &&
+                    Object.keys(this.players).length >= 3
+                  "
+                >
+                  <div class="numberOfCardsContainer">
+                <img src="/images/backsideCard.png" class="imageCard" />
+                <div class="numberOCards">
+                  {{ this.players[Object.keys(this.players)[3]].hand.length }}
+                </div>
+              </div>
+
+                  <div class="moneyOp">
+                    ${{ this.players[Object.keys(this.players)[3]].money }}
+                  </div>
+                </div>
+                <div
+                  v-else-if="
+                    this.$store.state.playerId ==
+                      Object.keys(this.players)[3] &&
+                    Object.keys(this.players).length == 4
+                  "
+                >
+                  <div class="numberOfCardsContainer">
+                <img src="/images/backsideCard.png" class="imageCard" />
+                <div class="numberOCards">
+                  {{ this.players[Object.keys(this.players)[2]].hand.length }}
+                </div>
+              </div>
+
+                  <div class="moneyOp">
+                    ${{ this.players[Object.keys(this.players)[2]].money }}
+                  </div>
+                </div>
+              </div>
+              <v-container class="opboardimage">
+                <OpponentBoard />
+              </v-container>
+            </div>
+          
+        </div>
+
+        <div class="pBoard">
+          <v-container class="pboard">
+            <PlayerBoard />
+            <div class="form-popup-bottle" id="bottlebuttons">
+              <form class="form-container-bottle">
+                <button
+                  type="button"
+                  class="bottleB"
+                  v-on:click="drawCardBottle()"
+                >
+                  1: get a card
+                </button>
+                <button
+                  type="button"
+                  class="bottleB"
+                  v-on:click="getMoneyOne()"
+                >
+                  2: get 1$
+                </button>
+                <button
+                  type="button"
+                  class="bottleB"
+                  v-on:click="getMoneyTwo()"
+                >
+                  3: get 2$
+                </button>
+              </form>
+            </div>
+
+            <div class="form-popup" id="myForm">
+              <form class="form-container">
+                <h1 class="PopUpText">
+                  Actions available {{ players[playerId].bottles }}
+                </h1>
+
+                <button
+                  type="button"
+                  class="buyItem"
+                  v-on:click="buyItemBottle()"
+                >
+                  Buy Item
+                </button>
+                <button
+                  type="button"
+                  class="gainSkill"
+                  v-on:click="gainSkillBottle()"
+                >
+                  Gain Skill
+                </button>
+                <button
+                  type="button"
+                  class="auction"
+                  v-on:click="auctionBottle()"
+                >
+                  Auction
+                </button>
+                <button
+                  type="button"
+                  class="raiseValue"
+                  v-on:click="raiseValueBottle()"
+                >
+                  Raise Value
+                </button>
+                <button type="button" class="work" v-on:click="workBottle()">
+                  work
+                </button>
+                <br />
+                <button type="button" class="cancel" v-on:click="closeForm()">
+                  Close
+                </button>
+              </form>
+            </div>
+          </v-container>
           <br /><br />
-          <div>
-            <button class="shape">${{ players[playerId].money }}</button> 
+          <div style="padding-top">
+            <button class="shape">${{ players[playerId].money }}</button>
             <button class="pieces1" v-on:click="PiecesA()">
-            <BluePieces />
+              <BluePieces />
             </button>
           </div>
           <div class="form-popup" id="bottlePlace">
             <form class="form-containerBottle">
-            <h1 class="PopUpText">Place your bottles on your playerboard</h1>
-            <button type="button" class="cancel" v-on:click="closeBottlePlace()">Close</button>
+              <h1 class="PopUpText">Place your bottles on your playerboard</h1>
+              <button
+                type="button"
+                class="cancel"
+                v-on:click="closeBottlePlace()"
+              >
+                Close
+              </button>
             </form>
           </div>
-            Hand
+          <h3 style="margin-bottom:0" v-if="true">{{ labels.hand }}</h3>
           <div class="cardslots" v-if="players[playerId]">
-            <CollectorsCard
-              v-for="(card, index) in players[playerId].hand"
-              :card="card"
-              :availableAction="card.available"
-              @doAction="selectOp(card)"
-              :key="index"
-            />
+            <div v-for="(card, index) in players[playerId].hand" :key="index">
+              <CollectorsCard
+                :card="card"
+                :availableAction="card.available"
+                @doAction="selectOp(card)"
+                :key="index"
+              />
+            </div>
           </div>
           <div class="form-popup" id="formHand">
-          <form class="form-container">
-          <h1 class="PopUpText">Actions from Hand</h1>
+            <form class="form-container">
+              <h1 class="PopUpText">Actions from Hand</h1>
 
-          <button type="button" class="buyItem" v-on:click="buyItem()">Buy Item</button>
-          <button type="button" class="gainSkill" v-on:click="gainSkill()">Gain Skill</button>
-          <button type="button" class="auction" v-on:click="putAuction()">Auction</button>
-          <button type="button" class="raiseValue" v-on:click="raiseValue()">Raise Value</button>
-          <br>
-          <button type="button" class="cancel" v-on:click="closeFormHand()">Close</button>
-          </form></div>
+              <button type="button" class="buyItem" v-on:click="buyItem()">
+                Buy Item
+              </button>
+              <button type="button" class="gainSkill" v-on:click="gainSkill()">
+                Gain Skill
+              </button>
+              <button type="button" class="auction" v-on:click="putAuction()">
+                Auction
+              </button>
+              <button
+                type="button"
+                class="raiseValue"
+                v-on:click="raiseValue()"
+              >
+                Raise Value
+              </button>
+              <br />
+              <button type="button" class="cancel" v-on:click="closeFormHand()">
+                Close
+              </button>
+            </form>
+          </div>
         </div>
 
-        <div class="backsideCard1"> <img src="/images/backsideCard.png" height= "100%" width= "30%" class="opac">
-        <div v-if="this.$store.state.playerId==Object.keys(this.players)[0]">
-        <div class="numberOCards">{{ this.players[Object.keys(this.players)[1]].hand.length }} </div>
-        <br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[1]].money}}</div>
-         
-        </div>
-        
-        <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[1] && Object.keys(this.players).length>=2"> 
-         <div class="numberOCards"> {{ this.players[Object.keys(this.players)[0]].hand.length }}</div>
-         <br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[0]].money}}</div>
-
-        </div>
-        
-         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[2] && Object.keys(this.players).length>=3"> 
-           <div class="numberOCards"> {{ this.players[Object.keys(this.players)[0]].hand.length }}</div>
-           <br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[0]].money}}</div>
-           </div>
-         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[3] && Object.keys(this.players).length==4">
-            <div class="numberOCards"> {{ this.players[Object.keys(this.players)[0]].hand.length }}</div>
-            <br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[0]].money}}</div>
-            </div>
-        
-      
-      
-      </div>
-        <div v-if="this.$store.state.playerCount>=3||Object.keys(this.players).length >= 3">
-          <div class="opboard2">
-            <OpponentBoard />
-             <div class="piecesOp21">
-            <BrownPieces />
-          </div>
-           <div class="piecesOp22">
-            <BrownPieces />
-          </div>
-          </div>
-         <div class="backsideCard2"> <img src="/images/backsideCard.png" height= "100%" width= "30%" class="opac">
-        <div v-if="this.$store.state.playerId==Object.keys(this.players)[0]">
-        <div class="numberOCards">{{ this.players[Object.keys(this.players)[2]].hand.length }} </div>
-         <br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[2]].money}}</div>
-        </div>
-        
-        <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[1] && Object.keys(this.players).length>=2"> 
-         <div class="numberOCards"> {{ this.players[Object.keys(this.players)[2]].hand.length }}</div>
-<br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[2]].money}}</div>
-        </div>
-        
-         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[2] && Object.keys(this.players).length>=3"> 
-           <div class="numberOCards"> {{ this.players[Object.keys(this.players)[1]].hand.length }}</div>
-           <br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[1]].money}}</div>
-           </div>
-         <div v-else-if="this.$store.state.playerId==Object.keys(this.players)[3] && Object.keys(this.players).length==4">
-            <div class="numberOCards"> {{ this.players[Object.keys(this.players)[1]].hand.length }}</div>
-            <br /><br />
-            <div class="moneyOp">${{ this.players[Object.keys(this.players)[1]].money}}</div>
-            </div>
-        </div>
-        </div>
-        
-       
-        <div class="actions" v-if="this.currentAction=='buyItem'">
+        <div class="actions" v-if="this.currentAction == 'buyItem'">
           <CollectorsBuyActions
             v-if="players[playerId]"
             :labels="labels"
@@ -216,18 +410,23 @@
             @buyCard="buyCard($event)"
             @placeBottle="placeBottle('buy', $event)"
           />
-          <div class="buttons" v-if="actingPlayer!==null">
-            <button :disabled="this.playOrder[actingPlayer] !== playerId" @click="drawCard">
+          <div class="buttons" v-if="actingPlayer !== null">
+            <button
+              :disabled="this.playOrder[actingPlayer] !== playerId"
+              @click="drawCard"
+            >
               {{ labels.draw }}
             </button>
-            <button @click="refillCards">Refill cards</button>
+            <button
+              :disabled="this.playOrder[actingPlayer] !== playerId"
+              @click="refillCards"
+            >
+              {{ labels.refill }}
+            </button>
           </div>
         </div>
-        <br>
-       
 
-      
-           <div class="actions" v-if="this.currentAction=='buySkill'">
+        <div class="actions" v-if="this.currentAction == 'buySkill'">
           <CollectorsSkillAction
             v-if="players[playerId]"
             :labels="labels"
@@ -243,7 +442,7 @@
           />
         </div>
 
-        <div class="actions" v-if="this.currentAction=='buyAuction'">
+        <div class="actions" v-if="this.currentAction == 'buyAuction'">
           <CollectorsAuction
             v-if="players[playerId]"
             :labels="labels"
@@ -258,56 +457,76 @@
             @buyAuction="buyAuction($event)"
           />
         </div>
-        
+        <div class="inventory">
+          <div class="itemCards">
+            <h3 style="margin-bottom:0" v-if="true">{{ labels.items }}</h3>
+            <div class="cardslots" v-if="players[playerId]">
+              <div
+                v-for="(card, index) in players[playerId].items"
+                :key="index"
+              >
+                <CollectorsCard :card="card" />
+              </div>
+            </div>
+          </div>
+          <div class="boughtSkills">
+            <h3 style="margin-bottom:0" v-if="true">{{ labels.boughtSkills }}</h3>
+            <div class="cardslots" v-if="players[playerId]">
+              <div
+                v-for="(card, index) in players[playerId].skills"
+                :key="index"
+              >
+                <CollectorsCard :card="card" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="auctionCard">
+          <h3 style="margin-top:0" v-if="true">{{ labels.currentAuction }}</h3>
 
-        <div class="item">
-          Items
-          <div class="cardslots" v-if="players[playerId]">
-            <CollectorsCard
-              v-for="(card, index) in players[playerId].items"
-              :card="card"
-              :key="index"
-            />
-          </div>
-        </div>
-        <div class="boughtSkills">
-          boughtSkills
-          <div class="cardslots" v-if="players[playerId]">
-            <CollectorsCard
-              v-for="(card, index) in players[playerId].skills"
-              :card="card"
-              :key="index"
-            />
-          </div>
-        </div>
-         <div class="auctionCard">
-          Auction Cards
-          <br>
-          <div class="cardslots" v-if="boughtAuction">
-            <CollectorsCard
-              v-for="(card, index) in boughtAuction"
-              :card="card"
-              :key="index"
-              :availableAction="card.available"
-              @doAction="getAuction(card)"
-            />
+          <div class="auctionArea">
+            <div style="margin: 0 auto 0 auto; width: 130px">
+              <div class="cardslots" v-if="boughtAuction">
+                <div v-for="(card, index) in boughtAuction" :key="index">
+                  <CollectorsCard
+                    :card="card"
+                    :availableAction="card.available"
+                    @doAction="getAuction(card)"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div class="form-auction" id="formAuction">
-          <form class="form-container">
-          <h1 class="PopUpText">Auction</h1>
+            <form class="form-container">
+              <h1 class="PopUpText">Auction</h1>
 
-          <label for="Auction price"><b class="PopUpText">Auction price</b></label>
-          <input type="number" placeholder="Enter price" name="price" id="price" required>
-          <button type="button" class="btn" v-on:click="bid(players[playerId].money);">Bid</button>
-          <button type="button" class="btn cancel" v-on:click="bidClose()">Close</button>
-          
-          </form>
+              <label for="Auction price"
+                ><b class="PopUpText">Auction price</b></label
+              >
+              <input
+                type="number"
+                placeholder="Enter price"
+                name="price"
+                id="price"
+                required
+              />
+              <button
+                type="button"
+                class="btn"
+                v-on:click="bid(players[playerId].money)"
+              >
+                Bid
+              </button>
+              <button type="button" class="btn cancel" v-on:click="bidClose()">
+                Close
+              </button>
+            </form>
           </div>
-         
         </div>
-      <div class="actions" v-if="this.currentAction=='buyMarket'">
-      <CollectorsMarket
-        v-if="players[playerId]"
+        <div class="actions" v-if="this.currentAction == 'buyMarket'">
+          <CollectorsMarket
+            v-if="players[playerId]"
             :labels="labels"
             :player="players[playerId]"
             :market="market"
@@ -321,30 +540,24 @@
             :playerId="playerId"
             @buySkill="buySkill($event)"
             @buyAuction="buyAuction($event)"
-            />   
-      </div>
-      <div class="actions" v-if="this.currentAction=='buyWork'">
-        <CollectorsWork
-        v-if="players[playerId]"
-        :labels="labels"
-        :player="players[playerId]"
-        :placement="workPlacement"
-        :playOrder="playOrder"
-        :actingPlayer="actingPlayer"
-        :playerId="playerId"
-        @placeBottle="placeBottle('work', $event)"
-        @buyWork="buyWork($event)"
-        @refillCards="refillCards($event)"
-        /> 
-      </div>
-
- 
-        <div class="pPieces">
-          Pieces
-          <div class="pieces">
-            <BlackPieces />
-          </div>
+          />
         </div>
+        <div class="actions" v-if="this.currentAction == 'buyWork'">
+          <CollectorsWork
+            v-if="players[playerId]"
+            :labels="labels"
+            :player="players[playerId]"
+            :placement="workPlacement"
+            :playOrder="playOrder"
+            :actingPlayer="actingPlayer"
+            :playerId="playerId"
+            @placeBottle="placeBottle('work', $event)"
+            @buyWork="buyWork($event)"
+            @refillCards="refillCards($event)"
+          />
+        </div>
+
+
       </div>
     </main>
     <!--
@@ -354,6 +567,11 @@
     <button v-if="players[playerId]" @click="players[playerId].money += 1">
       fake more money
     </button>
+    <button @click="toggleTutorial()">
+      Tutorial
+    </button>
+    
+      
     <footer>
       <p>
         {{ labels.invite }}
@@ -365,19 +583,17 @@
         />
       </p>
     </footer>
+    <embed id="tutorial" style="display: none" src="/7._Rules_-_Collectors_0.4.pdf" width="1000px" height="1000px"/>
   </div>
 </template>
 
 <script>
+
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 
 import CollectorsCard from "@/components/CollectorsCard.vue";
 import CollectorsBuyActions from "@/components/CollectorsBuyActions.vue";
-import CollectorsGameboard from "@/components/CollectorsGameboard.vue";
-import BlackPieces from "@/components/BlackPieces.vue";
 import BluePieces from "@/components/BluePieces.vue";
-import BrownPieces from "@/components/BrownPieces.vue";
-import PurplePieces from "@/components/PurplePieces.vue";
 import PlayerBoard from "@/components/PlayerBoard.vue";
 import OpponentBoard from "@/components/OpponentBoard.vue";
 import CollectorsSkillAction from "@/components/CollectorsSkillAction.vue";
@@ -390,11 +606,7 @@ export default {
   components: {
     CollectorsCard,
     CollectorsBuyActions,
-    CollectorsGameboard,
-    BlackPieces,
     BluePieces,
-    PurplePieces,
-    BrownPieces,
     PlayerBoard,
     OpponentBoard,
     CollectorsSkillAction,
@@ -425,7 +637,7 @@ export default {
         figures: 0,
         music: 0,
       },
-      skillValue:{
+      skillValue: {
         bottle: 0,
         workerIncome: 0,
         workerCard: 0,
@@ -444,12 +656,12 @@ export default {
       market: [],
       isMarket: false,
       twoCards: false,
-      costMarket:-1,
-      marketAction:"",
-      currentAction:"",
-      secondAction:false,
+      costMarket: -1,
+      marketAction: "",
+      currentAction: "",
+      secondAction: false,
       nextPhase: Boolean,
-      playerFinished:[],
+      playerFinished: [],
       newCard: true,
       marketTwoCards: Boolean,
       numButtons: 0,
@@ -467,23 +679,23 @@ export default {
           if (typeof this.players[p].hand[c].item !== "undefined")
             this.$set(this.players[p].hand[c], "available", false);
         }
+      }
+      this.amount = 0;
+      for (let t in this.players) {
+        this.amount += 1;
+        if (this.players[t].bottles <= 0) {
+          this.playerFinished.push(1);
         }
-        this.amount=0;
-        for (let t in this.players){
-          this.amount+=1;
-          if(this.players[t].bottles<=0){
-            this.playerFinished.push(1);
-          }
-        }
-        if(this.playerFinished.length==this.amount){ //&& this.twoCards==false, kan man sätta in the här för raise value, när man kör två handlingar.
-          this.nextPhase=true;
-          console.log("nu börjar skiten");
-          this.bottlesPlace();
-          this.placefirstBottles();
-
-        }
+      }
+      if (this.playerFinished.length == this.amount) {
+        //&& this.twoCards==false, kan man sätta in the här för raise value, när man kör två handlingar.
+        this.nextPhase = true;
+        console.log("nu börjar skiten");
+        this.bottlesPlace();
+        this.placefirstBottles();
+      }
     },
-    marketTwoCards: function(){
+    marketTwoCards: function () {
       console.log("marketTwo");
       this.players();
     },
@@ -523,17 +735,21 @@ export default {
       }.bind(this)
     );
 
-      this.$store.state.socket.on('collectorsUpdatePlayers', 
-        function(players) {
-          this.players = players;
-          for(let i = 0; i<2; i+=1){
-            console.log("player: ", this.players[i].bottles);
-          }
-          
-          if (this.players[this.playerId].bottles <= 0) {
-            this.$store.state.socket.emit('collectorsNextPlayer', {roomId: this.$route.params.id});
-          }
-        }.bind(this));
+    this.$store.state.socket.on(
+      "collectorsUpdatePlayers",
+      function (players) {
+        this.players = players;
+        for (let i = 0; i < 2; i += 1) {
+          console.log("player: ", this.players[i].bottles);
+        }
+
+        if (this.players[this.playerId].bottles <= 0) {
+          this.$store.state.socket.emit("collectorsNextPlayer", {
+            roomId: this.$route.params.id,
+          });
+        }
+      }.bind(this)
+    );
 
     this.$store.state.socket.on(
       "collectorsBottlePlaced",
@@ -543,21 +759,27 @@ export default {
         this.marketPlacement = d.marketPlacement;
         this.auctionPlacement = d.auctionPlacement;
         this.workPlacement = d.workPlacement;
-         if (this.players[this.playerId].bottles > 0) {
+        if (this.players[this.playerId].bottles > 0) {
           for (let i = 0; i < this.players[this.playerId].hand.length; i += 1) {
-            console.log("highlighting")
-            setTimeout(() =>
-            this.$set(this.players[this.playerId].hand[i], "available", true), 50);
+            console.log("highlighting");
+            setTimeout(
+              () =>
+                this.$set(
+                  this.players[this.playerId].hand[i],
+                  "available",
+                  true
+                ),
+              50
+            );
           }
-        }
-        else {
-          console.log("next player")
-          this.$store.state.socket.emit('collectorsNextPlayer', {roomId: this.$route.params.id});
+        } else {
+          console.log("next player");
+          this.$store.state.socket.emit("collectorsNextPlayer", {
+            roomId: this.$route.params.id,
+          });
         }
       }.bind(this)
     );
-
-    
 
     this.$store.state.socket.on(
       "collectorsActingPlayer",
@@ -584,8 +806,8 @@ export default {
         this.actingPlayer = d.actingPlayer;
       }.bind(this)
     );
-   
-     this.$store.state.socket.on(
+
+    this.$store.state.socket.on(
       "collectorsSkillBought",
       function (d) {
         console.log(d.playerId, "bought a skill");
@@ -614,32 +836,31 @@ export default {
         this.boughtAuction = d.boughtAuction;
       }.bind(this)
     );
-     this.$store.state.socket.on(
+    this.$store.state.socket.on(
       "collectorsMarketBought",
       function (d) {
         console.log(d.playerId, "bought a card from market");
         this.players = d.players;
         this.market = d.market;
-        this.auctionCards  = d.auctionCards;
+        this.auctionCards = d.auctionCards;
         this.skillsOnSale = d.skillsOnSale;
         this.marketValues = d.marketValues;
         this.actingPlayer = d.actingPlayer;
-        this.isMarket=false;
-        if(this.costMarket==0 && this.newCard==true){
-            this.newCard = false;
-            this.secondAction = true;
-            console.log("return", this.marketAction, this.costMarket);
-            this.placeBottle(this.marketAction,this.costMarket);
+        this.isMarket = false;
+        if (this.costMarket == 0 && this.newCard == true) {
+          this.newCard = false;
+          this.secondAction = true;
+          console.log("return", this.marketAction, this.costMarket);
+          this.placeBottle(this.marketAction, this.costMarket);
         }
-        if(this.costMarket==0 && this.newCard==false){
-          this.twoCards=false;
+        if (this.costMarket == 0 && this.newCard == false) {
+          this.twoCards = false;
           console.log("men nu då");
-          this.marketTwoCards=true; // hur kan man få den att titta 
+          this.marketTwoCards = true; // hur kan man få den att titta
         }
-
       }.bind(this)
     );
-     this.$store.state.socket.on(
+    this.$store.state.socket.on(
       "collectorsEffectOfBottles",
       function (d) {
         console.log(d.playerId, "time to place your bottles, bee");
@@ -647,24 +868,32 @@ export default {
         this.effectOfBottles(d.playerId, d.bottleActions);
       }.bind(this)
     );
-     this.$store.state.socket.on(
+    this.$store.state.socket.on(
       "collectorsGotMoney",
       function (d) {
         console.log(d.playerId, "You got money, bee");
         this.players = d.players;
       }.bind(this)
     );
-      this.$store.state.socket.on(
-        "collectorsCardsRefilled",
-        function (d) {
-          console.log(d.roomId, "refilled cards");
-          this.itemsOnSale = d.itemsOnSale;
-          this.skillsOnSale = d.skillsOnSale;
-          this.auctionCards = d.auctionCards;
-        }.bind(this)
+    this.$store.state.socket.on(
+      "collectorsCardsRefilled",
+      function (d) {
+        console.log(d.roomId, "refilled cards");
+        this.itemsOnSale = d.itemsOnSale;
+        this.skillsOnSale = d.skillsOnSale;
+        this.auctionCards = d.auctionCards;
+      }.bind(this)
     );
   },
   methods: {
+    toggleTutorial: function() {
+    var x = document.getElementById("tutorial");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+    },
     selectAll: function (n) {
       n.target.select();
     },
@@ -678,17 +907,16 @@ export default {
         cost: cost,
       });
       console.log(action, "the Action");
-        if(action=='market'){
-          this.isMarket=true;
-          this.costMarket=cost;
-          if(this.costMarket==0){
-            this.twoCards=true;
-          }
-          this.marketAction=action;
+      if (action == "market") {
+        this.isMarket = true;
+        this.costMarket = cost;
+        if (this.costMarket == 0) {
+          this.twoCards = true;
         }
-        else{
-          this.isMarket=false;
-        }
+        this.marketAction = action;
+      } else {
+        this.isMarket = false;
+      }
     },
     drawCard: function () {
       this.$store.state.socket.emit("collectorsDrawCard", {
@@ -696,48 +924,48 @@ export default {
         playerId: this.playerId,
       });
     },
-    selectOp: function(card){
+    selectOp: function (card) {
       this.handCard = card;
       document.getElementById("formHand").style.display = "block";
     },
-    buyItem: function(){
+    buyItem: function () {
       this.buyCard(this.handCard);
-       document.getElementById("formHand").style.display = "none";
+      document.getElementById("formHand").style.display = "none";
     },
-    buyItemBottle: function(){
-      this.currentAction='buyItem';
+    buyItemBottle: function () {
+      this.currentAction = "buyItem";
       document.getElementById("myForm").style.display = "none";
     },
-    gainSkillBottle: function(){
-      this.currentAction='buySkill';
+    gainSkillBottle: function () {
+      this.currentAction = "buySkill";
       document.getElementById("myForm").style.display = "none";
     },
-    auctionBottle: function(){
-      this.currentAction='buyAuction';
+    auctionBottle: function () {
+      this.currentAction = "buyAuction";
       document.getElementById("myForm").style.display = "none";
     },
-    raiseValueBottle: function(){
-      this.currentAction='buyMarket';
-      document.getElementById("myForm").style.display = "none";  
+    raiseValueBottle: function () {
+      this.currentAction = "buyMarket";
+      document.getElementById("myForm").style.display = "none";
     },
-    workBottle: function(){
-      this.currentAction='buyWork';
-      document.getElementById("myForm").style.display = "none"; 
+    workBottle: function () {
+      this.currentAction = "buyWork";
+      document.getElementById("myForm").style.display = "none";
     },
-    gainSkill: function(){
+    gainSkill: function () {
       this.buySkill(this.handCard);
-       document.getElementById("formHand").style.display = "none";
+      document.getElementById("formHand").style.display = "none";
     },
-    putAuction: function(){
+    putAuction: function () {
       this.buyAuction(this.handCard);
       document.getElementById("formHand").style.display = "none";
     },
-    raiseValue: function(){
-      if(this.isMarket){
-      console.log("action", this.marketAction);  
-      this.buyAuction(this.handCard);
-      this.isMarket=false;
-      document.getElementById("formHand").style.display = "none";
+    raiseValue: function () {
+      if (this.isMarket) {
+        console.log("action", this.marketAction);
+        this.buyAuction(this.handCard);
+        this.isMarket = false;
+        document.getElementById("formHand").style.display = "none";
       }
     },
     //funktioner kopplat till datahandlerCollectors
@@ -751,55 +979,53 @@ export default {
       });
     },
     buySkill: function (card) {
-      if(!this.isMarket){
-      console.log("buySkill", card);
-      this.$store.state.socket.emit("collectorsSkillCard", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        card: card,
-        cost: this.marketValues[card.market] + this.chosenPlacementCost,
-      });
-      }
-      else{
+      if (!this.isMarket) {
+        console.log("buySkill", card);
+        this.$store.state.socket.emit("collectorsSkillCard", {
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+          card: card,
+          cost: this.marketValues[card.market] + this.chosenPlacementCost,
+        });
+      } else {
         this.$store.state.socket.emit("collectorsMarket", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        card: card,
-        cost: this.marketValues[card.market] + this.chosenPlacementCost,
-        typeAction: 1,
-        secondAction: this.secondAction,
-      }); 
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+          card: card,
+          cost: this.marketValues[card.market] + this.chosenPlacementCost,
+          typeAction: 1,
+          secondAction: this.secondAction,
+        });
       }
     },
-     buyAuction: function (card) { 
-      if(!this.isMarket){ 
-      console.log("buyAuction", card);
-      this.$store.state.socket.emit("collectorsAuction", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        card: card,
-        cost: this.marketValues[card.market] + this.chosenPlacementCost,
-      });
-      }
-      else{
+    buyAuction: function (card) {
+      if (!this.isMarket) {
+        console.log("buyAuction", card);
+        this.$store.state.socket.emit("collectorsAuction", {
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+          card: card,
+          cost: this.marketValues[card.market] + this.chosenPlacementCost,
+        });
+      } else {
         this.$store.state.socket.emit("collectorsMarket", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        card: card,
-        cost: this.marketValues[card.market] + this.chosenPlacementCost,
-        typeAction: 2,
-        secondAction: this.secondAction,
-      }); 
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+          card: card,
+          cost: this.marketValues[card.market] + this.chosenPlacementCost,
+          typeAction: 2,
+          secondAction: this.secondAction,
+        });
       }
     },
-    
+
     refillCards: function () {
       console.log("RefillCards");
       this.$store.state.socket.emit("collectorsRefillCards", {
         roomId: this.$route.params.id,
       });
     },
-    
+
     /*
     buyMarket: function (card) {
       console.log("buyMarket", card);
@@ -812,7 +1038,7 @@ export default {
       });
       console.log(card);
     },*/
-    buyWork: function(event){
+    buyWork: function (event) {
       console.log("Collectors p", event);
       console.log("Collectors index", event.index);
       console.log("Collectors cost", event.cost);
@@ -823,100 +1049,98 @@ export default {
         index: event.index,
       });
     },
-  
-    getAuction: function (card) { 
-      this.auctionPrice = -1,
-      this.auctionCard = card;
-      console.log(this.auctionPrice, "hej")
+
+    getAuction: function (card) {
+      (this.auctionPrice = -1), (this.auctionCard = card);
+      console.log(this.auctionPrice, "hej");
       document.getElementById("formAuction").style.display = "block";
     },
-    PiecesA: function (){
+    PiecesA: function () {
       document.getElementById("myForm").style.display = "block";
     },
-    closeForm: function() {
-  document.getElementById("myForm").style.display = "none";
-  },
-  closeFormHand: function(){
-    document.getElementById("formHand").style.display = "none";
-  },
-  bottlesPlace: function(){
-    document.getElementById("bottlePlace").style.display = "block";
-  },
-  closeBottlePlace: function(){
-    document.getElementById("bottlePlace").style.display = "none";
-  },
-  bid: function(pMoney){
-  this.auctionPrice = document.getElementById("price").value;
-  console.log(this.auctionPrice, "bid");
-  document.getElementById("formAuction").style.display = "none";
-    if (this.auctionPrice>=0 && pMoney>=this.auctionPrice){
-      this.$store.state.socket.emit("collectorsGetAuction", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        card: this.auctionCard,
-        cost: this.auctionPrice
-      });
-    }
-    this.auctionCard={};
-  },
-  bidClose: function() {
-  document.getElementById("formAuction").style.display = "none";
-  },
-  placefirstBottles: function(){
-    console.log("bottleFirst");
+    closeForm: function () {
+      document.getElementById("myForm").style.display = "none";
+    },
+    closeFormHand: function () {
+      document.getElementById("formHand").style.display = "none";
+    },
+    bottlesPlace: function () {
+      document.getElementById("bottlePlace").style.display = "block";
+    },
+    closeBottlePlace: function () {
+      document.getElementById("bottlePlace").style.display = "none";
+    },
+    bid: function (pMoney) {
+      this.auctionPrice = document.getElementById("price").value;
+      console.log(this.auctionPrice, "bid");
+      document.getElementById("formAuction").style.display = "none";
+      if (this.auctionPrice >= 0 && pMoney >= this.auctionPrice) {
+        this.$store.state.socket.emit("collectorsGetAuction", {
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+          card: this.auctionCard,
+          cost: this.auctionPrice,
+        });
+      }
+      this.auctionCard = {};
+    },
+    bidClose: function () {
+      document.getElementById("formAuction").style.display = "none";
+    },
+    placefirstBottles: function () {
+      console.log("bottleFirst");
       this.$store.state.socket.emit("collectorsBottleEffect", {
         roomId: this.$route.params.id,
         playerId: this.playerId,
       });
-  },
-  effectOfBottles: function(playerId, bottleActions){
-    if(bottleActions>0){
-    document.getElementById("bottlebuttons").style.display = "block";
-    this.numButtons=bottleActions;
-    }
-  },
-  drawCardBottle: function(){
-    if(this.numButtons>0){
-      this.$store.state.socket.emit("collectorsDrawCard", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-      });
-      this.numButtons-=1;
-      if(this.numButtons<=0){
-        document.getElementById("bottlebuttons").style.display = "none";
+    },
+    effectOfBottles: function (playerId, bottleActions) {
+      if (bottleActions > 0) {
+        document.getElementById("bottlebuttons").style.display = "block";
+        this.numButtons = bottleActions;
       }
-    }
-  },
-  getMoneyOne: function(){
-   if(this.numButtons>0){
-     this.$store.state.socket.emit("collectorsgetMoney", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        extraMoney: 1
-      });
-    this.numButtons-=1;
-      if(this.numButtons<=0){
-        document.getElementById("bottlebuttons").style.display = "none";
-   }
-   } 
-
-  },
-  getMoneyTwo: function(){
-    if(this.numButtons>0){
-     this.$store.state.socket.emit("collectorsgetMoney", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-        extraMoney: 2
-      });
-    this.numButtons-=1;
-      if(this.numButtons<=0){
-        document.getElementById("bottlebuttons").style.display = "none";
-   }
-   } 
-  },
+    },
+    drawCardBottle: function () {
+      if (this.numButtons > 0) {
+        this.$store.state.socket.emit("collectorsDrawCard", {
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+        });
+        this.numButtons -= 1;
+        if (this.numButtons <= 0) {
+          document.getElementById("bottlebuttons").style.display = "none";
+        }
+      }
+    },
+    getMoneyOne: function () {
+      if (this.numButtons > 0) {
+        this.$store.state.socket.emit("collectorsgetMoney", {
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+          extraMoney: 1,
+        });
+        this.numButtons -= 1;
+        if (this.numButtons <= 0) {
+          document.getElementById("bottlebuttons").style.display = "none";
+        }
+      }
+    },
+    getMoneyTwo: function () {
+      if (this.numButtons > 0) {
+        this.$store.state.socket.emit("collectorsgetMoney", {
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+          extraMoney: 2,
+        });
+        this.numButtons -= 1;
+        if (this.numButtons <= 0) {
+          document.getElementById("bottlebuttons").style.display = "none";
+        }
+      }
+    },
   },
 };
-
+  
 </script>
 <style scoped>
 header {
@@ -944,7 +1168,7 @@ footer a:visited {
   background: radial-gradient(rgb(116, 22, 22), black);
   border-radius: 5px;
   padding: 20px;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 1fr 0.5fr 1fr;
 }
 .topPage {
   grid-column: 1 / span 3;
@@ -957,9 +1181,28 @@ footer a:visited {
 }
 .pBoard {
   grid-column: 1;
-  grid-row: 3;
-  transform: scale(0.8) translate(-15%, -15%);
+  grid-row: 2;
+  /*transform: scale(0.8) translate(-15%, -15%);*/
   position: relative;
+}
+.pboard {
+  width: 60%;
+  margin: 0;
+}
+.allOpponents {
+  margin: 5vh 0 0 0 ;
+  display: grid;
+  grid-row: 1 / 3;
+  grid-column: 3;
+  grid-template-rows: min-content min-content min-content;
+  grid-template-areas:
+    "opponent1"
+    "opponent2"
+    "opponent3";
+}
+.inventory {
+  grid-column: 1;
+  grid-row: 3;
 }
 .empty1 {
   grid-row: 2;
@@ -969,121 +1212,122 @@ footer a:visited {
   grid-row: 2;
   grid-column: 3;
 }
-.opboard1 {
-  
-  grid-row: 2;
-  grid-column: 2;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
+.opboardContainer {
+  max-height: max-content;
+  margin-bottom: 2%;
 }
-.backsideCard1{
+.opboard {
+  margin-bottom: 2%;
+}
+.backsideCard1 {
   grid-row: 2;
   grid-column: 3;
-  transform: scale(0.6) translate(-40%, -50%);
-  
-  position:relative;
-}
-.opac{
-  opacity:0.5;
-}
-.opboard2 {
-  
-  grid-row: 3;
-  grid-column: 3;
-  width: 70%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 200px;
   position: relative;
-  
+  height: 100%;
 }
-.backsideCard2{
-transform: scale(0.6) translate(-8%, -30%);
+.opac {
+  opacity: 0.5;
 }
-.opboard3 {
-  
-  width: 80%;
-  position: relative;
-  
+.auctionArea {
+  background-image: url("/images/auctionBG.PNG");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  width: 100%;
+  padding: 20% 0 0 0;
 }
-.backsideCard3{
-transform: scale(0.6) translate(110%, -120%);
+
+.opboardimage {
+  float: left;
+  width: 50%;
+  height: auto;
 }
-.numberOCards{
-  top: 1em;
-  left: 0.5em;
+.backsideCard3 {
+  transform: scale(0.6) translate(110%, -120%);
+}
+.imageCard {
+  opacity: 0.5;
+  height: auto;
+  width: 100%;
+}
+.numberOCards {
+  top: 0.3em;
+  left: 0.3em;
   font-size: 40px;
   color: white;
-  position:absolute;
-
+  position: absolute;
 }
-.actions{
-  grid-row: 4;
+.numberOfCardsContainer {
+  position: relative;
+  width: 10%;
+  height: auto;
+  float: left;
+}
+.actions {
+  grid-row: 3;
+  grid-column: 3;
+}
+.boughtSkills {
+  grid-row: 3;
   grid-column: 1;
 }
-.boughtSkills{
-  grid-row: 9;
-  grid-column: 1;
-}
-.auctionCard{
-  grid-row: 5;
+.auctionCard {
+  text-align: center;
+  align-content: center;
+  display: block;
+  grid-row: 2;
   grid-column: 2;
 }
 .pPieces {
   grid-row: 10;
   grid-column: 3;
 }
-.piecesOp11{
+.piecesOp11 {
   position: absolute;
   transform: scale(0.5);
   top: 10%;
   left: 8%;
 }
-.piecesOp12{
+.piecesOp12 {
   position: absolute;
   transform: scale(0.5);
   top: 10%;
   left: 24%;
-
 }
-.pieces1{
-  position: absolute;
+.pieces1 {
   transform: scale(0.7);
   top: 23%;
   left: 12%;
 }
-.pieces2{
+.pieces2 {
   position: absolute;
   transform: scale(0.7);
   top: 5%;
   left: 27%;
 }
-.piecesOp21{
+.piecesOp21 {
   position: absolute;
   transform: scale(0.5);
   bottom: 6%;
   left: 9%;
-  
 }
-.piecesOp22{
+.piecesOp22 {
   position: absolute;
   transform: scale(0.5);
   bottom: 6%;
   left: 25%;
 }
-.piecesOp31{
+.piecesOp31 {
   position: absolute;
   transform: scale(0.5);
   top: 10%;
   left: 9%;
 }
-.piecesOp32{
-position: absolute;
-transform: scale(0.5);
-top: 10%;
-left: 25%;
+.piecesOp32 {
+  position: absolute;
+  transform: scale(0.5);
+  top: 10%;
+  left: 25%;
 }
 .cardslots {
   display: grid;
@@ -1091,14 +1335,13 @@ left: 25%;
   grid-template-rows: repeat(auto-fill, 180px);
 }
 .cardslots div {
- transform: scale(0.5) translate(-50%, -50%);
+  transform: scale(0.7) translate(-20%, -20%);
   transition: 0.2s;
   transition-timing-function: ease-out;
   z-index: 0;
-  
 }
 .cardslots div:hover {
-   transform: scale(1) translate(-25%, 0);
+  transform: scale(1) translate(-10%, -10%);
   z-index: 1;
 }
 .shape {
@@ -1114,8 +1357,8 @@ left: 25%;
   cursor: pointer;
   border-radius: 50%;
 }
-.moneyOp{
-  background-color: blue; 
+.moneyOp {
+  background-color: blue;
   border: none;
   color: white;
   padding: 20px;
@@ -1133,7 +1376,7 @@ left: 25%;
   border: 3px solid #f1f1f1;
   z-index: 9;
 }
-.form-popup-bottle{
+.form-popup-bottle {
   display: none;
   position: fixed;
   border: 3px solid #f1f1f1;
@@ -1150,12 +1393,12 @@ left: 25%;
   padding: 10px;
   background-color: white;
 }
-.form-container-bottle{
+.form-container-bottle {
   width: 150%;
   padding: 10px;
   background-color: white;
 }
-.bottleB{
+.bottleB {
   width: 25%;
 }
 .form-containerBottle {
@@ -1164,17 +1407,23 @@ left: 25%;
   background-color: white;
 }
 
-.PopUpText{
+.PopUpText {
   color: black;
 }
 .form-container .cancel {
   background-color: red;
 }
+.itemCards {
+  grid-column: 2;
+  grid-row: 2;
+}
+#playerimage {
+  margin-right: 0;
+}
 
 @media screen and (max-width: 800px) {
   main {
     width: 90vw;
-    
-    }
+  }
 }
 </style>

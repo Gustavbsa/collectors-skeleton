@@ -33,12 +33,10 @@
             id="roomLink"
             :value="'localhost:8080/#/room/' + room"
           />
-          <inline v-on:click="copyLink()" id="copyButton">
-            <img id="clipboardimg" src="/images/copyclipboard.png" /><inline
-              id="copyButtonText"
-              >Copy</inline
-            >
-          </inline>
+          <div v-on:click="copyLink()" id="copyButton">
+            <img id="clipboardimg" src="/images/copyclipboard.png" />
+            <span id="copyButtonText">Copy</span>
+          </div>
         </div>
 
         <button type="button" class="btn" v-on:click="gameStart()">
