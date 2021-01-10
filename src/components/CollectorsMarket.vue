@@ -161,7 +161,7 @@ export default {
     grid-template-columns: repeat(auto-fill, 130px);
   }
   .buy-cards div {
-    transform: scale(0.7)translate(-20%,-0%);
+    transform: scale(0.7)translate(-20%,-25%);
     transition:0.2s;
     transition-timing-function: ease-out;
     z-index: 0;
