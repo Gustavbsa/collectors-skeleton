@@ -265,128 +265,65 @@
           
         </div>
 
-        <div class="pBoard">
-          <v-container class="pboard">
+<div class="pBoard">
+          <div class="pboard">
             <PlayerBoard />
           <div class="form-popup-bottle" id="bottlebuttons">
-            <form class="form-container-bottle">
-              <button type="button" class="bottleB" v-on:click="drawCardBottle();" :disabled="drawCardBottleDone()">1: don't a card</button>
-              <button type="button" class="bottleB" v-on:click="getMoneyOne();" :disabled="drawCardBottleDone1()">2: don't get 1$</button>
-              <button type="button" class="bottleB" v-on:click="getMoneyTwo();" :disabled="drawCardBottleDone2()">3: don't get 2$</button>
-            </form>
+          <form class="form-container-bottle">
+          <button type="button" class="bottleB" v-on:click="drawCardBottle();" :disabled="drawCardBottleDone()">1: don't a card</button>
+          <button type="button" class="bottleB" v-on:click="getMoneyOne();" :disabled="drawCardBottleDone1()">2: don't get 1$</button>
+          <button type="button" class="bottleB" v-on:click="getMoneyTwo();" :disabled="drawCardBottleDone2()">3: don't get 2$</button>
+          </form>
           </div> 
            
           <div class="form-popup" id="myForm">
           <form class="form-container">
-            <h1 class="PopUpText">Actions available {{players[playerId].bottles}}</h1>
+          <h1 class="PopUpText">Actions available {{players[playerId].bottles}}</h1>
 
-              <div class="form-popup" id="myForm">
-                <form class="form-container">
-                  <h1 class="PopUpText">
-                    Actions available {{ players[playerId].bottles }}
-                  </h1>
+          <button type="button" class="buyItem" v-on:click="buyItemBottle();">Buy Item</button>
+          <button type="button" class="gainSkill" v-on:click="gainSkillBottle()">Gain Skill</button>
+          <button type="button" class="auction" v-on:click="auctionBottle()">Auction</button>
+          <button type="button" class="raiseValue" v-on:click="raiseValueBottle()">Raise Value</button>
+          <button type="button" class="work" v-on:click="workBottle()">work</button>
+          <br>
+          <button type="button" class="cancel" v-on:click="closeForm()">Close</button>
+          </form></div>
 
-                  <button
-                    type="button"
-                    class="buyItem"
-                    v-on:click="buyItemBottle()"
-                  >
-                    Buy Item
-                  </button>
-                  <button
-                    type="button"
-                    class="gainSkill"
-                    v-on:click="gainSkillBottle()"
-                  >
-                    Gain Skill
-                  </button>
-                  <button
-                    type="button"
-                    class="auction"
-                    v-on:click="auctionBottle()"
-                  >
-                    Auction
-                  </button>
-                  <button
-                    type="button"
-                    class="raiseValue"
-                    v-on:click="raiseValueBottle()"
-                  >
-                    Raise Value
-                  </button>
-                  <button type="button" class="work" v-on:click="workBottle()">
-                    work
-                  </button>
-                  <br />
-                  <button type="button" class="cancel" v-on:click="closeForm()">
-                    Close
-                  </button>
-              </form>
-            </div>
-            </form>
-            </div>
-          </v-container>
-          
-          
+          </div>
+          <br /><br />
           <div>
-            <button class="shape">${{ players[playerId].money }}</button>
+            <button class="shape">${{ players[playerId].money }}</button> 
             <button class="pieces1" v-on:click="PiecesA()">
-              <BluePieces />
+            <BluePieces />
             </button>
           </div>
-          
           <div class="form-popup" id="bottlePlace">
             <form class="form-containerBottle">
-              <h1 class="PopUpText">Place your bottles on your playerboard</h1>
-              <button
-                type="button"
-                class="cancel"
-                v-on:click="closeBottlePlace()"
-              >
-                Close
-              </button>
+            <h1 class="PopUpText">Place your bottles on your playerboard</h1>
+            <button type="button" class="cancel" v-on:click="closeBottlePlace()">Close</button>
             </form>
           </div>
-          
-          <h3 style="margin-bottom:0" v-if="true">{{ labels.hand }}</h3>
-          
+            Hand
           <div class="cardslots" v-if="players[playerId]">
-            <div v-for="(card, index) in players[playerId].hand" :key="index">
-              <CollectorsCard
-                :card="card"
-                :availableAction="card.available"
-                @doAction="selectOp(card)"
-                :key="index"
-              />
-            </div>
+          <div  v-for="(card, index) in players[playerId].hand" :key="index">
+            <CollectorsCard
+              :card="card"
+              :availableAction="card.available"
+              @doAction="selectOp(card)"
+            />
           </div>
-          
+          </div>
           <div class="form-popup" id="formHand">
-            <form class="form-container">
-              <h1 class="PopUpText">Actions from Hand</h1>
+          <form class="form-container">
+          <h1 class="PopUpText">Actions from Hand</h1>
 
-              <button type="button" class="buyItem" v-on:click="buyItem()">
-                Buy Item
-              </button>
-              <button type="button" class="gainSkill" v-on:click="gainSkill()">
-                Gain Skill
-              </button>
-              <button type="button" class="auction" v-on:click="putAuction()">
-                Auction
-              </button>
-              <button
-                type="button"
-                class="raiseValue"
-                v-on:click="raiseValue()"
-              >
-                Raise Value
-              </button>
-              <br />
-              <button type="button" class="cancel" v-on:click="closeFormHand()">
-                Close
-              </button>
-            </form>
-          </div>
+          <button type="button" class="buyItem" v-on:click="buyItem()">Buy Item</button>
+          <button type="button" class="gainSkill" v-on:click="gainSkill()">Gain Skill</button>
+          <button type="button" class="auction" v-on:click="putAuction()">Auction</button>
+          <button type="button" class="raiseValue" v-on:click="raiseValue()">Raise Value</button>
+          <br>
+          <button type="button" class="cancel" v-on:click="closeFormHand()">Close</button>
+          </form></div>
         </div>
 
         <div class="actions" v-if="this.currentAction == 'buyItem'">
