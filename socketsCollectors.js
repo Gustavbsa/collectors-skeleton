@@ -158,10 +158,19 @@ function sockets(io, socket, data) {
         itemsOnSale: data.getItemsOnSale(d.roomId),
         skillsOnSale: data.getSkillsOnSale(d.roomId),
         auctionCards: data.getAuctionCards(d.roomId),
-        players: data.getPlayers(d.roomId)
+        players: data.getPlayers(d.roomId),
+        checkEnd: data.checkEnd(d.roomId),
       }
       );
     });
+    socket.on('collectorsResetPlacement', function(d) {
+      io.to(d.roomId).emit('collectorsPlacementReset', data.getPlacements(d.roomId),{
+        players: data.getPlayers(d.roomId),
+        placements: data.getPlacements(d.roomId),
+      }
+      );
+    });
+
 }
 
 module.exports = sockets;
