@@ -70,31 +70,34 @@ Data.prototype.createRoom = function (roomId, playerCount, lang) {
   room.boughtAuction = [];
   room.market = [];
   this.rooms[roomId] = room;
-  this.resetPlacements(roomId);
-  
+  this.resetPlacements(room);
 }
 
-Data.prototype.resetPlacements = function (roomId) {
-  let room = this.rooms[roomId];
-  if(typeof room !== 'undefined'){
-  room.buyPlacement = [{ cost: 1, playerId: null },
+Data.prototype.resetPlacements = function (room) {
+  console.log("gör något för guds skull");
+  room.buyPlacement = 
+  [{ cost: 1, playerId: null },
     { cost: 1, playerId: null },
     { cost: 2, playerId: null },
     { cost: 2, playerId: null },
     { cost: 3, playerId: null }];
-    room.skillPlacement = [{ cost: 0, playerId: null },
+    room.skillPlacement = 
+    [{ cost: 0, playerId: null },
     { cost: 0, playerId: null },
     { cost: 0, playerId: null },
     { cost: 1, playerId: null },
     { cost: 1, playerId: null }];
-    room.auctionPlacement = [{ cost: -2, playerId: null },
+    room.auctionPlacement = 
+    [{ cost: -2, playerId: null },
     { cost: -1, playerId: null },
     { cost: 0, playerId: null },
     { cost: 0, playerId: null }];
-    room.marketPlacement = [{ cost: 0, playerId: null },
+    room.marketPlacement = 
+    [{ cost: 0, playerId: null },
     { cost: 2, playerId: null },
     { cost: 1, playerId: null }];
-    room.workPlacement = [{ cost: 0, playerId: null, cards: 0, index: 1 },
+    room.workPlacement = 
+    [{ cost: 0, playerId: null, cards: 0, index: 1 },
     { cost: -1, playerId: null, cards: 0, index: 2 },
     { cost: -2, playerId: null, cards: 0, index: 3 },
     { cost: -3, playerId: null, cards: 0, index: 4 },
@@ -102,7 +105,6 @@ Data.prototype.resetPlacements = function (roomId) {
     { cost: 1, playerId: null, cards: 2, index: 6 },
     { cost: 0, playerId: null, cards: 1, index: 7 },
     { cost: 0, playerId: null, cards: 1, index: 8 },];
-}
 }
 
 Data.prototype.createDeck = function () {
@@ -138,6 +140,7 @@ Data.prototype.joinGame = function (roomId, playerId) {
         bottleSlots: new Set(),
         bottleActions: -1,
         timetoPlaceBB: new Boolean,
+        winner: false,
       };
 
       room.playOrder.push(playerId);
@@ -223,8 +226,7 @@ Data.prototype.buyCard = function (roomId, playerId, card, cost) {
     room.players[playerId].items.push(...c);
     room.players[playerId].money -= cost;
     room.players[playerId].bottles -= 1;
-
-
+    this.getAmountOfItems(roomId, playerId);
   }
 }
 Data.prototype.buyWork = function (roomId, playerId, cost, index) {
@@ -446,7 +448,6 @@ Data.prototype.placeBottle = function (roomId, playerId, action, cost) {
         let sv = this.getSkillValue(roomId, playerId);
         room.players[playerId].money += 1 * sv.auctionIncome;
       }
-
     }
     else if (action === "market") {
       activePlacement = room.marketPlacement;
@@ -633,23 +634,91 @@ Data.prototype.refillCards = function (roomId) {
     room.players[playerId].money += room.players[playerId].income.length;
     room.players[playerId].bottles = room.players[playerId].amountBottles;
     room.players[playerId].bottleActions = -1;
+    room.players[playerId].timetoPlaceBB=false;
   }
-  if(room.round>=4){
+  if(room.round>2){
     this.countVP(roomId);   
   }
   else{
     room.round += 1;
     console.log("New round");
-    this.resetPlacements(roomId);
+    this.resetPlacements(room);
   }
 
+}
+Data.prototype.checkEnd = function (roomId){
+  let room = this.rooms[roomId];
+  for(let playerId in room.players){
+    if(room.players[playerId].winner){
+      return(true)
+    }
+  }
+  return(false);
 }
 Data.prototype.countVP = function(roomId){
   let room = this.rooms[roomId];
   if (typeof room !== 'undefined') {
     console.log("time to count the points");
+    for(let playerId in room.players){
+      let moneyPoints = 0;
+      for(let i = 1; i<=room.players[playerId].money; i+=1){
+        if(i%3==0){
+          moneyPoints +=1;
+        }
+      }
+      let skillPoints = this.skillItemVP(playerId, roomId);
+      let marketPoints = this.marketItemVP(playerId, roomId);
+      room.players[playerId].points = marketPoints + skillPoints + moneyPoints;
+      console.log("this player: ", playerId, " has pointsToT: ", room.players[playerId].points, " marketPoints: ",marketPoints, " skillPoints: ",skillPoints, " moneyPoints: ", moneyPoints);
+    }
+    let winnerPoints = 0;
+    let sharedWinners = [];
+    for(let playerI in room.players){
+      if(room.players[playerI].points>winnerPoints){
+        sharedWinners = [];
+        winnerPoints = room.players[playerI].points;
+        sharedWinners.push(playerI);
+      }
+      else if(room.players[playerI].points==winnerPoints){
+        sharedWinners.push(playerI);
+      }
+    }
+    
+      console.log("the winners are: ", sharedWinners);
+      for(let winner in sharedWinners){
+        console.log("winner: ", winner);
+        room.players[sharedWinners[winner]].winner = true;
+      }
   }
 }
+Data.prototype.skillItemVP = function (playerId, roomId){
+  let sv = this.getSkillValue(roomId,playerId);
+  let iv = this.getAmountOfItems(roomId, playerId);
+  let skillPoints = 0;
+  skillPoints += sv.VPmusic*iv.music;
+  skillPoints += sv.VPtechnology*iv.technology;
+  skillPoints += sv.VPmovie*iv.movie;
+  skillPoints += sv.VPfastaval*iv.fastaval;
+  skillPoints += sv.VPfigures*iv.figures;
+  if(iv.music>0 && iv.technology>0 && iv.movie>0 && iv.fastaval>0 && iv.figures>0){
+    skillPoints += 5*sv.VPall;
+  }
+  return(skillPoints);
+}
+Data.prototype.marketItemVP = function (playerId, roomId){
+  let mv = this.getMarketValues(roomId);
+  let iv = this.getAmountOfItems(roomId, playerId);
+  let marketPoints = 0;
+  marketPoints += mv.music*iv.music;
+  marketPoints += mv.technology*iv.technology;
+  marketPoints += mv.movie*iv.movie;
+  marketPoints += mv.fastaval*iv.fastaval;
+  marketPoints += mv.figures*iv.figures;
+  
+  return(marketPoints);
+}
+
+
 
 Data.prototype.adjustBottle = function (roomId, playerId, oldPos, newPos) {
   player.bottleSlots.delete(oldPos);
@@ -740,6 +809,25 @@ Data.prototype.getMarketValues = function (roomId) {
   }
   return [];
 }
+Data.prototype.getAmountOfItems = function (roomId,playerId) {
+  let room = this.rooms[roomId];
+  if (typeof room !== 'undefined') {
+    let iv = {
+      fastaval: 0,
+      movie: 0,
+      technology: 0,
+      figures: 0,
+      music: 0
+    };
+
+    for (let cardIndex in room.players[playerId].items) {
+      iv[room.players[playerId].items[cardIndex].item] += 1;
+    }
+    return iv;
+  }
+  return [];
+}
+
 Data.prototype.getSkillValue = function (roomId, playerId) {
   let room = this.rooms[roomId];
 

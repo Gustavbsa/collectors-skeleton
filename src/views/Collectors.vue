@@ -7,6 +7,13 @@
          <h1>Round: {{ round }} Play order: {{ playOrder }} </h1> 
  <h1 v-if="actingPlayer!==null">Current player is {{ playOrder[actingPlayer]}}</h1>
         </div>
+        <div class="form-popup-end" id="theEnd">
+          <form class="form-container-end">
+          <h1 class="PopUpText">The winner: {{ winner }} </h1>
+          <a href="http://localhost:8080/#/"><button type="button" class="newGame">New game</button></a>
+          </form>
+          </div>
+
         <div class="empty1"></div>
 
         <div v-if="this.$store.state.playerCount>=2 || Object.keys(this.players).length>=2">
@@ -85,6 +92,7 @@
           <button type="button" class="bottleB" v-on:click="getMoneyTwo();" :disabled="drawCardBottleDone2()">3: don't get 2$</button>
           </form>
           </div> 
+          
            
           <div class="form-popup" id="myForm">
           <form class="form-container">
@@ -456,7 +464,9 @@ export default {
       drawCardB: false,
       getMoney1: false,
       getMoney2: false,
-      bottlesA: false
+      bottlesA: false,
+      winner: [],
+      duplicate: false,
 
 
     };
@@ -689,8 +699,33 @@ export default {
           this.skillsOnSale = d.skillsOnSale;
           this.auctionCards = d.auctionCards;
           this.players = d.players;
+          this.$store.state.socket.emit("collectorsResetPlacement", {roomId: this.$route.params.id});
+          this.drawCardB = false;
+          this.getMoney1 = false;
+          this.getMoney2 = false;
+          if(d.checkEnd){
+            console.log("the winner has been decided");
+            for(let playerId in this.players){
+              if(this.players[playerId].winner){
+                console.log("the winner is: ", playerId);
+              }
+            }
+            this.endGame();
+          }
         }.bind(this)
     );
+    this.$store.state.socket.on(
+      "collectorsPlacementReset",
+      function (d) {
+        console.log("Jag är din vän, placementReset")
+        this.buyPlacement = d.buyPlacement;
+        this.skillPlacement = d.skillPlacement;
+        this.marketPlacement = d.marketPlacement;
+        this.auctionPlacement = d.auctionPlacement;
+        this.workPlacement = d.workPlacement;
+      }.bind(this)
+    );
+    
   },
   methods: {
     selectAll: function (n) {
@@ -1035,7 +1070,23 @@ export default {
       }
     } 
     }
-  }
+  },
+  endGame: function(){
+    for(let playerId in this.players){
+      if(this.players[playerId].winner){
+        for(let win in this.winner){
+          if(win==playerId){
+            this.duplicate = true;
+            break;
+          }
+        }
+        if(!this.duplicate){
+          this.winner.push(playerId);
+        }
+      }
+    }
+    document.getElementById("theEnd").style.display = "block";
+  },
   },
 };
 
@@ -1263,6 +1314,14 @@ left: 25%;
   top: 12%;
   left: 42%;
 }
+.form-popup-end{
+  display: none;
+  position: fixed;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  top: 12%;
+  left: 42%;
+}
 .form-auction {
   display: none;
   z-index: 9;
@@ -1272,10 +1331,18 @@ left: 25%;
   padding: 10px;
   background-color: white;
 }
+.form-container-end{
+  width: 150%;
+  padding: 10px;
+  background-color: white;
+}
 .form-container-bottle{
   width: 150%;
   padding: 10px;
   background-color: white;
+}
+.newGame{
+  width: 25%;
 }
 .bottleB{
   width: 25%;
