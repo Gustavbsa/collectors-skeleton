@@ -80,10 +80,10 @@ function sockets(io, socket, data) {
       );
     });
     socket.on('collectorsNewRound', function(d) { 
-      data.checkRound(d.roomId),
       io.to(d.roomId).emit('collectorsCheck', { 
           playerId: d.playerId,
           players: data.getPlayers(d.roomId),
+          nextRound:  data.checkRound(d.roomId)
         }
       );
     });

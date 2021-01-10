@@ -136,7 +136,7 @@ Data.prototype.joinGame = function (roomId, playerId) {
         bottles: 2,
         amountBottles: 2,
         bottleSlots: new Set(),
-        bottleActions: 0,
+        bottleActions: -1,
         timetoPlaceBB: new Boolean,
       };
 
@@ -269,7 +269,9 @@ Data.prototype.buyWork = function (roomId, playerId, cost, index) {
     room.players[playerId].money -= cost;
     room.players[playerId].bottles -= 1;
     let sv = this.getSkillValue(roomId, playerId);
+    if(sv.workerIncome>0){
     room.players[playerId].money += 2 * sv.workerIncome;
+  }
     for (let index = 0; index < sv.workerCard; index++) {
       this.drawCard(roomId, playerId)
     }
@@ -481,7 +483,7 @@ Data.prototype.nextPlayer = function (roomId, playerIdN) {
   if (typeof room !== 'undefined') {
     let bottlesLeft = false;
     for (let playerId in room.players) {
-      if(room.players[playerId].bottles>0){
+      if(room.players[playerId].bottles>0 && room.players[playerId].bottleActions<0){
         bottlesLeft=true;
         console.log("there is a player with bottles");
         break;
@@ -548,7 +550,6 @@ Data.prototype.refillCards = function (roomId) {
     if (skillsArray[index].skill == undefined) {
       console.log("found empty card");
       let nextFound = false;
-      while (nextFound == false) {
         for (let jndex = index + 1; jndex < skillsArray.length; jndex++) {
           if (skillsArray[jndex].skill != undefined) {
             nextFound = true;
@@ -558,20 +559,19 @@ Data.prototype.refillCards = function (roomId) {
             break;
           }
         }
-        if (nextFound == true) {
-          break;
-        }
-        for (let jndex = 0; jndex < itemsArray.length; jndex++) {
-          if (itemsArray[jndex].skill != undefined) {
-            nextFound = true;
-            console.log("found next card in itemsArray");
-            skillsArray[index] = itemsArray[jndex];
-            itemsArray[jndex] = {};
-            break;
+        if (nextFound == false) {
+          for (let jndex = 0; jndex < itemsArray.length; jndex++) {
+            if (itemsArray[jndex].skill != undefined) {
+              nextFound = true;
+              console.log("found next card in itemsArray");
+              skillsArray[index] = itemsArray[jndex];
+              itemsArray[jndex] = {};
+              break;
+            }
           }
         }
-
-      }
+        
+      
     }
   };
 
@@ -630,8 +630,9 @@ Data.prototype.refillCards = function (roomId) {
   room.auctionCards = auctionArray;
   console.log(room.auctionCards);
   for(let playerId in room.players){
-    room.players[playerId].money += room.players[playerId].income;
+    room.players[playerId].money += room.players[playerId].income.length;
     room.players[playerId].bottles = room.players[playerId].amountBottles;
+    room.players[playerId].bottleActions = -1;
   }
   if(room.round>=4){
     this.countVP(roomId);   
@@ -679,8 +680,12 @@ Data.prototype.checkRound = function (roomId) {
           break;
         }
     }
-    if(!this.bottleA){
-      this.refillCards(roomId);
+    if(!bottleA){
+      console.log("reset now");
+      return(true);
+    }
+    else{
+      return(false);
     }
   }
   return [];
@@ -796,11 +801,12 @@ Data.prototype.bottleEffect = function (roomId) {
   console.log("bottleEffect");
   if (typeof room !== 'undefined') {
   for(let playerIdN in room.players){
-    if(room.players[playerIdN].amountBottles<=2){
+    if(room.players[playerIdN].amountBottles<=2 && room.players[playerIdN].bottleActions<0){
       room.players[playerIdN].amountBottles=2;
       console.log("only two bottles");
+      room.players[playerIdN].bottleActions=0;
     }
-   else{
+   else if(room.players[playerIdN].amountBottles>2 && room.players[playerIdN].bottleActions<0){
     console.log("bottles: ", room.players[playerIdN].amountBottles, " bottleAction: ", room.players[playerIdN].bottleActions, "playerId: ", playerIdN); 
     room.players[playerIdN].bottleActions = room.players[playerIdN].amountBottles-2;
    }

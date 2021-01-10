@@ -675,6 +675,10 @@ export default {
       function (d) {
         console.log(d.playerId, "New round");
         this.players = d.players;
+        this.nextRound = d.nextRound;
+        if(this.nextRound){
+          this.refillCards();
+        }
       }.bind(this)
     );
       this.$store.state.socket.on(
@@ -893,12 +897,9 @@ export default {
       
 
       if(this.numButtons<=0){
-        this.$store.state.socket.emit("collectorsNumButtons", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-      });
         console.log("it's time");
         document.getElementById("bottlebuttons").style.display = "none";
+        console.log("getMoney1: ", this.getMoney1);
       if(this.getMoney1==false){
         this.$store.state.socket.emit("collectorsgetMoney", {
         roomId: this.$route.params.id,
@@ -906,6 +907,7 @@ export default {
         extraMoney: 1
       });
       }
+      console.log("getMoney2: ", this.getMoney2);
       if(this.getMoney2==false){
         this.$store.state.socket.emit("collectorsgetMoney", {
         roomId: this.$route.params.id,
@@ -929,12 +931,9 @@ export default {
       });
       console.log("player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
     if(this.numButtons<=0){
-      this.$store.state.socket.emit("collectorsNumButtons", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-      });
       console.log("it's time");
       document.getElementById("bottlebuttons").style.display = "none";
+      console.log("getMOney 2: ", this.getMoney2);
     if(this.getMoney2==false){
         this.$store.state.socket.emit("collectorsgetMoney", {
         roomId: this.$route.params.id,
@@ -942,12 +941,13 @@ export default {
         extraMoney: 2
       });
       }
+      console.log("drawCard: ", this.drawCardB);
     if(this.drawCardB==false){
       this.$store.state.socket.emit("collectorsDrawCard", {
         roomId: this.$route.params.id,
         playerId: this.playerId,
       });
-    }    
+    }   
    }
    this.doneOr();
    } 
@@ -964,13 +964,10 @@ export default {
       });
       console.log("player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
     if(this.numButtons<=0){
-      this.$store.state.socket.emit("collectorsNumButtons", {
-        roomId: this.$route.params.id,
-        playerId: this.playerId,
-      });
       console.log("After player: ", this.playerId, " has this many actions: ", this.players[this.playerId].bottleActions);
       console.log("it's time");
       document.getElementById("bottlebuttons").style.display = "none";
+      console.log("getMoney1: ", this.getMoney1);
        if(this.getMoney1==false){
          this.$store.state.socket.emit("collectorsgetMoney", {
         roomId: this.$route.params.id,
@@ -978,6 +975,7 @@ export default {
         extraMoney: 1
       });
       }
+      console.log("getCard: ", this.drawCardB);
       if(this.drawCardB==false){
       this.$store.state.socket.emit("collectorsDrawCard", {
         roomId: this.$route.params.id,
@@ -990,6 +988,7 @@ export default {
    } 
   },
   doneOr: function(){
+    console.log("has entered");
     this.$store.state.socket.emit("collectorsNewRound", {
         roomId: this.$route.params.id,
         playerId: this.playerId,
@@ -1014,16 +1013,26 @@ export default {
         console.log("this player1: ", this.playerId, " has: ",this.players[this.playerId].bottleActions," bottleActions1" );
         this.effectOfBottles(this.playerId,this.players[this.playerId].bottleActions);
       }
-      else{
+      if(this.players[this.playerId].bottleActions<=0){
+        console.log("Another player might have a card");
+        this.$store.state.socket.emit("collectorsgetMoney", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        extraMoney: 3
+      });
+      this.$store.state.socket.emit("collectorsDrawCard", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+      });
       for(let playerI in this.players){
-        if(this.players[playerI].bottleActions>0)
+        if(this.players[playerI].bottleActions>0){
         this.bottlesA=true;
         break;
+        }
       }
       if(!this.bottlesA){
         this.refillCards();
       }
-      
     } 
     }
   }
