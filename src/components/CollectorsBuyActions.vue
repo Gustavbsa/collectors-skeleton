@@ -62,8 +62,10 @@ export default {
     cannotAfford: function (cost) {
       let minCost = 100;
       for(let key in this.marketValues) {
-        if (cost + this.marketValues[key] < minCost)
+        console.log("marketValues: ", this.marketValues[key])
+        if (cost + this.marketValues[key] < minCost){
           minCost = cost + this.marketValues[key]
+        }
       }
       this.opTurn = this.playerOrder(); 
       if(this.opTurn){
