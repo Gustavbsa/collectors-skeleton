@@ -18,7 +18,7 @@ function sockets(io, socket, data) {
             skillValue: data.getSkillValue(d.roomId, d.playerId),
             playOrder: data.getPlayOrder(d.roomId),
             actingPlayer: data.getActingPlayer(d.roomId),
-            round: data.getRound(d.roomId) 
+            round: data.getRound(d.roomId, d.playerId) 
           }
         );
       }
@@ -28,24 +28,18 @@ function sockets(io, socket, data) {
         data.drawCard(d.roomId, d.playerId)
       );
     });
-    socket.on('collectorsNextPlayer', function(d) {
-      io.to(d.roomId).emit('collectorsActingPlayer', {
-        players: data.getPlayers(d.roomId),
-        actingPlayer: data.nextPlayer(d.roomId, d.playerId)
-      }
-      );
-    });
+
     socket.on('collectorsBuyCard', function(d) {
       data.buyCard(d.roomId, d.playerId, d.card, d.cost, d.hand)
       io.to(d.roomId).emit('collectorsCardBought', { 
           playerId: d.playerId,
           players: data.getPlayers(d.roomId),
           itemsOnSale: data.getItemsOnSale(d.roomId),
-          actingPlayer: data.nextPlayer(d.roomId, d.playerId),
-
+          actingPlayer: data.nextPlayer(d.roomId),
         }
       );
     });
+
     socket.on('collectorsSkillCard', function(d) { 
       data.buySkill(d.roomId, d.playerId, d.card, d.cost, d.hand),
       io.to(d.roomId).emit('collectorsSkillBought', { 
@@ -53,7 +47,7 @@ function sockets(io, socket, data) {
           players: data.getPlayers(d.roomId),
           skillsOnSale: data.getSkillsOnSale(d.roomId), 
           skillValue: data.getSkillValue(d.roomId, d.playerId),
-          actingPlayer: data.nextPlayer(d.roomId, d.playerId),
+          actingPlayer: data.nextPlayer(d.roomId),
         }
       );
     });
@@ -64,7 +58,7 @@ function sockets(io, socket, data) {
           players: data.getPlayers(d.roomId),
           auctionCards: data.getAuctionCards(d.roomId),
           boughtAuction: data.getBoughtAuction(d.roomId),
-          actingPlayer: data.nextPlayer(d.roomId, d.playerId),
+          actingPlayer: data.nextPlayer(d.roomId),
           
         }
       );
@@ -125,7 +119,7 @@ function sockets(io, socket, data) {
           auctionCards: data.getAuctionCards(d.roomId), 
           skillsOnSale: data.getSkillsOnSale(d.roomId),
           marketValues: data.getMarketValues(d.roomId),
-          actingPlayer: data.nextPlayer(d.roomId, d.playerId), 
+          actingPlayer: data.nextPlayer(d.roomId), 
         }
       );
       }
@@ -135,7 +129,7 @@ function sockets(io, socket, data) {
       io.to(d.roomId).emit('collectorsWorkBought', { 
           playerId: d.playerId,
           players: data.getPlayers(d.roomId),
-          actingPlayer: data.nextPlayer(d.roomId, d.playerId),  
+          actingPlayer: data.nextPlayer(d.roomId),  
         }
       );
     });
@@ -153,16 +147,18 @@ function sockets(io, socket, data) {
     });
 
     socket.on('collectorsRefillCards', function(d) {
-      data.refillCards(d.roomId);
+      data.refillCards(d.roomId,d.playerId);
       io.to(d.roomId).emit('collectorsCardsRefilled',{
         itemsOnSale: data.getItemsOnSale(d.roomId),
         skillsOnSale: data.getSkillsOnSale(d.roomId),
         auctionCards: data.getAuctionCards(d.roomId),
         players: data.getPlayers(d.roomId),
         checkEnd: data.checkEnd(d.roomId),
+        round: data.getRound(d.roomId,d.playerId),
       }
       );
     });
+
     socket.on('collectorsResetPlacement', function(d) {
       io.to(d.roomId).emit('collectorsPlacementReset', data.getPlacements(d.roomId),{
         players: data.getPlayers(d.roomId),

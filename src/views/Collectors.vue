@@ -3,7 +3,6 @@
     <main>
       <div class="layout">
         <div class="topPage">
-          <h3>info info info {{ Object.keys(this.players).length }}</h3>
           <h3>Round: {{ round }} Play order: {{ playOrder }}</h3>
           <h3 v-if="actingPlayer !== null">
             You are: {{ this.playerId }}, Current player is
@@ -34,6 +33,7 @@
                   this.$store.state.playerId == Object.keys(this.players)[0]
                 "
               >
+              <p style="float:left">{{ Object.keys(this.players)[1] }}</p>
                 <div class="moneyOp">
                   ${{ this.players[Object.keys(this.players)[1]].money }}
                 </div>              
@@ -52,6 +52,7 @@
                   Object.keys(this.players).length >= 2
                 "
               >
+              <p style="float:left">{{ Object.keys(this.players)[0] }}</p>
                 <div class="moneyOp">
                   ${{ this.players[Object.keys(this.players)[0]].money }}
                 </div>
@@ -71,6 +72,7 @@
                   Object.keys(this.players).length >= 3
                 "
               >
+              <p style="float:left">{{ Object.keys(this.players)[0] }}</p>
               <div class="moneyOp">
                   ${{ this.players[Object.keys(this.players)[0]].money }}
                 </div>
@@ -89,6 +91,7 @@
                   Object.keys(this.players).length == 4
                 "
               >
+              <p style="float:left">{{ Object.keys(this.players)[0] }}</p>
               <div class="moneyOp">
                   ${{ this.players[Object.keys(this.players)[0]].money }}
                 </div>
@@ -104,6 +107,7 @@
               <v-container class="opboardimage">
                 <OpponentBoard />
               </v-container>
+
             </div>
           </div>
 
@@ -121,6 +125,7 @@
                     this.$store.state.playerId == Object.keys(this.players)[0]
                   "
                 >
+                <p style="float:left">{{ Object.keys(this.players)[2] }}</p>
                 <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[2]].money }}
                   </div>
@@ -140,6 +145,7 @@
                     Object.keys(this.players).length >= 2
                   "
                 >
+                <p style="float:left">{{ Object.keys(this.players)[2] }}</p>
                 <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[2]].money }}
                   </div>
@@ -159,6 +165,7 @@
                     Object.keys(this.players).length >= 3
                   "
                 >
+                <p style="float:left">{{ Object.keys(this.players)[1] }}</p>
                 <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[1]].money }}
                   </div>
@@ -178,6 +185,7 @@
                     Object.keys(this.players).length == 4
                   "
                 >
+                <p style="float:left">{{ Object.keys(this.players)[1] }}</p>
                 <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[1]].money }}
                   </div>
@@ -212,6 +220,7 @@
                     this.$store.state.playerId == Object.keys(this.players)[0]
                   "
                 >
+                <p style="float:left">{{ Object.keys(this.players)[3] }}</p>
                   <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[3]].money }}
                   </div>
@@ -231,6 +240,7 @@
                     Object.keys(this.players).length >= 2
                   "
                 >
+                <p style="float:left">{{ Object.keys(this.players)[3] }}</p>
                 <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[3]].money }}
                   </div>
@@ -251,6 +261,7 @@
                     Object.keys(this.players).length >= 3
                   "
                 >
+                <p style="float:left">{{ Object.keys(this.players)[3] }}</p>
                 <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[3]].money }}
                   </div>
@@ -270,6 +281,7 @@
                     Object.keys(this.players).length == 4
                   "
                 >
+                <p style="float:left">{{ Object.keys(this.players)[2] }}</p>
                 <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[2]].money }}
                   </div>
@@ -329,7 +341,7 @@
             <button type="button" class="cancel" v-on:click="closeBottlePlace()">Close</button>
             </form>
           </div>
-            Hand
+            {{labels.hand}}
           <div class="cardslots" v-if="players[playerId]">
           <div  v-for="(card, index) in players[playerId].hand" :key="index">
             <CollectorsCard
@@ -409,7 +421,7 @@
         </div>
         <div class="inventory">
           <div class="itemCards">
-            <h3 style="margin-bottom:0" v-if="true">{{ labels.items }}</h3>
+            {{ labels.items }}
             <div class="cardslots" v-if="players[playerId]">
               <div
                 v-for="(card, index) in players[playerId].items"
@@ -420,7 +432,7 @@
             </div>
           </div>
           <div class="boughtSkills">
-            <h3 style="margin-bottom:0" v-if="true">{{ labels.boughtSkills }}</h3>
+             {{ labels.boughtSkills }}
             <div class="cardslots" v-if="players[playerId]">
               <div
                 v-for="(card, index) in players[playerId].skills"
@@ -432,7 +444,7 @@
           </div>
         </div>
         <div class="auctionCard">
-          <h3 style="margin-top:0" v-if="true">{{ labels.currentAuction }}</h3>
+          {{ labels.currentAuction }}
 
           <div class="auctionArea">
             <div style="margin: 0 auto 0 auto; width: 130px">
@@ -504,7 +516,6 @@
             :playerId="playerId"
             @placeBottle="placeBottle('work', $event)"
             @buyWork="buyWork($event)"
-            @refillCards="refillCards($event)"
           />
         </div>
 
@@ -642,13 +653,6 @@ export default {
             this.$set(this.players[p].hand[c], "available", false);
         }
       }
-      this.amount = 0;
-      for (let t in this.players) {
-        this.amount += 1;
-        if (this.players[t].bottles <= 0) {
-          this.playerFinished.push(1);
-        }
-      }
     },
     marketTwoCards: function () {
       console.log("marketTwo");
@@ -694,12 +698,7 @@ export default {
       "collectorsUpdatePlayers",
       function (players) {
         this.players = players;
-        if (this.players[this.playerId].bottles <= 0) {
-          this.$store.state.socket.emit("collectorsNextPlayer", {
-            roomId: this.$route.params.id,
-            playerId: this.playerId,
-          });
-        }
+        
       }.bind(this)
     );
 
@@ -711,34 +710,6 @@ export default {
         this.marketPlacement = d.marketPlacement;
         this.auctionPlacement = d.auctionPlacement;
         this.workPlacement = d.workPlacement;
-        if (this.players[this.playerId].bottles > 0) {
-          for (let i = 0; i < this.players[this.playerId].hand.length; i += 1) {
-            console.log("highlighting");
-            setTimeout(
-              () =>
-                this.$set(
-                  this.players[this.playerId].hand[i],
-                  "available",
-                  true
-                ),
-              50
-            );
-          }
-        } else {
-          console.log("next player");
-          this.$store.state.socket.emit("collectorsNextPlayer", {
-            roomId: this.$route.params.id,
-            playerId: this.playerId,
-          });
-        }
-      }.bind(this)
-    );
-
-    this.$store.state.socket.on(
-      "collectorsActingPlayer",
-      function (d) {
-        this.players = d.players;
-        this.actingPlayer = d.actingPlayer;
       }.bind(this)
     );
 
@@ -911,11 +882,11 @@ export default {
       this.$store.state.socket.on(
         "collectorsCardsRefilled",
         function (d) {
-          console.log(d.roomId, "refilled cards");
           this.itemsOnSale = d.itemsOnSale;
           this.skillsOnSale = d.skillsOnSale;
           this.auctionCards = d.auctionCards;
           this.players = d.players;
+          this.round= d.round;
           this.$store.state.socket.emit("collectorsResetPlacement", {roomId: this.$route.params.id});
           this.drawCardB = false;
           this.getMoney1 = false;
@@ -935,7 +906,6 @@ export default {
     this.$store.state.socket.on(
       "collectorsPlacementReset",
       function (d) {
-        console.log("Jag är din vän, placementReset")
         this.buyPlacement = d.buyPlacement;
         this.skillPlacement = d.skillPlacement;
         this.marketPlacement = d.marketPlacement;
@@ -1126,6 +1096,7 @@ export default {
       console.log("RefillCards");
       this.$store.state.socket.emit("collectorsRefillCards", {
         roomId: this.$route.params.id,
+        playerId: this.playerId,
       });
     },
 
@@ -1383,6 +1354,7 @@ export default {
             }
           }
       if(!this.bottlesA){
+        console.log("fyller på då bottlesA är falsk")
         this.refillCards();
       } 
       }
@@ -1703,10 +1675,12 @@ footer a:visited {
 #playerimage {
   margin-right: 0;
 }
-
 @media screen and (max-width: 800px) {
-  main {
-    width: 90vw;
-  }
+.layout{
+  display: grid;
+  background: radial-gradient(rgb(116, 22, 22), black);
+  border-radius: 5px;
+  padding: 20px;
+}
 }
 </style>
