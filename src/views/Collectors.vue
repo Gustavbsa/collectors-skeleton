@@ -3,12 +3,12 @@
     <main>
       <div class="layout">
         <div class="topPage">
-          <h1>info info info {{ Object.keys(this.players).length }}</h1>
-          <h1>Round: {{ round }} Play order: {{ playOrder }}</h1>
-          <h1 v-if="actingPlayer !== null">
+          <h3>info info info {{ Object.keys(this.players).length }}</h3>
+          <h3>Round: {{ round }} Play order: {{ playOrder }}</h3>
+          <h3 v-if="actingPlayer !== null">
             You are: {{ this.playerId }}, Current player is
             {{ playOrder[actingPlayer] }}
-          </h1>
+          </h3>
         </div>
         <div class="form-popup-end" id="theEnd">
           <form class="form-container-end">
@@ -34,15 +34,16 @@
                   this.$store.state.playerId == Object.keys(this.players)[0]
                 "
               >
-                <div class="numberOfCardsContainer">
-                  <img src="/images/backsideCard.png" class="imageCard" />
-                  <div class="numberOCards">
-                    {{ this.players[Object.keys(this.players)[1]].hand.length }}
-                  </div>
-                </div>
                 <div class="moneyOp">
                   ${{ this.players[Object.keys(this.players)[1]].money }}
-                </div>
+                </div>              
+                <span class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[1]].hand.length }}</text>
+                  </svg>
+                </span>
+
               </div>
               
               <div
@@ -51,17 +52,17 @@
                   Object.keys(this.players).length >= 2
                 "
               >
-
-                <div class="numberOfCardsContainer">
-                  <img src="/images/backsideCard.png" class="imageCard" />
-                  <div class="numberOCards">
-                    {{ this.players[Object.keys(this.players)[0]].hand.length }}
-                  </div>
-                </div>
-
                 <div class="moneyOp">
                   ${{ this.players[Object.keys(this.players)[0]].money }}
                 </div>
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[0]].hand.length }}</text>
+                  </svg>
+                </div>
+
+                
               </div>
 
               <div
@@ -70,16 +71,17 @@
                   Object.keys(this.players).length >= 3
                 "
               >
-                <div class="numberOfCardsContainer">
-                  <img src="/images/backsideCard.png" class="imageCard" />
-                  <div class="numberOCards">
-                    {{ this.players[Object.keys(this.players)[0]].hand.length }}
-                  </div>
-                </div>
-
-                <div class="moneyOp">
+              <div class="moneyOp">
                   ${{ this.players[Object.keys(this.players)[0]].money }}
                 </div>
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[0]].hand.length }}</text>
+                  </svg>
+                </div>
+
+                
               </div>
               <div
                 v-else-if="
@@ -87,16 +89,17 @@
                   Object.keys(this.players).length == 4
                 "
               >
-                <div class="numberOfCardsContainer">
-                  <img src="/images/backsideCard.png" class="imageCard" />
-                  <div class="numberOCards">
-                    {{ this.players[Object.keys(this.players)[0]].hand.length }}
-                  </div>
-                </div>
-
-                <div class="moneyOp">
+              <div class="moneyOp">
                   ${{ this.players[Object.keys(this.players)[0]].money }}
                 </div>
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[0]].hand.length }}</text>
+                  </svg>
+                </div>
+
+                
               </div>
               <v-container class="opboardimage">
                 <OpponentBoard />
@@ -118,9 +121,16 @@
                     this.$store.state.playerId == Object.keys(this.players)[0]
                   "
                 >
-                  <div class="moneyOp">
+                <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[2]].money }}
                   </div>
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[2]].hand.length }}</text>
+                  </svg>
+                </div>
+                  
                 </div>
 
                 <div
@@ -130,15 +140,16 @@
                     Object.keys(this.players).length >= 2
                   "
                 >
-                <div class="numberOfCardsContainer">
-                  <img src="/images/backsideCard.png" class="imageCard" />
-                  <div class="numberOCards">
-                    {{ this.players[Object.keys(this.players)[2]].hand.length }}
-                  </div>
-                </div>
-                  <div class="moneyOp">
+                <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[2]].money }}
                   </div>
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[2]].hand.length }}</text>
+                  </svg>
+                </div>
+                  
                 </div>
 
                 <div
@@ -148,16 +159,17 @@
                     Object.keys(this.players).length >= 3
                   "
                 >
-                <div class="numberOfCardsContainer">
-                  <img src="/images/backsideCard.png" class="imageCard" />
-                  <div class="numberOCards">
-                    {{ this.players[Object.keys(this.players)[1]].hand.length }}
-                  </div>
-                </div>
-
-                  <div class="moneyOp">
+                <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[1]].money }}
                   </div>
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[1]].hand.length }}</text>
+                  </svg>
+                </div>
+
+                  
                 </div>
                 <div
                   v-else-if="
@@ -166,16 +178,17 @@
                     Object.keys(this.players).length == 4
                   "
                 >
-                <div class="numberOfCardsContainer">
-                  <img src="/images/backsideCard.png" class="imageCard" />
-                  <div class="numberOCards">
-                    {{ this.players[Object.keys(this.players)[1]].hand.length }}
-                  </div>
-                </div>
-
-                  <div class="moneyOp">
+                <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[1]].money }}
                   </div>
+                <div class="numberOfCardsContainer">
+                  <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[1]].hand.length }}</text>
+                  </svg>
+                </div>
+
+                  
                 </div>
               </div>
               <v-container class="opboardimage">
@@ -199,15 +212,16 @@
                     this.$store.state.playerId == Object.keys(this.players)[0]
                   "
                 >
-              <div class="numberOfCardsContainer">
-                <img src="/images/backsideCard.png" class="imageCard" />
-                <div class="numberOCards">
-                  {{ this.players[Object.keys(this.players)[3]].hand.length }}
-                </div>
-              </div>
                   <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[3]].money }}
                   </div>
+              <div class="numberOfCardsContainer">
+                <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[3]].hand.length }}</text>
+                  </svg>
+              </div>
+
                 </div>
 
                 <div
@@ -217,16 +231,17 @@
                     Object.keys(this.players).length >= 2
                   "
                 >
-                  <div class="numberOfCardsContainer">
-                <img src="/images/backsideCard.png" class="imageCard" />
-                <div class="numberOCards">
-                  {{ this.players[Object.keys(this.players)[3]].hand.length }}
-                </div>
-              </div>
-
-                  <div class="moneyOp">
+                <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[3]].money }}
                   </div>
+                  <div class="numberOfCardsContainer">
+                <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[3]].hand.length }}</text>
+                  </svg>
+              </div>
+
+                  
                 </div>
 
                 <div
@@ -236,16 +251,17 @@
                     Object.keys(this.players).length >= 3
                   "
                 >
-                  <div class="numberOfCardsContainer">
-                <img src="/images/backsideCard.png" class="imageCard" />
-                <div class="numberOCards">
-                  {{ this.players[Object.keys(this.players)[3]].hand.length }}
-                </div>
-              </div>
-
-                  <div class="moneyOp">
+                <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[3]].money }}
                   </div>
+                  <div class="numberOfCardsContainer">
+                <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[3]].hand.length }}</text>
+                  </svg>
+              </div>
+
+                  
                 </div>
                 <div
                   v-else-if="
@@ -254,16 +270,17 @@
                     Object.keys(this.players).length == 4
                   "
                 >
-                  <div class="numberOfCardsContainer">
-                <img src="/images/backsideCard.png" class="imageCard" />
-                <div class="numberOCards">
-                  {{ this.players[Object.keys(this.players)[2]].hand.length }}
-                </div>
-              </div>
-
-                  <div class="moneyOp">
+                <div class="moneyOp">
                     ${{ this.players[Object.keys(this.players)[2]].money }}
                   </div>
+                  <div class="numberOfCardsContainer">
+                <img src="/images/backsideCard.png" class="imageCard" />
+                  <svg class="numberOCards" viewBox="0 0 40 20">
+                    <text x="0" y="15" >{{ this.players[Object.keys(this.players)[2]].hand.length }}</text>
+                  </svg>
+              </div>
+
+                  
                 </div>
               </div>
               <v-container class="opboardimage">
@@ -274,15 +291,15 @@
         </div>
 
 <div class="pBoard">
-          <div class="pboard">
+          <v-container class="pboard">
             <PlayerBoard />
           <div class="form-popup-bottle" id="bottlebuttons">
-          <form class="form-container-bottle">
-          <button type="button" class="bottleB" v-on:click="drawCardBottle();" :disabled="drawCardBottleDone()">1: don't a card</button>
-          <button type="button" class="bottleB" v-on:click="getMoneyOne();" :disabled="drawCardBottleDone1()">2: don't get 1$</button>
-          <button type="button" class="bottleB" v-on:click="getMoneyTwo();" :disabled="drawCardBottleDone2()">3: don't get 2$</button>
-          </form>
-          </div> 
+            <form class="form-container-bottle">
+              <button type="button" class="bottleB" v-on:click="drawCardBottle();" :disabled="drawCardBottleDone()">1: don't get a card</button>
+              <button type="button" class="bottleB" v-on:click="getMoneyOne();" :disabled="drawCardBottleDone1()">2: don't get 1$</button>
+              <button type="button" class="bottleB" v-on:click="getMoneyTwo();" :disabled="drawCardBottleDone2()">3: don't get 2$</button>
+            </form>
+          </div>
           
            
           <div class="form-popup" id="myForm">
@@ -298,7 +315,7 @@
           <button type="button" class="cancel" v-on:click="closeForm()">Close</button>
           </form></div>
 
-          </div>
+          </v-container>
           <br /><br />
           <div>
             <button class="shape">${{ players[playerId].money }}</button> 
@@ -1454,8 +1471,7 @@ footer a:visited {
 .numberOCards {
   top: 0.3em;
   left: 0.3em;
-  font-size: 40px;
-  color: white;
+  fill: white;
   position: absolute;
 }
 .numberOfCardsContainer {
@@ -1559,16 +1575,18 @@ footer a:visited {
   border-radius: 50%;
 }
 .moneyOp {
+  float: left;
   background-color: blue;
   border: none;
   color: white;
   padding: 20px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+  display: block;
   font-size: 16px;
   margin: 4px 2px;
   border-radius: 50%;
+  
 }
 .form-popup {
   display: none;
@@ -1578,12 +1596,14 @@ footer a:visited {
   z-index: 9;
 }
 .form-popup-bottle {
+  max-width: max-content;
+  position: absolute;
   display: none;
   position: fixed;
   border: 3px solid #f1f1f1;
   z-index: 9;
-  top: 12%;
-  left: 42%;
+  top: 28%;
+  left: 15%;
 }
 .form-popup-end{
   display: none;
@@ -1608,7 +1628,7 @@ footer a:visited {
   background-color: white;
 }
 .form-container-bottle{
-  width: 150%;
+  
   padding: 10px;
   background-color: white;
 }

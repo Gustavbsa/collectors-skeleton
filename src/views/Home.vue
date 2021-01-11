@@ -169,7 +169,7 @@ export default {
         document.getElementById("pages").innerHTML =
           "SCORING: At the end of the game, you total your points. All players reveal their hidden items in their treasure chest and tuck it with the rest of their collected items. Count your number of points as follows: ● Each item gives their owner one point per market card in the market pool sharing the item symbol with the item. If there are no matching cards in the market pool to an item it is worth zero points. ● Every third $1 gives their owner one point. ● Some skill cards give further points (see the section on Special skills). The player with the most points is the winner of the game. In the case of a tie, the player with the most cards in their hand wins. If there’s still a tie, the victory is shared.";
       } else if (this.value == 7) {
-        document.getElementById("pages").innerHTML = "Detta är sida 7";
+        document.getElementById("pages").innerHTML = "You can find a copy of the rules at the bottom of the gameboard while in-game, scroll down after clicking the button named 'Tutorial'";
       }
     },
     closeInfo: function () {
