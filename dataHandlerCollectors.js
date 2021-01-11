@@ -1,3 +1,4 @@
+//Group 4 Jakob Gimbringer, Gustav Boström, Thomas Parker, Fredrik Fleron
 'use strict';
 
 let csv = require("csvtojson");

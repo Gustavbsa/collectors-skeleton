@@ -1,3 +1,4 @@
+//Group 4 Jakob Gimbringer, Gustav Boström, Thomas Parker, Fredrik Fleron
 function sockets(io, socket, data) {
     socket.on('setupCollectors', function(d) {
       data.createRoom(d.roomId, d.playerCount, d.lang);
