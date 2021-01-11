@@ -473,6 +473,7 @@
             :playerId="playerId"
             @buySkill="buySkill($event)"
             @buyAuction="buyAuction($event)"
+            @placeBottle="placeBottle('market', $event)"
           />
         </div>
         <div class="actions" v-if="this.currentAction == 'buyWork'">
@@ -606,6 +607,7 @@ export default {
       bottlesA: false,
       winner: [],
       duplicate: false,
+      hand: false,
 
 
     };
@@ -837,6 +839,7 @@ export default {
         this.marketValues = d.marketValues;
         this.actingPlayer = d.actingPlayer;
         this.isMarket = false;
+
         if (this.costMarket == 0 && this.newCard == true) {
           this.newCard = false;
           this.secondAction = true;
@@ -900,6 +903,7 @@ export default {
           this.drawCardB = false;
           this.getMoney1 = false;
           this.getMoney2 = false;
+          this.secondAction = false;
           if(d.checkEnd){
             console.log("the winner has been decided");
             for(let playerId in this.players){
@@ -968,6 +972,7 @@ export default {
       document.getElementById("formHand").style.display = "block";
     },
     buyItem: function () {
+      this.hand = true;
       this.buyCard(this.handCard);
       document.getElementById("formHand").style.display = "none";
     },
@@ -992,10 +997,12 @@ export default {
       document.getElementById("myForm").style.display = "none";
     },
     gainSkill: function () {
+      this.hand = true;
       this.buySkill(this.handCard);
       document.getElementById("formHand").style.display = "none";
     },
     putAuction: function () {
+      this.hand = true;
       this.buyAuction(this.handCard);
       document.getElementById("formHand").style.display = "none";
     },
@@ -1010,22 +1017,49 @@ export default {
     //funktioner kopplat till datahandlerCollectors
     buyCard: function (card) {
       console.log("buyCard", card);
-      this.$store.state.socket.emit("collectorsBuyCard", {
+      if(this.hand){
+        this.$store.state.socket.emit("collectorsBuyCard", {
+        roomId: this.$route.params.id,
+        playerId: this.playerId,
+        card: card,
+        cost: 1,
+        hand: this.hand,
+      });
+      this.hand=false;
+      }
+      else{
+        this.$store.state.socket.emit("collectorsBuyCard", {
         roomId: this.$route.params.id,
         playerId: this.playerId,
         card: card,
         cost: this.marketValues[card.market] + this.chosenPlacementCost,
-      });
+        hand: this.hand,
+      }); 
+      } 
     },
     buySkill: function (card) {
+      console.log("buySkill", card);
       if (!this.isMarket) {
-        console.log("buySkill", card);
-        this.$store.state.socket.emit("collectorsSkillCard", {
+        if(this.hand){
+          this.$store.state.socket.emit("collectorsSkillCard", {
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+          card: card,
+          cost: 1,
+          hand: this.hand,
+        });
+        this.hand = false;
+        }
+        else{
+          this.$store.state.socket.emit("collectorsSkillCard", {
           roomId: this.$route.params.id,
           playerId: this.playerId,
           card: card,
           cost: this.marketValues[card.market] + this.chosenPlacementCost,
+          hand: this.hand,
         });
+        }
+        
       } else {
         this.$store.state.socket.emit("collectorsMarket", {
           roomId: this.$route.params.id,
@@ -1038,14 +1072,27 @@ export default {
       }
     },
     buyAuction: function (card) {
+      console.log("buyAuction", card);
       if (!this.isMarket) {
-        console.log("buyAuction", card);
-        this.$store.state.socket.emit("collectorsAuction", {
+        if(this.hand){
+          this.$store.state.socket.emit("collectorsAuction", {
+          roomId: this.$route.params.id,
+          playerId: this.playerId,
+          card: card,
+          cost: 1,
+          hand: this.hand,
+        });
+        this.hand = false;
+        }
+        else{
+          this.$store.state.socket.emit("collectorsAuction", {
           roomId: this.$route.params.id,
           playerId: this.playerId,
           card: card,
           cost: this.marketValues[card.market] + this.chosenPlacementCost,
+          hand: this.hand,
         });
+        }
       } else {
         this.$store.state.socket.emit("collectorsMarket", {
           roomId: this.$route.params.id,
@@ -1279,7 +1326,6 @@ export default {
         " timeToPlaceBB: ", this.players[this.playerId].timetoPlaceBB
       );
       if (this.players[this.playerId].timetoPlaceBB) {
-        console.log("nu börjar skiten");
         this.bottlesPlace();
         console.log(
           "this player: ",
@@ -1328,7 +1374,7 @@ export default {
     for(let playerId in this.players){
       if(this.players[playerId].winner){
         for(let win in this.winner){
-          if(win==playerId){
+          if(this.winner[win]==playerId){
             this.duplicate = true;
             break;
           }
