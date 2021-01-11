@@ -17,7 +17,7 @@ function sockets(io, socket, data) {
             market: data.getMarket(d.roomId),
             skillValue: data.getSkillValue(d.roomId, d.playerId),
             playOrder: data.getPlayOrder(d.roomId),
-            actingPlayer: data.getActingPlayer(d.roomId, d.playerId),
+            actingPlayer: data.getActingPlayer(d.roomId),
             round: data.getRound(d.roomId) 
           }
         );
@@ -113,7 +113,7 @@ function sockets(io, socket, data) {
           auctionCards: data.getAuctionCards(d.roomId), 
           skillsOnSale: data.getSkillsOnSale(d.roomId),
           marketValues: data.getMarketValues(d.roomId),
-          actingPlayer: data.getActingPlayer(d.roomId),
+          actingPlayer: data.nextPlayer(d.roomId),
         }
       );
       }

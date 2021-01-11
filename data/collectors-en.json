@@ -11,5 +11,6 @@
 	"hand":"Your hand",
 	"items":"Your items",
 	"currentAuction":"Current auction",
-	"boughtSkills":"Your skills"
+	"boughtSkills":"Your skills",
+	"leave": "Leave game"
 }

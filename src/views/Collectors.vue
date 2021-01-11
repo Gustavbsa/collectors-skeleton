@@ -356,12 +356,6 @@
             >
               {{ labels.draw }}
             </button>
-            <button
-              :disabled="this.playOrder[actingPlayer] !== playerId"
-              @click="refillCards"
-            >
-              {{ labels.refill }}
-            </button>
           </div>
         </div>
 
@@ -509,6 +503,9 @@
     <button @click="toggleTutorial()">
       Tutorial
     </button>
+    <a href="http://localhost:8080/#/"><button type="button" >{{labels.leave}}</button></a>
+      
+    
     
       
     <footer>
@@ -1278,7 +1275,8 @@ export default {
         "this player: ",
         this.playerId,
         ": has this many ",
-        this.players[this.playerId].bottleActions
+        this.players[this.playerId].bottleActions,
+        " timeToPlaceBB: ", this.players[this.playerId].timetoPlaceBB
       );
       if (this.players[this.playerId].timetoPlaceBB) {
         console.log("nu börjar skiten");
@@ -1313,24 +1311,19 @@ export default {
             roomId: this.$route.params.id,
             playerId: this.playerId,
           });
-          for (let playerI in this.players) {
-            if (this.players[playerI].bottleActions > 0) {
-              this.bottlesA = true;
-              break;
+        }
+      
+      for (let playerI in this.players) {
+        if (this.players[playerI].bottleActions > 0) {
+            this.bottlesA = true;
+            break;
             }
           }
-          if (!this.bottlesA) {
-            this.refillCards();
-          }
-        }
-      }
       if(!this.bottlesA){
         this.refillCards();
+      } 
       }
-    } 
     },
-  
-
   endGame: function(){
     for(let playerId in this.players){
       if(this.players[playerId].winner){
@@ -1347,6 +1340,7 @@ export default {
     }
     document.getElementById("theEnd").style.display = "block";
   },
+  }
 };
 </script>
 <style scoped>

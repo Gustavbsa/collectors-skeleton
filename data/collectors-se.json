@@ -11,5 +11,6 @@
 	"hand":"Din hand",
 	"items":"Dina items",
 	"currentAuction":"Nuvarande auktion",
-	"boughtSkills":"Dina skills"
+	"boughtSkills":"Dina skills",
+	"leave": "Lämna spelet"
 }
