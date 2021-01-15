@@ -177,7 +177,7 @@
                   </svg>
                 </div>
 
-                  
+
                 </div>
                 <div
                   v-else-if="
@@ -1678,10 +1678,57 @@ footer a:visited {
 }
 @media screen and (max-width: 800px) {
 .layout{
+  grid-template-rows: repeat(auto-fill,1fr);
+  grid-template-columns: auto;
   display: grid;
   background: radial-gradient(rgb(116, 22, 22), black);
   border-radius: 5px;
   padding: 20px;
 }
+.topPage{
+  grid-row: 1;
+  grid-column: 1;
+}
+.pBoard{
+  grid-row: 2;
+  grid-column: 1;
+}
+.itemCards{
+  grid-row: 3;
+  grid-column: 1;
+}
+.boughtSkills{
+  grid-row: 4;
+  grid-column: 1;
+}
+.allOpponents{
+  grid-row: 7;
+  grid-column: 1;
+}
+.auctionCard{
+  grid-row: 5;
+  grid-column: 1;
+}
+.actions{
+  grid-row: 6;
+  grid-column: 1;
+}
+.cardslots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 20vw);
+  height:25vh; /* height needs to be proportional to width */
+}
+
+.card div:hover {
+  transform: scale(0.3)translate(-10%,10%);
+  z-index: 1;
+}
+  .card div {
+  transform: scale(0.3)translate(-20%,-25%);
+  transition:0.2s;
+  transition-timing-function: ease-out;
+  z-index: 0;
+}
+
 }
 </style>

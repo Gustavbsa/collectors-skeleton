@@ -12,5 +12,14 @@
 	"items":"Your items",
 	"currentAuction":"Current auction",
 	"boughtSkills":"Your skills",
-	"leave": "Leave game"
+	"leave": "Leave game",
+	"workoption1": "Put the two left-most cards from hand as future income",
+	"workoption2": "Put the two left-most cards from hand as future income and gain 1$",
+	"workoption3": "Put the two left-most cards from hand as future income and gain 2$",
+	"workoption4": "Put the two left-most cards from hand as future income and gain 3$",
+	"workoption5": "Trash one bottle",
+	"workoption6": "Draw two cards",
+	"workoption7": "Draw one card",
+	"workoption8": "Draw one card and put the left-most card from hand as future income"
+
 }

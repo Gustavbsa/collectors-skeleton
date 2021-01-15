@@ -136,4 +136,23 @@ export default {
     transform: scale(1)translate(-10%,10%);
     z-index: 1;
   }
+  @media screen and (max-width: 800px) {
+      .buy-cards{
+    display: grid;
+    grid-template-rows: 180px;
+    grid-template-columns: repeat(auto-fill, 100px);
+  }
+      .buy-cards div {
+    transform: scale(0.7)translate(-20%,-25%);
+    transition:0.2s;
+    transition-timing-function: ease-out;
+    z-index: 0;
+  }
+  .buy-cards div:hover {
+    transform: scale(1)translate(-10%,10%);
+    z-index: 1;
+  }
+  }
+
+
 </style>

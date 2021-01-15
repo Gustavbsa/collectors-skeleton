@@ -97,13 +97,13 @@ Data.prototype.resetPlacements = function (room) {
     { cost: 2, playerId: null },
     { cost: 1, playerId: null }];
     room.workPlacement = 
-    [{ cost: 0, playerId: null, cards: 0, index: 1 },
-    { cost: -1, playerId: null, cards: 0, index: 2 },
-    { cost: -2, playerId: null, cards: 0, index: 3 },
-    { cost: -3, playerId: null, cards: 0, index: 4 },
+    [{ cost: 0, playerId: null, cards: 2, index: 1 },
+    { cost: -1, playerId: null, cards: 2, index: 2 },
+    { cost: -2, playerId: null, cards: 2, index: 3 },
+    { cost: -3, playerId: null, cards: 2, index: 4 },
     { cost: -1, playerId: null, cards: 0, index: 5 },
-    { cost: 1, playerId: null, cards: 2, index: 6 },
-    { cost: 0, playerId: null, cards: 1, index: 7 },
+    { cost: 1, playerId: null, cards: 0, index: 6 },
+    { cost: 0, playerId: null, cards: 0, index: 7 },
     { cost: 0, playerId: null, cards: 1, index: 8 },];
 }
 
@@ -225,14 +225,14 @@ Data.prototype.buyWork = function (roomId, playerId, cost, index) {
   if (typeof room !== 'undefined') {
     let cardOne = null;
     let cardTwo = null;
-    if (index <= 3) {
+    if (index <= 4) {
       cardOne = room.players[playerId].hand.splice(0, 1);
       cardTwo = room.players[playerId].hand.splice(0, 1);
       room.players[playerId].income.push(...cardOne);
       room.players[playerId].income.push(...cardTwo);
-      room.players[playerId].incomeN += (2 * room.players[playerId].cardIncome);
+      room.players[playerId].money += index - 1;
     }
-    if (index <= 5) {
+    if (index == 5) {
       room.players[playerId].amountBottles -= 1;
     }
     if (index == 6) {
@@ -244,17 +244,11 @@ Data.prototype.buyWork = function (roomId, playerId, cost, index) {
     if (index == 7) {
       let card = room.deck.pop();
       room.players[playerId].hand.push(card);
-      for (let i in room.playOrder) {
-        if (room.playOrder[i] === playerId) {
-          room.playOrderNextRound.unshift(...room.playOrderNextRound.splice(i, 1));
-          break;
-        }
-      }
     }
     if (index == 8) {
       cardOne = room.players[playerId].hand.splice(0, 1);
       room.players[playerId].income.push(...cardOne);
-      room.players[playerId].incomeN += room.players[playerId].cardIncome;
+      
       let card = room.deck.pop();
       room.players[playerId].hand.push(card);
     }

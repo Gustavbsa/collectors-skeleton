@@ -12,5 +12,13 @@
 	"items":"Dina items",
 	"currentAuction":"Nuvarande auktion",
 	"boughtSkills":"Dina skills",
-	"leave": "Lämna spelet"
+	"leave": "Lämna spelet",
+	"workoption1": "Sätt de två vänstraste korten i handen som framtida inkomst",
+	"workoption2": "Sätt de två vänstraste korten i handen som framtida inkomst och få 1$",
+	"workoption3": "Sätt de två vänstraste korten i handen som framtida inkomst och få 2$",
+	"workoption4": "Sätt de två vänstraste korten i handen som framtida inkomst och få 3$",
+	"workoption5": "Släng en flaska",
+	"workoption6": "Dra två kort",
+	"workoption7": "Dra ett kort",
+	"workoption8": "Dra ett kort och sätt det vänstraste kortet i handen korten som framtida inkomst"
 }
